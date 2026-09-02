@@ -403,32 +403,19 @@ function tcl_ManualUpdate()
 end
 
 --[[ titan panel functions ]]
-function TitanPanelRightClickMenu_PrepareCritLineMenu()
+-- registry.menuContextFunction (Titan_Menu, Jan 2026 scheme). Titan_Menu.AddContextMenu
+-- already adds the plugin title, a divider, and (via GenControlVars) the ShowIcon /
+-- ShowLabelText / DisplayOnRightSide / Hide controls declared in registry.controlVariables,
+-- so only the CritLine-specific entries are added here.
+function TitanCritLine_MenuGenerator(owner, rootDescription)
 	local id = TITAN_CRITLINE_ID;
-	TitanPanelRightClickMenu_AddTitle(TitanPlugins[id].menuText.." "..TITAN_CRITLINE_VERSION);
+	local root = rootDescription;
 
-	local info = {};
-	info.text = TITAN_CRITLINE_MENU_SETTINGS;
-	info.func = tcl_DisplaySettings;
-	UIDropDownMenu_AddButton(info);
-	TitanPanelRightClickMenu_AddSpacer();
-	local info2 = {};
-	info2.text = TITAN_CRITLINE_MENU_POSTGUILD;
-	info2.func = tcl_PostToGuild;
-	local info3 = {};
-	info3.text = TITAN_CRITLINE_MENU_POSTPARTY;
-	info3.func = tcl_PostToParty;
-	local info4 = {};
-	info4.text = TITAN_CRITLINE_MENU_POSTRAID;
-	info4.func = tcl_PostToRaid;
-	UIDropDownMenu_AddButton(info2);
-	UIDropDownMenu_AddButton(info3);
-	UIDropDownMenu_AddButton(info4);
-	TitanPanelRightClickMenu_AddSpacer();
-	TitanPanelRightClickMenu_AddToggleIcon(id);
-	TitanPanelRightClickMenu_AddToggleLabelText(id);
-	TitanPanelRightClickMenu_AddSpacer();
-	TitanPanelRightClickMenu_AddCommand(TITAN_PANEL_MENU_HIDE, id, TITAN_PANEL_MENU_FUNC_HIDE);
+	Titan_Menu.AddCommand(root, id, TITAN_CRITLINE_MENU_SETTINGS, tcl_DisplaySettings);
+	Titan_Menu.AddDivider(root);
+	Titan_Menu.AddCommand(root, id, TITAN_CRITLINE_MENU_POSTGUILD, tcl_PostToGuild);
+	Titan_Menu.AddCommand(root, id, TITAN_CRITLINE_MENU_POSTPARTY, tcl_PostToParty);
+	Titan_Menu.AddCommand(root, id, TITAN_CRITLINE_MENU_POSTRAID, tcl_PostToRaid);
 end
 
 function tcl_GetButtonText( id )
@@ -458,12 +445,17 @@ function tcl_OnLoad(self)
 		id = TITAN_CRITLINE_ID,
 		category = "Combat",
 		version = TITAN_CRITLINE_VERSION,
-		menuText = TITAN_CRITLINE_ID, 
-		buttonTextFunction = "tcl_GetButtonText", 
+		menuText = TITAN_CRITLINE_ID,
+		menuContextFunction = TitanCritLine_MenuGenerator,
+		buttonTextFunction = "tcl_GetButtonText",
 		tooltipTitle = TITAN_CRITLINE_ID.." "..TITAN_CRITLINE_TOOLTIP_HEADER.." "..TITAN_CRITLINE_VERSION,
-		tooltipTextFunction = "tcl_GetSummaryRichText", 
+		tooltipTextFunction = "tcl_GetSummaryRichText",
 		icon = TITAN_CRITLINE_BUTTON_ICON,
 		iconWidth = 16,
+		controlVariables = {
+			ShowIcon = true,
+			ShowLabelText = true,
+		},
 		savedVariables = {
 			ShowIcon = true,
 			ShowLabelText = true,

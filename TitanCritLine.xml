@@ -23,18 +23,6 @@
 			</Button>
 		</Frames>
 	</Frame>
-	<Frame hidden="true" id="1" inherits="UIDropDownMenuTemplate" name="TitanPanelCritLine_Button_Menu">
-		<Size>
-			<AbsDimension x="10" y="10"></AbsDimension>
-		</Size>
-		<Anchors>
-			<Anchor point="TOP">
-				<Offset>
-					<AbsDimension x="10" y="-60" />
-				</Offset>
-			</Anchor>
-		</Anchors>
-	</Frame>
 	<MessageFrame frameStrata="PARENT" insertMode="TOP" name="TitanCritLineSummaryFrame" parent="UIParent" toplevel="true">
 		<Size>
 			<AbsDimension x="512" y="100" />
