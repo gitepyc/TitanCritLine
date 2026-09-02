@@ -14,6 +14,25 @@ This repository initially preserves the addon as received, apart from line
 ending normalization and exclusion of local Eclipse/LDT workspace metadata.
 Compatibility with current WoW clients has not yet been verified.
 
+The legacy source is preserved on `main` and by the `0.7.1` tag. Active work
+targets `dev`; feature and modernization branches should open pull requests
+against `dev`.
+
+## Modernization
+
+The addon predates the current WoW and Titan Panel APIs. No compatibility claim
+should be made until the first in-game test has passed. The immediate goal is a
+conservative compatibility port that restores the 0.7.1 behavior without adding
+features or redesigning the addon. Structural refactoring is deferred until
+functional parity has been demonstrated.
+
+- [Legacy inventory](docs/LEGACY-INVENTORY.md) describes the current behavior,
+  structure, data, and known risks.
+- [Modernization plan](docs/MODERNIZATION-PLAN.md) defines the target
+  architecture, priorities, migration path, and acceptance criteria.
+- [Titan Panel 9 compatibility](docs/TITAN-PANEL-9-COMPATIBILITY.md) records
+  the verified package layout and the 2026 plugin API transition.
+
 ## Installation
 
 Copy the repository contents into a directory named `TitanCritLine` below the
