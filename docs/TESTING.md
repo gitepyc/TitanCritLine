@@ -61,8 +61,8 @@ baseline.
 
 ## Baseline smoke test
 
-This first compatibility branch changes metadata only. It must pass the
-following checks before further API fixes are mixed into it:
+Run these checks after any compatibility change that does not touch the
+combat-log parser:
 
 - TitanCritLine appears in the addon list without an out-of-date warning.
 - Titan Panel loads normally.
@@ -70,10 +70,16 @@ following checks before further API fixes are mixed into it:
 - `CritLine` appears in Titan's available plugin list under Combat.
 - The plugin can be placed on a Titan bar.
 - Its icon, label, and initial `0/0/0` text are visible.
-- Hovering the plugin shows the existing summary tooltip.
+- Hovering the plugin shows the existing summary tooltip (`tooltipTextFunction`;
+  verified against the actual Titan Panel 9.3.2 source that this is still the
+  standard contract used by every built-in plugin, no migration needed).
 - Left-click follows the existing configured behavior.
-- Right-click either opens the legacy menu or produces a captured error for the
-  next Titan-menu compatibility change.
+- Right-click opens the new `Titan_Menu` context menu (`registry.menuContextFunction`)
+  showing, in order: a title (added by Titan itself), `Settings`, a divider,
+  `Post record to GUILD/PARTY/RAID chat`, then Titan's automatic `Show Icon`,
+  `Show Label Text`, `Display on Right Side`, and `Hide` controls. No addon-owned
+  dropdown frame should appear; `TitanPanelCritLine_Button_Menu` was removed as
+  dead XML.
 - `/reload` preserves the Titan placement and produces no additional error.
 - Disabling TitanCritLine and reloading does not affect Titan Panel.
 
