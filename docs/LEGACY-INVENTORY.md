@@ -76,16 +76,24 @@ schema.
 
 ### Titan Panel
 
-The underlying Titan plugin mechanism still exists. Titan's current developer
-template documents inherited button templates, `TitanPanelButton_OnLoad`,
-`TitanPanelButton_OnClick`, registry-based registration, and button refreshes.
-The legacy addon therefore needs a focused Titan compatibility update, not the
-removal of Titan integration.
+The current product is the unified **Titan Panel** distribution, version 9.3.2
+at the time of this inventory. The obsolete standalone **Titan Panel Classic**
+project is not the dependency to target. The unified package contains a core
+addon named `Titan` and a Classic compatibility addon named `TitanClassic`.
+Current first-party plugins still declare `## Dependencies: Titan`.
 
-However, current Titan releases recommend a new menu wrapper and a Titan-owned
-tooltip path because Blizzard changed menu and tooltip behavior. The legacy
-right-click menu and tooltip implementation must be validated and most likely
-adapted.
+The button mechanism survives: inherited button templates,
+`TitanPanelButton_OnLoad`, `TitanPanelButton_OnClick`, registry-based
+registration, and button refreshes remain in Titan 9.3.2. The menu and tooltip
+contracts changed substantially in 2026, however. `registry.menuContextFunction`
+and the object-oriented `Titan_Menu` wrapper are now preferred over
+`TitanPanelRightClickMenu_*` and `UIDropDownMenu`. Titan-owned tooltip frames and
+`registry.tooltipTemplateFunction` were introduced for the new tooltip model.
+
+The legacy routes remain as lower-priority compatibility fallbacks in 9.3.2.
+That is useful for diagnosis but not a stable modernization target. See
+[Titan Panel 9 compatibility](TITAN-PANEL-9-COMPATIBILITY.md) for the inspected
+package layout and exact migration implications.
 
 ### World of Warcraft
 

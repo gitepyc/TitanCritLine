@@ -29,6 +29,8 @@ than an incremental cleanup of the monolithic legacy implementation.
   structure, data, and known risks.
 - [Modernization plan](docs/MODERNIZATION-PLAN.md) defines the target
   architecture, priorities, migration path, and acceptance criteria.
+- [Titan Panel 9 compatibility](docs/TITAN-PANEL-9-COMPATIBILITY.md) records
+  the verified package layout and the 2026 plugin API transition.
 
 ## Installation
 
