@@ -30,6 +30,4 @@ client's `Interface/AddOns` directory. Install and enable Titan Panel as well.
 
 ## License
 
-No explicit license was included with the received source. Do not assume that
-the code or artwork may be redistributed under an open-source license until
-the original licensing terms have been established.
+TitanCritLine is distributed under the MIT License. See [LICENSE](LICENSE).
