@@ -1,0 +1,219 @@
+Titan [CritLine] Changelog
+--------------------------
+v0.7.1
+Modified to account for change in COMBAT_LOG_EVENT from 4.1
+
+v0.7.0
+Retooling DOT processing to either store the entire dot or not. -- in progress
+Eliminated recording of damage while on a mount
+Fixed bug that would process healing dot when heals were ignored 
+
+v0.6.9
+bug at line 914 reading nil table
+
+v0.6.8
+Refined DOT processing to eliminate bugs found in 0.6.7
+Fixed crit % display
+
+v0.6.7
+Added DOT processing
+Removed storage of spells that do not store a dmg value
+
+v0.6.6
+Added RU Localization
+via KindDragon
+
+v0.6.5
+Fixed menu error
+
+v0.6.4
+Updated TOC to meet 4.0 standards
+removed this reference to self.
+
+v0.6.3
+Updated TOC to meet 3.3 changes
+
+v0.6.2
+Fixed Filter bug when unchecking options
+
+v0.6.1
+Found problems with OnEvent showing help data, fixed reference errors in xml
+Found Combat Log errors where Critical values were not found.  
+  -  3.0 added overkill/overhealing which moved the crit information by 1
+
+v0.6.0
+Updated TOC to meet 3.0 changes
+Modified app to work with Titan Panel 4.0.
+Put app in TitanCritLine bucket so app installs correctly via Curse downloader
+Modified TitanCritlineXML to account for the Titan Panel 4.0 updates.
+
+
+v0.5.9
+Removed the Welcome message that was annoying everyone!
+
+v0.5.8
+Found a bug with filter where I was not setting the correct flag when the filter check was disabled.  It should have set it from 0 to 1
+but instead was setting 0 to 0 thus having no effect.  I've also increased the number of attacks stored from 30 to 40.
+
+v0.5.7
+Reversed the display for filtering so items shown are checked and unchecked will filter out.
+
+v0.5.6
+Modified tcl_Update to check if the input dictionary exists.  This occurs with 
+a new installation of the addon.
+
+	if ( version == "NEW" or version == "UNKNOWN" ) then
+		if ( version == "NEW" ) then
+			TCL_SETTINGS = {};
+		end
+		dbName = TCL_SETTINGS;
+	end
+This should resolve the errors seen recently with new installations
+
+v0.5.5
+Modified the tcl_Initialize so that it retains the previous values the user
+selected.  If none are found, the default value will be used.
+
+v0.5.4
+Fixed the bug that did not create a dictionary for new accounts.  By default,
+a empty dictionary will be created for a new install.
+
+v0.5.3
+Added New option to process all Spell casts for the player.  This uses the
+SPELL_CAST_SUCCESS event in the new 2.4 Combat logging.  
+
+v0.5.2
+Major revision of event handling to meet WOW 2.4 changes.
+
+Fixed dictionary conversion from older version
+- the dictionary refernce was getting overwritten and we were losing data
+Added functionality to the global saved parameter to store the last player logged per realm
+
+v0.5.1
+Found a minor bug with Heal processing.
+Criticals heals were being marked as a new heal type instead of the CRIT component of the HealType
+
+v0.5.0
+Has Pet damage processing
+Added the About button to show the development thus far
+fixed the crit % calculation
+
+
+v0.4.6-0.4.9
+Major overhaul of the internal code.
+Pet damage was easy to add but when I tried to incorporate DOT damage, The code was too complex and unstructured.  I decided to step back and rewrite and restructure the underlying code.
+
+v0.4.5 
+Found another dev was working on this tool on a different site, he stopped working on the tool a year ago so I merged his changes into this tool. - credit Lowpinger for the idea of adding Pet damage and DOT
+--although the changes were cosmetic, the idea got in my head and I tried to incorporate this change
+
+v0.4.2
+Fixed Heal/Critical Heal not displaying correctly
+
+v0.4.1
+--Fixed OnLoad bug with 0.4.0i with Titan 3.2.0.20300
+--Updated TOC to Wow 2.3.3
+
+v0.4.0i
+-Moved Titan [CritLine] to from the General section of Titan Panel addons, to the Combat section.
+-Fixed errors in German localization file
+
+v0.4.0h
+-Cleaned up some of the files to be more organized & consistant
+-Added the Hunter autoshoot translations to the deDE & frFR localization files. Since I don't speak either languages, I have
+tried my best to guess what the proper words would be using Babelfish. Please report any mistakes with fixes to me.
+
+v0.4.0g
+-Hunter autoshoot fix
+-More vulnerable mobs added
+
+v0.4.0f
+-Updated for WoW 2.0
+
+v0.4.0e
+-fix some database issues
+
+v0.4.0a
+-fix an issue that sometimes the database creation was not complete
+
+v0.4.0
+-add an option to use the Titan Button with SHIFT key
+-add a special mob filter (thanks to gogusrl) that filter out these mobs in existing records and future
+ can turned on or off in the options dialog, if you do this, the old values were saved into the database
+-add a new saved value (missed attacks), for future use
+
+v0.3.9b
+-fix the bug that the critical splash message not shown correctly
+-fix the issue the heals with the addon selfcast (or similar) not be counted 
+
+v0.3.9a
+-add the help text for the options
+-add some french translation, thanks to Feu
+-fix a bug with the button, that highest filtered attacks shown on the button
+-add a new message for criticals for the splash screen
+
+v0.3.9
+-add a post records to channel function
+-add to options panel when you click on the CL button should it be open the settings or post the data in the channel
+-change the level adjustment setting to a slider, the default trivial setting in pvp by blizz is 10 level difference
+-add a function for help text for each option, but I need translators for french (important)
+-resize dynamically the filter options window
+
+v0.3.8
+-add a filter option for the tooltip
+-fix a few minor bugs
+
+v0.3.7d
+-fix a bug with french translation
+-made it compatible to game version 1.8.0
+
+v0.3.7c
+-changed the combat log messages and add the new ones, for game version 1.7.0, add the new msgs to the code
+-add crit percentage to tooltip, add checkbox for this to options frame
+-override the original germann translation mistake for normal magic hits
+-override the french translation with brackets '()' thanks to Franael
+
+v0.3.7
+-Fixed an bug with DE and FR clients.
+
+v0.3.6
+-Fixed an bug with DE client.
+
+v0.3.5
+-Fixed an bug with DE clients crits not working.
+-Fixed a bug with french text on the settings menu.
+
+v0.3.4
+-Fixed an error with the French clients recording one hit as a Crit and Normal hit.
+-Settings menu translated to French and German.
+-Changed default for Level Adjustment to be off.
+
+v0.3.3
+-Attempts to repair saved data information.
+-Fixed an issue with French clients not recording hits.
+
+v0.3.2
+-Fixed an issue with German clients not recording hits.
+-Added Right-Click menu to toggle Icon/Text.
+-Added better error handling and error recovery.
+
+v0.3.1
+-Added command to rebuild data structure.
+-Change archive format to .zip.
+
+v0.3
+-Added level range filter.
+-Added attack type to splash screen message (e.g. 'New Ambush Record!')
+-Cleaned up summary tooltip.
+-Added healing spells.
+
+v0.2
+-Added settings menu
+-Added Detailed summary for high damage attacks (ToolTip)
+-Toggle for ScreenShot on new damage records.
+-Toggle for counting PvP damage only.
+-Toggle for sound
+-Toggle Splash Screen
+
+v0.1
+-Initial Release
