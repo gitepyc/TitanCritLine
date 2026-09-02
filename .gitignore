@@ -1,0 +1,20 @@
+# Local Eclipse/LDT workspace
+.metadata/
+
+# Packager output
+.release/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Nested agent worktrees
+.claude/
+
+# Lint output
+tests/lint/*.log

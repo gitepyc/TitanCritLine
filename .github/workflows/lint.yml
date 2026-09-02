@@ -1,0 +1,26 @@
+name: Lint
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  luacheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build lint image
+        run: docker build -t titancritline-luacheck:5.1 -f tests/lint/Dockerfile tests/lint
+
+      - name: Run luacheck
+        run: |
+          set +e
+          docker run --rm -v "$PWD":/addon:ro titancritline-luacheck:5.1 .
+          code=$?
+          set -e
+          echo "luacheck exit code: $code"
+          if [ "$code" -ge 2 ]; then
+            exit 1
+          fi
