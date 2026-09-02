@@ -1,0 +1,7 @@
+BUGS, SUGGESTIONS
+------------------------
+
+For bugs, please go to http://my.curse.com/account/messages/compose/?uname=agr8 and use the link just before
+the user comments to directly alert me to any bugs in a given release.
+
+As for suggestions, please feel free to leave them in comments at http://my.curse.com/account/messages/compose/?uname=agr8.

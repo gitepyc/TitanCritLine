@@ -1,0 +1,20 @@
+DEVELOPERS:
+-------------
+CritLine Concept by Sordit
+Titan Conversion until version 0.3.7 by Uggh
+Continued Development from 0.3.7 by FALLI
+Continued Development from 0.4.0e by AidenK
+Continued Development from 0.4.0i by Penddor/Lowpinger
+Continued Development from 4.5 by Penddor
+
+
+Others:
+-------------
+Snowblind - Added more vulnerable mobs
+Coani - Hunter autoshoot fix
+
+Localization:
+-------------
+English (enUS): Sordit
+French (frFR): ArKoS, Franael, Feu
+German (deDE): Nebel, BobTheMage, Sordit, SEmteX, Callas

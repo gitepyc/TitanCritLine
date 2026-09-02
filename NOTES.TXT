@@ -1,0 +1,29 @@
+IMPORTANT UPDATE NOTES: 
+-----------------------
+abcd
+
+ADDON VERSION 0.3.9x to 0.4.0x
+
+To filter out some special mobs, I must add deep database modifications and save the old values too.
+If you use the option to filter out these special mobs, your whole CritLine records are under
+investigation, this can result in errors, I hope I aware on all possible erros that can occur, but
+I can't test it out by myself.
+
+So, please, if you get problems with these conversion let me know.
+
+With toggeling these option, the addon try to restore your old datas if they are available.
+
+
+GAME VERSION 1.7.x to 1.8.x 
+
+To make CritLine ready for WoW v1.8.x I use a few new functions from the new version. There are many
+changes in the data structure and so an update process is needed. You found the old settings in this
+folder 'x:\x\World of Warcraft\WTF\AccountName\SavedVariables.lua' or
+'x:\x\World of Warcraft\WTF\AccountName\SavedVariables\TitanCritLine.lua'. The variable called
+'TitanCritLineSettings'.
+
+In the new version you find the settings in this folder: 
+'x:\x\World of Warcraft\WTF\AccountName\CharacterName\SavedVariables\TitanCritLine.lua'. The variable
+called 'TCL_SETTINGS'.
+
+The update process converts the old table to the new one, your data isn't lost.
