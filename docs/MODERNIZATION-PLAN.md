@@ -6,11 +6,10 @@ Rebuild TitanCritLine behind a small Titan Panel adapter while preserving the
 observable 0.7.1 behavior that is still valuable. Do not port the monolith line
 by line, and do not discard the legacy data before an import decision is made.
 
-The first supported release should target one explicitly selected WoW flavor.
-Classic Era/Season of Discovery is the leading candidate, but that choice must
-be confirmed by an in-game spike before implementation commits to interface
-metadata or combat-log semantics. Additional flavors are separate targets, not
-an implicit promise.
+The first supported release should target Classic Era/Season of Discovery using
+the unified Titan Panel 9 distribution. That choice must still be confirmed by
+an in-game spike before implementation commits to combat-log semantics.
+Additional WoW flavors are separate targets, not an implicit promise.
 
 ## Goals
 
@@ -82,8 +81,11 @@ database key.
 
 ### Dependency policy
 
-- Depend on Titan through its documented plugin contract only.
-- Use the current Titan menu and tooltip paths after the compatibility spike.
+- Depend on the unified Titan Panel package through its core addon name `Titan`;
+  do not depend on the obsolete standalone Titan Panel Classic project.
+- Target Titan 9's `registry.menuContextFunction` and `Titan_Menu` menu path.
+- Select either `registry.tooltipTemplateFunction` or
+  `registry.tooltipDisplayFrame` during the compatibility spike.
 - Do not reach into Titan's embedded Ace libraries as an undeclared dependency.
 - Prefer native WoW facilities when they are sufficient; vendor or declare any
   library the addon truly owns.
@@ -115,10 +117,12 @@ work follows event decoding even though both are high priority.
 
 Deliver a throwaway or minimal vertical slice before restructuring the addon.
 
-- Select and document the first supported game flavor and exact client build.
-- Record the exact Titan Panel release used for development.
+- Confirm Classic Era/Season of Discovery and record the exact client build.
+- Install the unified Titan Panel distribution and record the exact release;
+  use `Titan` as the dependency and verify the role of `TitanClassic`.
 - Load a minimal TitanCritLine button using the current Titan template.
-- Exercise its menu and tooltip using Titan's current recommended paths.
+- Exercise `registry.menuContextFunction` with `Titan_Menu` and a current
+  Titan-owned tooltip path.
 - Capture representative combat events for melee, spell, periodic, healing,
   pet/guardian, miss, and target-death cases.
 - Decide whether legacy 0.7.1 data exists in the test environment and must be
@@ -239,3 +243,4 @@ boundaries. Extract by behavior while tests establish each new boundary.
 
 - [Titan Panel developer template](https://www.titanpanel.org/template.html)
 - [Current Titan Panel project and developer notes](https://www.curseforge.com/wow/addons/titan-panel)
+- [Verified Titan Panel 9 compatibility notes](TITAN-PANEL-9-COMPATIBILITY.md)
