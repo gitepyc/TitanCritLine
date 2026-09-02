@@ -1,0 +1,14 @@
+# Config for https://github.com/BigWigsMods/packager
+
+package-as: TitanCritLine
+
+ignore:
+  - README.md
+  - LICENSE
+  - tests
+  - scripts
+  - .github
+  - .luacheckrc
+  - .editorconfig
+  - .gitattributes
+  - .gitignore
