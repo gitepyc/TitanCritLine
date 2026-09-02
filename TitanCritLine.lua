@@ -300,10 +300,10 @@ function tcl_ToggleAllSpells()
 end
 
 function tcl_Reset()
-	for index = 1, table.getn(TCL_SOURCETYPE) do
+	for index = 1, #(TCL_SOURCETYPE) do
 		TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[index]] = {};
 	end
-	for index = 1, table.getn(TCL_SOURCETYPE) do
+	for index = 1, #(TCL_SOURCETYPE) do
 		TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[index]] = {};
 	end
 	TitanPanelButton_UpdateTooltip( self );
@@ -321,7 +321,7 @@ function tcl_About()
 	if ( TitanCritLine_AboutFrame:IsVisible() ) then
 		tcl_AboutClose();
 	else 
-		local text = getglobal("TitanCritLine_AboutFrame_Text");
+		local text = _G["TitanCritLine_AboutFrame_Text"];
 		text:Show();
 		text:SetText( tcl_GetAboutRichText() );
 		TitanCritLine_AboutFrame:Show();
@@ -338,14 +338,14 @@ function tcl_Filter()
 		tcl_FilterClose();
 	else
 		local i = 1;
-		for index = 1, table.getn(TCL_SOURCETYPE) do
+		for index = 1, #(TCL_SOURCETYPE) do
 			for k,v in pairs(TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[index]]) do
 				if ( i > 40 ) then
 					do break end
 				end
 				tcl_DEBUG("create button no."..tostring(i).." for "..k);
-				local button = getglobal("TitanCritLine_FilterFrame_Option"..tostring(i));
-				local text = getglobal("TitanCritLine_FilterFrame_Option"..tostring(i).."Text");
+				local button = _G["TitanCritLine_FilterFrame_Option"..tostring(i)];
+				local text = _G["TitanCritLine_FilterFrame_Option"..tostring(i).."Text"];
 				text:Show();
 				text:SetText(k);
 				button:Show();
@@ -363,11 +363,11 @@ function tcl_Filter()
 end
 
 function tcl_FilterOptionButton_OnClick(self, id)
-	local button = getglobal("TitanCritLine_FilterFrame_Option"..tostring(id));
-	local attackType = getglobal("TitanCritLine_FilterFrame_Option"..tostring(id).."Text"):GetText();
+	local button = _G["TitanCritLine_FilterFrame_Option"..tostring(id)];
+	local attackType = _G["TitanCritLine_FilterFrame_Option"..tostring(id).."Text"]:GetText();
 	if ( button:GetChecked() ) then
 		tcl_DEBUG(attackType.." filter is on");
-		for i = 1, table.getn(TCL_SOURCETYPE) do
+		for i = 1, #(TCL_SOURCETYPE) do
 			if (TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType] ~= nil) then
 				TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["Filter"] = "0";
 				break;
@@ -375,7 +375,7 @@ function tcl_FilterOptionButton_OnClick(self, id)
 		end
 	else
 		tcl_DEBUG(attackType.." filter is off");
-		for i = 1, table.getn(TCL_SOURCETYPE) do
+		for i = 1, #(TCL_SOURCETYPE) do
 			if (TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType] ~= nil) then
 				TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["Filter"] = "1";
 				break;
@@ -388,8 +388,8 @@ end
 function tcl_FilterClose()
 	TitanCritLine_FilterFrame:Hide();
 	for i = 1, 20, 1 do
-		local button = getglobal("TitanCritLine_FilterFrame_Option"..tostring(i));
-		local text = getglobal("TitanCritLine_FilterFrame_Option"..tostring(i).."Text");
+		local button = _G["TitanCritLine_FilterFrame_Option"..tostring(i)];
+		local text = _G["TitanCritLine_FilterFrame_Option"..tostring(i).."Text"];
 		button:SetChecked(false);
 		button:Hide();
 		text:SetText(nil);
@@ -547,7 +547,7 @@ function tcl_OnEvent(self, event, ...)
 		TitanCritLineSettings.VERSION  = TITAN_CRITLINE_VERSION; 
 		
 		
-		for i = 1, table.getn(TCL_SOURCETYPE) do
+		for i = 1, #(TCL_SOURCETYPE) do
 			if ( TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[i]] ~= nil ) then
 				TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[i]] = {};
 				tcl_DEBUG("Removing TCL_DOT table ["..TCL_SOURCETYPE[i].."]");		
@@ -848,7 +848,7 @@ function tcl_OnEvent(self, event, ...)
 				-- for now unit items like totem healing dots are not stored.
 				tcl_DEBUG("arg6 : "..arg6.." is not stored.");
 			end
-			for i = 1, table.getn(TCL_SOURCETYPE) do
+			for i = 1, #(TCL_SOURCETYPE) do
 				for spellName,v in pairs(TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[i]]) do							
 					for gUID,v in pairs(TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[i]][spellName]) do					  								 				 	
 						if ( gUID == destID ) then
@@ -1080,7 +1080,7 @@ function tcl_Update(version)
 			end
 
 			if (dbName[realm] ~= nil ) then
-				if ( table.getn(TCL_SETTINGS[realm]["DATA"]) == nil or table.getn(TCL_SETTINGS[realm]["DATA"]) == 0 ) then
+				if ( #(TCL_SETTINGS[realm]["DATA"]) == nil or #(TCL_SETTINGS[realm]["DATA"]) == 0 ) then
 					tcl_Msg("Updating old Titan CritLine data ...");
 					for k,v in pairs(TCL_SETTINGS[realm]["SETTINGS"]) do
 						dbName[TCL_REALM]["SETTINGS"][k] = v;
@@ -1123,12 +1123,12 @@ function tcl_Update(version)
 			if (dbName[TCL_REALM] == nil) then
 				tcl_Msg("Old Titan CritLine database found, but not for "..UnitName("player")..", creating new one.");
 			else
-				if ( table.getn(TCL_SETTINGS[TCL_REALM]["DATA"]) == nil or table.getn(TCL_SETTINGS[TCL_REALM]["DATA"]) == 0 ) then
+				if ( #(TCL_SETTINGS[TCL_REALM]["DATA"]) == nil or #(TCL_SETTINGS[TCL_REALM]["DATA"]) == 0 ) then
 					tcl_Msg("Updating old Titan CritLine data ...");
 					for k,v in pairs(TCL_SETTINGS[TCL_REALM]["SETTINGS"]) do
 						dbName[TCL_REALM]["SETTINGS"][k] = v;
 					end
-					for i = 1, table.getn(TCL_SOURCETYPE) do
+					for i = 1, #(TCL_SOURCETYPE) do
 						for attackType,v in pairs(TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]]) do
 							dbName[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType] = {};
 							dbName[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["Filter"] = "0";
@@ -1154,7 +1154,7 @@ function tcl_Update(version)
 		end
 		--add changes to database
 		tcl_Msg("Updating main database ...");
-		for i = 1, table.getn(TCL_SOURCETYPE) do
+		for i = 1, #(TCL_SOURCETYPE) do
 			for k, v in pairs(dbName[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]]) do
 				if ( dbName[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][k]["Misses"] == nil ) then
 					dbName[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][k]["Misses"] = 0;
@@ -1182,7 +1182,7 @@ function tcl_InitDOT(tcl_Table)
     	tcl_DEBUG("DOT_DATA was not found...Creating");
        	tab["DOT_DATA"] = {};
     end
-    for i = 1, table.getn(TCL_SOURCETYPE) do
+    for i = 1, #(TCL_SOURCETYPE) do
    	 if (tab["DOT_DATA"][TCL_SOURCETYPE[i]] == nil) then
 			tab["DOT_DATA"][TCL_SOURCETYPE[i]] = {};
 		end	
@@ -1301,7 +1301,7 @@ function tcl_Initialize(tcl_Table)
 	if (tab[TCL_REALM]["DATA"] == nil) then
 		tab[TCL_REALM]["DATA"] = {};
 	end
-	for i = 1, table.getn(TCL_SOURCETYPE) do
+	for i = 1, #(TCL_SOURCETYPE) do
 		if (tab[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]] == nil) then
 			tab[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]] = {};
 		end
@@ -1702,7 +1702,7 @@ end
 function tcl_GetSummaryRichText()
 	local rtfAttack="";
 	local line = "    -------------------------------------------------------------------  \n";
-	for i = 1, table.getn(TCL_SOURCETYPE) do
+	for i = 1, #(TCL_SOURCETYPE) do
 		local hicrit = tcl_GetHighDMG(TCL_SOURCETYPE[i], "CRIT");
 		local hicritperc = tcl_GetHighestCritPercentage(TCL_SOURCETYPE[i]);	
 		local hidmg = tcl_GetHighDMG(TCL_SOURCETYPE[i]);
