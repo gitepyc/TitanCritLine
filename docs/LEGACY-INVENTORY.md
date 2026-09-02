@@ -26,15 +26,15 @@ The implementation contains the following feature areas.
 | --- | --- | --- |
 | Damage records | Stores highest normal and critical weapon, ranged, and spell hits | Keep |
 | Healing records | Stores highest normal, critical, and periodic healing | Keep, verify semantics |
-| Periodic effects | Aggregates DoT/HoT ticks until aura removal, refresh, or unit death | Redesign and test |
-| Pets and guardians | Keeps a separate record namespace for controlled sources | Keep, rebuild classification |
-| Miss statistics | Counts misses and includes them in percentages | Review product meaning |
+| Periodic effects | Aggregates DoT/HoT ticks until aura removal, refresh, or unit death | Preserve and test |
+| Pets and guardians | Keeps a separate record namespace for controlled sources | Preserve and test |
+| Miss statistics | Counts misses and includes them in percentages | Preserve and test |
 | Titan display | Shows selected record data in the Titan bar and tooltip | Keep through an adapter |
 | Record notification | Shows splash text; can play a sound or take a screenshot | Keep as opt-in choices |
-| Target filtering | Can restrict records by PvP status, target level, and a mob-name filter | Redesign around stable identifiers |
-| Data maintenance | Reset, rebuild, delete filtered records, and restore a backup | Replace with explicit safe operations |
+| Target filtering | Can restrict records by PvP status, target level, and a mob-name filter | Preserve and test |
+| Data maintenance | Reset, rebuild, delete filtered records, and restore a backup | Preserve and test |
 | Chat export | Posts record summaries to raid, party, or guild chat | Keep only as an explicit user action |
-| Settings and overview | Custom movable XML frames and a 40-row static filter form | Replace |
+| Settings and overview | Custom movable XML frames and a 40-row static filter form | Preserve unless an API is unavailable |
 
 ## Runtime flow
 

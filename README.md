@@ -21,9 +21,10 @@ against `dev`.
 ## Modernization
 
 The addon predates the current WoW and Titan Panel APIs. No compatibility claim
-should be made until the first in-game spike has passed. The proposed approach
-is a behavior-preserving rewrite with an explicit compatibility layer, rather
-than an incremental cleanup of the monolithic legacy implementation.
+should be made until the first in-game test has passed. The immediate goal is a
+conservative compatibility port that restores the 0.7.1 behavior without adding
+features or redesigning the addon. Structural refactoring is deferred until
+functional parity has been demonstrated.
 
 - [Legacy inventory](docs/LEGACY-INVENTORY.md) describes the current behavior,
   structure, data, and known risks.

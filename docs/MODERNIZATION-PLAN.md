@@ -1,246 +1,239 @@
-# Modernization plan
+# Compatibility restoration plan
 
-## Decision
+## Objective
 
-Rebuild TitanCritLine behind a small Titan Panel adapter while preserving the
-observable 0.7.1 behavior that is still valuable. Do not port the monolith line
-by line, and do not discard the legacy data before an import decision is made.
+Restore TitanCritLine 0.7.1 on the current Classic Era/Season of Discovery
+client and the unified Titan Panel 9 distribution with the same user-visible
+behavior it had originally.
 
-The first supported release should target Classic Era/Season of Discovery using
-the unified Titan Panel 9 distribution. That choice must still be confirmed by
-an in-game spike before implementation commits to combat-log semantics.
-Additional WoW flavors are separate targets, not an implicit promise.
+This is a compatibility port, not a product redesign. TitanCritLine is also a
+small reference project for learning the current Titan Panel plugin contract so
+that the same integration patterns can later be applied to another addon.
 
-## Goals
+## Success criteria
 
-- Load without errors with the selected current WoW client and Titan Panel.
-- Record deterministic damage and healing highscores for the player and owned
-  units.
-- Use spell IDs and GUID-derived identifiers internally; localize names only at
-  presentation boundaries.
-- Keep game API access, Titan integration, state transitions, persistence, and
-  presentation independently testable.
-- Offer a documented, recoverable import path for useful 0.7.1 records.
-- Produce repeatable packages and pre-release artifacts from CI.
+The restored addon must:
 
-## Non-goals for the first modern release
+- load without Lua errors when current Titan Panel is enabled;
+- register as a Titan plugin and appear on a Titan bar;
+- record the same normal, critical, healing, periodic, and pet records as 0.7.1;
+- show the same button text, summary tooltip, menus, and record notifications;
+- retain the existing settings, filters, chat export, sound, screenshot, reset,
+  backup, and restore behavior;
+- preserve existing saved data where technically possible;
+- introduce no new user-facing feature.
 
-- Simultaneous support for every Retail and Classic flavor.
-- Pixel-perfect reproduction of the legacy XML windows.
-- Permanent support for every historical saved-variable version.
-- Automated chat messages, screenshots, or other side effects without a direct
-  user preference or action.
-- New record types before the core recording behavior is verified.
+The `main` branch and `0.7.1` tag remain the immutable legacy reference. All
+compatibility work targets `dev` through small pull requests.
 
-## Proposed architecture
+## Constraints
 
-```text
-TitanCritLine.toc
-TitanCritLine.lua             addon namespace and lifecycle only
-Core/
-  CombatLog.lua               game event capture and named event decoding
-  Records.lua                 pure record and percentage rules
-  Filters.lua                 pure eligibility rules
-  Constants.lua               schema and record enums
-Persistence/
-  Database.lua                defaults, validation, and writes
-  Legacy071.lua               one-way legacy import
-Integration/
-  Titan.lua                   Titan registry, button, tooltip, and menu adapter
-  Notifications.lua           splash, sound, and screenshot adapters
-UI/
-  Options.lua                 generated/current settings UI
-Localization/
-  enUS.lua
-  deDE.lua
-  frFR.lua
-  ruRU.lua
-```
+- Preserve behavior and defaults unless a current API makes the old behavior
+  impossible.
+- Keep UI text and interaction patterns stable unless Titan or WoW requires a
+  change.
+- Do not convert spell names to spell IDs as part of this restoration. That is a
+  separate post-parity refactor.
+- Do not redesign the saved-variable schema before compatibility is restored.
+- Do not add Retail or other Classic-flavor support implicitly.
+- Do not perform a broad file split merely to make the code look modern.
+- Document every unavoidable behavior difference before merging it.
 
-The exact filenames may change during implementation. The important boundaries
-are contracts: decoded events enter pure rules; persistence stores normalized
-records; presentation never becomes the source of truth.
+## Verified target baseline
 
-### Normalized record identity
+| Component | Baseline |
+| --- | --- |
+| WoW flavor | Classic Era/Season of Discovery |
+| Exact client build | Record from the installed test client before coding |
+| Titan distribution | Unified Titan Panel, not the retired standalone Titan Panel Classic project |
+| Current researched Titan version | 9.3.2 |
+| Titan core dependency | `Titan` |
+| Classic compatibility module | `TitanClassic`, shipped inside the unified package |
+| Titan 9.3.2 Classic interface | `11509` for game version 1.15.9 |
 
-Use a structured key rather than a displayed label:
+The addon TOC must use the interface value reported by the installed Season of
+Discovery client. Titan's multi-flavor TOC is evidence of package support, not a
+value to copy without verification.
 
-```lua
-{
-  source = "player",        -- or pet/guardian
-  kind = "spell_damage",    -- stable internal enum
-  spellId = 12345,           -- nil for melee swings
-  outcome = "critical"
-}
-```
+See [Titan Panel 9 compatibility](TITAN-PANEL-9-COMPATIBILITY.md) for the
+package inspection and API details.
 
-Store target GUID/NPC ID, level, amount, timestamp, and build metadata as named
-fields where they are relevant. Resolve spell and creature names only for the
-current locale when rendering. Never concatenate pet and attack names into a
-database key.
+## Compatibility strategy
 
-### Dependency policy
+Change the smallest boundary that is broken, verify parity, and only then move
+to the next boundary. Prefer thin adapters over changes to record logic.
 
-- Depend on the unified Titan Panel package through its core addon name `Titan`;
-  do not depend on the obsolete standalone Titan Panel Classic project.
-- Target Titan 9's `registry.menuContextFunction` and `Titan_Menu` menu path.
-- Select either `registry.tooltipTemplateFunction` or
-  `registry.tooltipDisplayFrame` during the compatibility spike.
-- Do not reach into Titan's embedded Ace libraries as an undeclared dependency.
-- Prefer native WoW facilities when they are sufficient; vendor or declare any
-  library the addon truly owns.
+### Titan integration
 
-## Prioritized debt register
+Keep the existing Titan plugin identity, button template, registry values,
+button text function, and update calls where they remain supported.
 
-Priority is calculated as `(Impact + Risk) × (6 - Effort)`, with each dimension
-scored from 1 (low) to 5 (high). A high score should be addressed earlier.
+Replace only the obsolete integration paths:
 
-| Rank | Item | Impact | Risk | Effort | Priority | Action |
-| ---: | --- | ---: | ---: | ---: | ---: | --- |
-| 1 | Establish target client and executable smoke test | 5 | 5 | 1 | 50 | First compatibility spike |
-| 2 | Replace positional combat-log parsing | 5 | 5 | 2 | 40 | Named decoder plus fixtures |
-| 3 | Isolate globals and game/Titan APIs | 5 | 4 | 2 | 36 | Namespace and adapters |
-| 4 | Define normalized schema and safe legacy import | 5 | 5 | 3 | 30 | New DB plus one-way importer |
-| 5 | Add record-rule and migration tests | 5 | 4 | 3 | 27 | Pure Lua test suite |
-| 6 | Replace legacy menu/tooltip integration | 4 | 4 | 3 | 24 | Current Titan adapter |
-| 7 | Replace static XML settings and filter UI | 4 | 3 | 4 | 14 | Generated current settings UI |
-| 8 | Strengthen linting and packaging | 3 | 3 | 2 | 24 | CI gates per supported flavor |
-| 9 | Review optional side effects and exports | 2 | 3 | 2 | 20 | Explicit settings and actions |
-| 10 | Refresh all translations | 3 | 2 | 3 | 15 | English source-of-truth review |
+- retain `## Dependencies: Titan`;
+- retain `TitanPanelComboTemplate`, `TitanPanelButton_OnLoad`,
+  `TitanPanelButton_OnClick`, and `TitanPanelButton_UpdateButton` while they are
+  present in Titan 9;
+- replace the global `TitanPanelRightClickMenu_PrepareCritLineMenu` route with
+  `registry.menuContextFunction` and `Titan_Menu` while reproducing the same
+  menu entries and actions;
+- remove the addon-owned `UIDropDownMenuTemplate` frame once the new menu is
+  equivalent;
+- initially retain `tooltipTextFunction`, because Titan 9.3.2 still supports it
+  and TitanCritLine already returns formatted text;
+- move to `tooltipTemplateFunction` only if the existing tooltip cannot reproduce
+  the old display safely on the target client.
 
-The score is a sequencing aid, not a substitute for dependency order. Schema
-work follows event decoding even though both are high priority.
+The resulting Titan adapter should be useful as a concise implementation
+example, but learning value must not justify unrelated abstractions.
 
-## Delivery phases
+### Combat log integration
 
-### Phase 0: compatibility spike
+The legacy parser's use of positional `arg1` through `arg20` is the main WoW API
+compatibility risk. Preserve the existing record rules and replace only event
+capture and decoding:
 
-Deliver a throwaway or minimal vertical slice before restructuring the addon.
+1. Read the current event payload through `CombatLogGetCurrentEventInfo()`.
+2. Map each supported combat subevent to named local fields.
+3. Pass values to the existing record paths in their expected meaning.
+4. Add recorded fixtures for every legacy event family before changing its
+   behavior.
 
-- Confirm Classic Era/Season of Discovery and record the exact client build.
-- Install the unified Titan Panel distribution and record the exact release;
-  use `Titan` as the dependency and verify the role of `TitanClassic`.
-- Load a minimal TitanCritLine button using the current Titan template.
-- Exercise `registry.menuContextFunction` with `Titan_Menu` and a current
-  Titan-owned tooltip path.
-- Capture representative combat events for melee, spell, periodic, healing,
-  pet/guardian, miss, and target-death cases.
-- Decide whether legacy 0.7.1 data exists in the test environment and must be
-  imported.
+Supported legacy event families include direct heals, ranged damage, swings,
+spell damage, casts, aura lifecycle events, summons, deaths, periodic healing,
+periodic damage, and misses. Correct the misspelled
+`SPELL_PERODIC_MISSED` event to `SPELL_PERIODIC_MISSED`; this restores intended
+legacy behavior rather than adding a feature.
 
-Exit criteria: a checked-in compatibility note and repeatable manual smoke
-procedure prove the supported client/Titan pair and the current event shapes.
+### Other WoW API changes
 
-### Phase 1: executable shell and decoder
+Audit and replace deprecated calls only when confirmed on the target client,
+including:
 
-- Introduce the addon namespace and lifecycle module.
-- Update interface metadata only for the verified target.
-- Implement a named combat-event decoder with fixture tests.
-- Register events through the new lifecycle and log decoded events in a debug
-  build without modifying records.
-- Remove reliance on implicit `argN` payloads.
+- string-based sound identifiers;
+- screenshot invocation;
+- chat-message invocation;
+- combat-log flag and bit operations;
+- realm, unit, GUID, level, and relationship APIs;
+- XML widget templates used by the settings and filter windows.
 
-Exit criteria: fixtures cover every retained event family, and an in-game debug
-session produces equivalent decoded data without Lua errors.
+Each replacement must preserve the old result and default. A working old call
+does not need to be replaced merely because a newer style exists.
 
-### Phase 2: recording core
+### Saved variables
 
-- Implement pure record reducers for melee, ranged, direct spell damage, and
-  direct healing.
-- Add source ownership classification for player, pet, and guardian.
-- Define precise rules for normal/critical counts, misses, percentages, ties,
-  target eligibility, and unknown data.
-- Add periodic damage/healing only after direct events are stable.
+Keep `TitanCritLineSettings`, `TCL_SETTINGS`, and `TCL_DOT` for the compatibility
+release. Test clean initialization and loading a real 0.7.1 saved-variable file.
 
-Exit criteria: tests define all record decisions, and captured events reproduce
-expected records without Titan or UI dependencies.
+The historical migration code may be isolated or guarded if it crashes, but it
+must not be replaced with a new schema during this project. Version comparison,
+spell-ID storage, and schema redesign belong to a later refactor after parity.
 
-### Phase 3: persistence and migration
+## Delivery sequence
 
-- Introduce an integer schema version independent of addon release versions.
-- Separate account preferences, character preferences, persistent records, and
-  session-only aggregation state.
-- Validate loaded data and fall back safely when malformed.
-- Implement an idempotent, one-way 0.7.1 importer with a backup and a migration
-  report. Never delete the legacy tables in the first release that imports them.
-- Resolve legacy spell names to IDs only when the client can do so reliably;
-  preserve unresolved records as labelled legacy entries.
+### PR 1: executable compatibility baseline
 
-Exit criteria: clean install, upgrade, repeated import, malformed input, and
-rollback scenarios are covered by tests and a manual procedure.
+- Record the installed WoW build and Titan version.
+- Update the addon interface metadata for that verified client.
+- Add a short manual smoke-test checklist.
+- Make the existing Titan button register and render without errors.
+- Change no record behavior.
 
-### Phase 4: Titan presentation and settings
+Exit criteria: TitanCritLine can be enabled, placed on a Titan bar, reloaded,
+and disabled without Lua errors.
 
-- Connect the record core to Titan text and tooltip rendering.
-- Implement the current Titan menu API behind one adapter.
-- Replace 40 static filter checkboxes with a data-driven list.
-- Move configuration to the current settings system or another explicitly owned
-  UI dependency.
-- Make sound, splash, screenshot, and chat export opt-in and testable through
-  adapters.
+### PR 2: Titan 9 menu and tooltip parity
 
-Exit criteria: the supported Titan release can enable, place, configure, and
-interact with the plugin without taint or Lua errors.
+- Recreate the existing right-click menu with
+  `registry.menuContextFunction` and `Titan_Menu`.
+- Remove the obsolete addon-owned dropdown frame.
+- Verify every old menu action and displayed state.
+- Retain the text tooltip if it renders correctly; otherwise port it to
+  `tooltipTemplateFunction` without changing its content.
 
-### Phase 5: hardening and release
+Exit criteria: screenshots or a written comparison confirm the same button,
+tooltip, menu items, toggles, and commands as the legacy addon.
 
-- Enable undefined-global linting for modern modules and permit only documented
-  WoW/Titan globals.
-- Add deterministic unit tests and package validation to CI.
-- Build installable ZIP artifacts with a single top-level `TitanCritLine` folder.
-- Run a manual matrix covering login, reload, combat types, settings, migration,
-  reset, localization fallback, and Titan disabled/missing.
-- Publish `0.8.0-alpha.1` style prereleases; reserve `1.0.0` for the agreed
-  compatibility and migration promise.
+### PR 3: current combat-log input
 
-Exit criteria: CI is green, the manual matrix is signed off, rollback is
-documented, and the package installs cleanly in a fresh client profile.
+- Capture representative current-client events.
+- Introduce a named decoder around `CombatLogGetCurrentEventInfo()`.
+- Route decoded values into the existing record logic.
+- Add fixture tests for all supported subevents.
+- Correct confirmed event-name and field-position defects.
 
-## Recommended pull-request sequence
+Exit criteria: direct, periodic, healing, miss, pet, and death scenarios update
+the same record categories as the 0.7.1 design.
 
-Keep each pull request independently reviewable and target `dev`.
+### PR 4: remaining API compatibility
 
-1. Compatibility spike and support matrix.
-2. Namespaced bootstrap plus combat-log decoder fixtures.
-3. Direct damage/healing record core.
-4. New database schema and 0.7.1 importer.
-5. Periodic effects and owned-unit classification.
-6. Current Titan button, tooltip, and menu adapter.
-7. Settings/filter UI and optional notifications.
-8. Localization refresh, packaging, and release checklist.
+- Verify settings and filter windows.
+- Update only broken widget, sound, screenshot, chat, unit, and bit APIs.
+- Verify notifications and optional side effects with their existing defaults.
+- Test clean and legacy saved variables.
 
-Avoid a preliminary file-only split of the legacy code. Moving globally coupled
-functions into multiple files would change geography without creating stable
-boundaries. Extract by behavior while tests establish each new boundary.
+Exit criteria: every inventoried 0.7.1 feature has a pass result or a documented,
+approved compatibility exception.
 
-## Decisions required after Phase 0
+### PR 5: release hardening
 
-- Which client flavor is the first supported target?
-- Is Titan Panel mandatory, or should a LibDataBroker display become a future
-  optional frontend?
-- Are misses part of a useful crit percentage, or should accuracy be separate?
-- Should a DoT/HoT record represent the largest tick, one application total, or
-  the full effect until removal?
-- How long must 0.7.1 import support remain in shipped builds?
-- Which filters remain useful when stable NPC and spell IDs replace names?
-- Which four localizations have maintainers for semantic review?
+- Remove temporary diagnostics.
+- Enable stricter linting for files changed by the port.
+- Package an installable ZIP with one `TitanCritLine` directory.
+- Run the complete manual regression checklist on a clean client profile and an
+  upgraded 0.7.1 profile.
+- Release the compatibility build as the next 0.x version; do not call it 1.0
+  solely because it runs on a current client.
 
-## Definition of done for the modernization
+Exit criteria: CI passes, both profiles pass the checklist, and known deviations
+are documented in the release notes.
 
-- Supported client and Titan versions are explicit and verified.
-- No production logic consumes raw positional combat-log fields.
-- No addon-owned mutable symbol is added to the global namespace except the
-  saved variables and frame names that the platform requires.
-- Spell records use IDs internally with localized display names.
-- Current and migrated databases are validated and recoverable.
-- Core rules and migration paths have deterministic automated tests.
-- User-triggered side effects are documented and disabled or conservative by
-  default.
-- README, architecture notes, support matrix, migration guide, and release
-  checklist match the shipped implementation.
+## Regression checklist
+
+At minimum, verify:
+
+- login, logout, `/reload`, and Titan disabled or missing;
+- Titan button placement, label, icon, text refresh, tooltip, and menu;
+- normal and critical melee, ranged, and spell damage;
+- normal and critical direct healing;
+- periodic damage and healing completion;
+- player, pet, and guardian ownership;
+- misses and displayed percentages;
+- target-level, PvP, and mob filters;
+- splash, sound, and screenshot record notifications;
+- overview, settings, reset, rebuild, backup, and restore;
+- raid, party, and guild export initiated by the user;
+- clean saved variables and an imported 0.7.1 profile;
+- English, German, French, and Russian loading without missing-key errors.
+
+## Explicitly deferred work
+
+After the compatibility release is proven, separate proposals may consider:
+
+- replacing spell-name keys with spell IDs;
+- introducing a new saved-variable schema and importer;
+- splitting the monolith into modules;
+- replacing the custom settings UI;
+- reducing globals and removing the `table` extension;
+- broadening support to other WoW flavors;
+- removing features that are no longer useful.
+
+None of these changes is required to complete the 1:1 restoration.
+
+## Definition of done
+
+- The addon behaves like 0.7.1 on the verified current Classic Era/Season of
+  Discovery client.
+- The current unified Titan Panel package is the documented dependency.
+- Titan menus use the current `Titan_Menu` contract.
+- Combat events are read from the current combat-log API.
+- Existing settings and records survive the update where technically possible.
+- Every legacy feature is covered by the regression checklist.
+- No new user-facing feature or unapproved behavior change is included.
 
 ## References
 
+- [Titan Panel 9 compatibility](TITAN-PANEL-9-COMPATIBILITY.md)
+- [Legacy inventory](LEGACY-INVENTORY.md)
 - [Titan Panel developer template](https://www.titanpanel.org/template.html)
 - [Current Titan Panel project and developer notes](https://www.curseforge.com/wow/addons/titan-panel)
-- [Verified Titan Panel 9 compatibility notes](TITAN-PANEL-9-COMPATIBILITY.md)
