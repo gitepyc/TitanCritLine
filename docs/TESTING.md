@@ -87,6 +87,10 @@ combat-log parser:
   checkboxes, and level-adjustment slider visible.
 - `Filter`, `Manual Update`, `Reset All`, and `About` execute their actions
   without a `PlaySound` argument error.
+- The WoW addon list displays the bundled CritLine icon instead of a question
+  mark.
+- Enabling the special-mob filter hides an existing record whose target is on
+  the localized special-mob list; disabling it restores that record.
 - Entering combat produces no missing-argument error from
   `COMBAT_LOG_EVENT_UNFILTERED`.
 - A new record updates the Titan bar immediately, even when sound or screenshot
