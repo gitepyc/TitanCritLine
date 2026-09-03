@@ -124,9 +124,12 @@
 			</Anchor>
 		</Anchors>
 		<Scripts>
-			<OnLoad>
-				table.insert(UISpecialFrames, self:GetName());
-			</OnLoad>
+			<OnShow>
+				tcl_PushEscapeFrame(self:GetName());
+			</OnShow>
+			<OnHide>
+				tcl_PopEscapeFrame(self:GetName());
+			</OnHide>
 		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">
@@ -362,10 +365,15 @@
 		</Anchors>
 		<Scripts>
 			<OnLoad>
-				table.insert(UISpecialFrames, 1, self:GetName());
 				self:RegisterForDrag("LeftButton");
 				self:SetClampedToScreen(true);
 			</OnLoad>
+			<OnShow>
+				tcl_PushEscapeFrame(self:GetName());
+			</OnShow>
+			<OnHide>
+				tcl_PopEscapeFrame(self:GetName());
+			</OnHide>
 			<OnDragStart>
 				self:StartMoving();
 			</OnDragStart>
@@ -484,9 +492,12 @@
 			</Anchor>
 		</Anchors>
 		<Scripts>
-			<OnLoad>
-				table.insert(UISpecialFrames, 1, self:GetName());
-			</OnLoad>
+			<OnShow>
+				tcl_PushEscapeFrame(self:GetName());
+			</OnShow>
+			<OnHide>
+				tcl_PopEscapeFrame(self:GetName());
+			</OnHide>
 		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">
