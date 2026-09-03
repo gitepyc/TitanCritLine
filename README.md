@@ -37,6 +37,8 @@ functional parity has been demonstrated.
   the verified package layout and the 2026 plugin API transition.
 - [Manual testing](docs/TESTING.md) defines the supported baseline and the
   compatibility checks required before a change can be declared working.
+- [Feature reference](docs/FEATURES.md) explains the settings, filters, and
+  record notification behavior.
 
 ## Installation
 

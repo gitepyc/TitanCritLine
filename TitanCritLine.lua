@@ -7,6 +7,7 @@ local TITAN_CRITLINE_VERSION = "0.8.2-dev";
 local TITAN_CRITLINE_BUTTON_LABEL = "CL: ";
 local TITAN_CRITLINE_BUTTON_ICON = "Interface\\AddOns\\TitanCritLine\\TitanCritLine";
 local TITAN_CRITLINE_BUTTON_TEXT = "%s/%s/%s";
+local TITAN_CRITLINE_RECORD_SOUND = 888; -- SOUNDKIT.LEVEL_UP
 
 local HEADER_TEXT_COLOR  = "|cffffffff";
 local SUBHEADER_TEXT_COLOR  = "|cffCEA208";
@@ -1584,8 +1585,8 @@ function tcl_DisplayNewRecord(AttackType, DamageAmount, HitType)
 		TitanCritLineSplashFrame:AddMessage(format(splash_msg, AttackType), 1, 1, 0, 1, 3);
 	end
 	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
-	if(TCL_SETTINGS[TCL_REALM]["SETTINGS"]["PLAYSOUND"] == "1" and SOUNDKIT and SOUNDKIT.LEVEL_UP) then
-		PlaySound(SOUNDKIT.LEVEL_UP);
+	if(TCL_SETTINGS[TCL_REALM]["SETTINGS"]["PLAYSOUND"] == "1") then
+		PlaySound(TITAN_CRITLINE_RECORD_SOUND);
 	end
 	if(TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SNAPSHOT"] == "1") then 
 		TakeScreenshot(); 
@@ -1867,7 +1868,9 @@ end
 function tcl_GetAboutRichText()
 	return 
 		COLOR(HEADER_TEXT_COLOR, TITAN_CRITLINE_ID.." v"..TITAN_CRITLINE_VERSION).."\n\n"..
-		COLOR(SUBHEADER_TEXT_COLOR, "Developers: ").."\n\n"..
+		COLOR(SUBHEADER_TEXT_COLOR, "Current maintainer:").."\n"..
+		COLOR(BODY_TEXT_COLOR, "Epyc").."\n\n"..
+		COLOR(SUBHEADER_TEXT_COLOR, "History:").."\n"..
 		COLOR(BODY_TEXT_COLOR, "Sordit: Concept and Stand-Alone version").."\n"..
 		COLOR(BODY_TEXT_COLOR, "Uggh: Titan Panel version < 0.3.7").."\n"..
 		COLOR(BODY_TEXT_COLOR, "Falli: Titan Panel version > 0.3.7").."\n"..
