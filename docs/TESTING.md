@@ -73,6 +73,8 @@ combat-log parser:
 - Hovering the plugin shows the existing summary tooltip (`tooltipTextFunction`;
   verified against the actual Titan Panel 9.3.2 source that this is still the
   standard contract used by every built-in plugin, no migration needed).
+- Hovering immediately after login, before any combat records exist, shows an
+  empty summary without a Lua error.
 - Left-click follows the existing configured behavior.
 - Right-click opens the new `Titan_Menu` context menu (`registry.menuContextFunction`)
   showing, in order: a title (added by Titan itself), `Settings`, a divider,
@@ -80,6 +82,8 @@ combat-log parser:
   `Show Label Text`, `Display on Right Side`, and `Hide` controls. No addon-owned
   dropdown frame should appear; `TitanPanelCritLine_Button_Menu` was removed as
   dead XML.
+- Selecting `Settings` opens the settings frame with its backdrop, labels,
+  checkboxes, and level-adjustment slider visible.
 - `/reload` preserves the Titan placement and produces no additional error.
 - Disabling TitanCritLine and reloading does not affect Titan Panel.
 
