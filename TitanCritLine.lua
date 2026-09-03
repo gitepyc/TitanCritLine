@@ -15,7 +15,7 @@ local HEAL_TEXT_COLOR  = "|cFF0070CC";
 local DOT_TEXT_COLOR   = "|cFFFF8000";
 local HINT_TEXT_COLOR  = "|cff00ff00";
 
-local TCL_REALM = GetCVar("realmName");
+local TCL_REALM = GetRealmName() or GetNormalizedRealmName();
 local TitanCritLine_PlayerRealmName = ""; -- only stored for compability reasons
 local TCL_PUID = nil;						-- tracks the player UID to determine whom casted spells/effects
 local TCL_FINALIZE_DOT = false;  			-- flag used to force dot effects to finalize healing dots.  Without this healing dot effects will register forever.
@@ -33,6 +33,19 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Titan", true)
 local LB = LibStub("AceLocale-3.0"):GetLocale("Titan_CritLine", true)
 local TitanCritLine = LibStub("AceAddon-3.0"):NewAddon("TitanCritLine", "AceHook-3.0", "AceTimer-3.0")
 
+local TITAN_CRITLINE_DIALOG_BACKDROP = {
+	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+	edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+	tile = true,
+	tileSize = 32,
+	edgeSize = 32,
+	insets = { left = 11, right = 12, top = 12, bottom = 11 },
+};
+
+local function tcl_ApplyDialogBackdrop(frame)
+	frame:SetBackdrop(TITAN_CRITLINE_DIALOG_BACKDROP);
+end
+
 local function tcl_EnsureInitialized()
 	if (TCL_SETTINGS == nil) then
 		TCL_SETTINGS = {};
@@ -49,6 +62,7 @@ end
 --[[ functions for the setup dialog ]]
 function tcl_DisplaySettings()
 	tcl_EnsureInitialized();
+	tcl_ApplyDialogBackdrop(TitanCritLine_SettingsFrame);
 	TitanCritLine_SettingsFrame_HeaderText:SetText(TITAN_CRITLINE_ID.." "..TITAN_CRITLINE_MENU_SETTINGS);
 	TitanCritLine_SettingsFrame_Option1Text:SetText(COLOR(SUBHEADER_TEXT_COLOR, TITAN_CRITLINE_OPTION_SPLASH_TEXT));
 	TitanCritLine_SettingsFrame_Option1.HelpText = TITAN_CRITLINE_OPTION_SPLASH_HELPTEXT;
@@ -337,6 +351,7 @@ function tcl_About()
 		local text = _G["TitanCritLine_AboutFrame_Text"];
 		text:Show();
 		text:SetText( tcl_GetAboutRichText() );
+		tcl_ApplyDialogBackdrop(TitanCritLine_AboutFrame);
 		TitanCritLine_AboutFrame:Show();
 	end
 end
@@ -371,6 +386,7 @@ function tcl_Filter()
 		local height = i * 24 + 20;
 		TitanCritLine_FilterFrame:SetHeight(height);
 		TitanCritLine_FilterFrame:SetPoint("LEFT", "TitanCritLine_SettingsFrame", "RIGHT", 5, 0);
+		tcl_ApplyDialogBackdrop(TitanCritLine_FilterFrame);
 		TitanCritLine_FilterFrame:Show();
 	end
 end
@@ -485,10 +501,29 @@ end
 function tcl_OnUpdate( self, elapsed ) 
 end
 
+local function tcl_GetLegacyCombatLogEventInfo()
+	local timestamp, subevent, hideCaster,
+		sourceGUID, sourceName, sourceFlags, _sourceRaidFlags,
+		destGUID, destName, destFlags, _destRaidFlags,
+		payload1, payload2, payload3, payload4, payload5, payload6,
+		payload7, payload8, payload9, payload10, payload11 = CombatLogGetCurrentEventInfo();
+
+	return timestamp, subevent, hideCaster,
+		sourceGUID, sourceName, sourceFlags,
+		destGUID, destName, destFlags,
+		payload1, payload2, payload3, payload4, payload5, payload6,
+		payload7, payload8, payload9, payload10, payload11;
+end
+
 function tcl_OnEvent(self, event, ...)
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20 = select(1, ...);
 	local srcType;
 	local myUnit = false;
+
+	if (event == "COMBAT_LOG_EVENT_UNFILTERED") then
+		arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+			arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20 = tcl_GetLegacyCombatLogEventInfo();
+	end
 	
 	if ( event ~= nil and event ~= "COMBAT_LOG_EVENT_UNFILTERED" ) then 
 		tcl_DEBUG("***"..tostring(event).."***");
@@ -531,7 +566,7 @@ function tcl_OnEvent(self, event, ...)
 				local greeting;
 				if (TitanCritLineSettings.LASTUSER ~= nil and TitanCritLineSettings.LASTREALM ~= nil) then
 					if (TitanCritLineSettings.LASTUSER == UnitName("player") 
-						and TitanCritLineSettings.LASTREALM == GetCVar("realmName") ) then
+						and TitanCritLineSettings.LASTREALM == GetRealmName() ) then
 						greeting = TitanCritLineSettings.LASTUSER..": Welcome back to "..TitanCritLineSettings.LASTREALM;
 						--if (SHOW_WELCOME == 0) then
 						--	TitanCritLineSplashFrame:AddMessage(greeting, 1, 1, 0, 1, 20);
@@ -1076,7 +1111,7 @@ function tcl_Update(version)
 		if (dbName == nil) then
 			tcl_Msg("No old Titan Critline database found, creating new database for "..UnitName("player")..".");
 		else
-			realm = GetCVar("realmName").."."..UnitName("player");
+			realm = GetRealmName().."."..UnitName("player");
 			if (dbName[realm] == nil) then
 				realm = TCL_REALM;
 				if (dbName[realm] == nil ) then 
@@ -1199,7 +1234,7 @@ function tcl_Initialize(tcl_Table)
     local tab = tcl_Table or TCL_SETTINGS;
 
 	tcl_DEBUG("Initializing...");
-	--TCL_REALM = GetCVar("realmName");
+	TCL_REALM = TCL_REALM or GetRealmName() or GetNormalizedRealmName();
 	if (tab == nil) then
 		tab = {};
 	end
@@ -1212,93 +1247,99 @@ function tcl_Initialize(tcl_Table)
 	if (tab[TCL_REALM]["SETTINGS"] == nil) then
 		tab[TCL_REALM]["SETTINGS"] = {};
 	end
+	local existingSettings = TCL_SETTINGS
+		and TCL_SETTINGS[TCL_REALM]
+		and TCL_SETTINGS[TCL_REALM]["SETTINGS"]
+		or {};
 	if (tab[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] == nil) then
- 		if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] ~= nil) then
-			tab[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] = TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_HEALING"];
+		if (existingSettings["FILTER_HEALING"] ~= nil) then
+			tab[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] = existingSettings["FILTER_HEALING"];
 		else 
 			tab[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] = "1";
 		end
 	end
 	if (tab[TCL_REALM]["SETTINGS"]["LVLADJ"] == nil) then
-		if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["LVLADJ"] ~= nil) then
-			tab[TCL_REALM]["SETTINGS"]["LVLADJ"] = TCL_SETTINGS[TCL_REALM]["SETTINGS"]["LVLADJ"];
+		if (existingSettings["LVLADJ"] ~= nil) then
+			tab[TCL_REALM]["SETTINGS"]["LVLADJ"] = existingSettings["LVLADJ"];
 		else 
 			tab[TCL_REALM]["SETTINGS"]["LVLADJ"] = "0";
 		end
 	end
 	if (tab[TCL_REALM]["SETTINGS"]["SPLASH"] == nil) then
-		if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SPLASH"] ~= nil) then
-			tab[TCL_REALM]["SETTINGS"]["SPLASH"] = TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SPLASH"];
+		if (existingSettings["SPLASH"] ~= nil) then
+			tab[TCL_REALM]["SETTINGS"]["SPLASH"] = existingSettings["SPLASH"];
 		else 
 			tab[TCL_REALM]["SETTINGS"]["SPLASH"] = "1";
 		end
 	end
 	if (tab[TCL_REALM]["SETTINGS"]["PVPONLY"] == nil) then
-		if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["PVPONLY"] ~= nil) then
-			tab[TCL_REALM]["SETTINGS"]["PVPONLY"] = TCL_SETTINGS[TCL_REALM]["SETTINGS"]["PVPONLY"];
+		if (existingSettings["PVPONLY"] ~= nil) then
+			tab[TCL_REALM]["SETTINGS"]["PVPONLY"] = existingSettings["PVPONLY"];
 		else 
 			tab[TCL_REALM]["SETTINGS"]["PVPONLY"] = "0";
 		end
 	end
 	if (tab[TCL_REALM]["SETTINGS"]["PLAYSOUND"] == nil) then
-		if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["PLAYSOUND"] ~= nil) then
-			tab[TCL_REALM]["SETTINGS"]["PLAYSOUND"] = TCL_SETTINGS[TCL_REALM]["SETTINGS"]["PLAYSOUND"];
+		if (existingSettings["PLAYSOUND"] ~= nil) then
+			tab[TCL_REALM]["SETTINGS"]["PLAYSOUND"] = existingSettings["PLAYSOUND"];
 		else 
 			tab[TCL_REALM]["SETTINGS"]["PLAYSOUND"] = "1";
 		end
 	end
 	if (tab[TCL_REALM]["SETTINGS"]["SNAPSHOT"] == nil) then
-		if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SNAPSHOT"] ~= nil) then
-			tab[TCL_REALM]["SETTINGS"]["SNAPSHOT"] = TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SNAPSHOT"];
+		if (existingSettings["SNAPSHOT"] ~= nil) then
+			tab[TCL_REALM]["SETTINGS"]["SNAPSHOT"] = existingSettings["SNAPSHOT"];
 		else 
 			tab[TCL_REALM]["SETTINGS"]["SNAPSHOT"] = "0";
 		end
 	end
 	if (tab[TCL_REALM]["SETTINGS"]["SHOWCRIT"] == nil) then
-		if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOWCRIT"] ~= nil) then
-			tab[TCL_REALM]["SETTINGS"]["SHOWCRIT"] = TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOWCRIT"];
+		if (existingSettings["SHOWCRIT"] ~= nil) then
+			tab[TCL_REALM]["SETTINGS"]["SHOWCRIT"] = existingSettings["SHOWCRIT"];
 		else 
 			tab[TCL_REALM]["SETTINGS"]["SHOWCRIT"] = "1";
 		end
 	end
 	if ( tab[TCL_REALM]["SETTINGS"]["SHOWHITS"] == nil ) then
-		if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOWHITS"] ~= nil) then
-			tab[TCL_REALM]["SETTINGS"]["SHOWHITS"] = TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOWHITS"];
+		if (existingSettings["SHOWHITS"] ~= nil) then
+			tab[TCL_REALM]["SETTINGS"]["SHOWHITS"] = existingSettings["SHOWHITS"];
 		else 
 			tab[TCL_REALM]["SETTINGS"]["SHOWHITS"] = "1";
 		end
 	end
 	if (tab[TCL_REALM]["SETTINGS"]["ONCLICK"] == nil) then
-		if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["ONCLICK"] ~= nil) then
-			tab[TCL_REALM]["SETTINGS"]["ONCLICK"] = TCL_SETTINGS[TCL_REALM]["SETTINGS"]["ONCLICK"];
+		if (existingSettings["ONCLICK"] ~= nil) then
+			tab[TCL_REALM]["SETTINGS"]["ONCLICK"] = existingSettings["ONCLICK"];
 		else 
 			tab[TCL_REALM]["SETTINGS"]["ONCLICK"] = "0";
 		end
 	end
 	if (tab[TCL_REALM]["SETTINGS"]["SHIFTONCLICK"] == nil) then
-		if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHIFTONCLICK"] ~= nil) then
-			tab[TCL_REALM]["SETTINGS"]["SHIFTONCLICK"] = TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHIFTONCLICK"];
+		if (existingSettings["SHIFTONCLICK"] ~= nil) then
+			tab[TCL_REALM]["SETTINGS"]["SHIFTONCLICK"] = existingSettings["SHIFTONCLICK"];
 		else 
 			tab[TCL_REALM]["SETTINGS"]["SHIFTONCLICK"] = "0";
 		end
 	end
 	if ( tab[TCL_REALM]["SETTINGS"]["FILTER_MOBS"] == nil ) then
-		if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_MOB"] ~= nil) then
-			tab[TCL_REALM]["SETTINGS"]["FILTER_MOB"] = TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_MOB"];
+		if (existingSettings["FILTER_MOBS"] ~= nil) then
+			tab[TCL_REALM]["SETTINGS"]["FILTER_MOBS"] = existingSettings["FILTER_MOBS"];
+		elseif (existingSettings["FILTER_MOB"] ~= nil) then
+			tab[TCL_REALM]["SETTINGS"]["FILTER_MOBS"] = existingSettings["FILTER_MOB"];
 		else 
-			tab[TCL_REALM]["SETTINGS"]["FILTER_MOB"] = "0";
+			tab[TCL_REALM]["SETTINGS"]["FILTER_MOBS"] = "0";
 		end
 	end
 	if ( tab[TCL_REALM]["SETTINGS"]["SHOW_PET"] == nil ) then
-		if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOW_PET"] ~= nil) then
-			tab[TCL_REALM]["SETTINGS"]["SHOW_PET"] = TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOW_PET"];
+		if (existingSettings["SHOW_PET"] ~= nil) then
+			tab[TCL_REALM]["SETTINGS"]["SHOW_PET"] = existingSettings["SHOW_PET"];
 		else 
 			tab[TCL_REALM]["SETTINGS"]["SHOW_PET"] = "0";
 		end
 	end
 	if ( tab[TCL_REALM]["SETTINGS"]["ALL_SPELLS"] == nil ) then
-		if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["ALL_SPELLS"] ~= nil) then
-			tab[TCL_REALM]["SETTINGS"]["ALL_SPELLS"] = TCL_SETTINGS[TCL_REALM]["SETTINGS"]["ALL_SPELLS"];
+		if (existingSettings["ALL_SPELLS"] ~= nil) then
+			tab[TCL_REALM]["SETTINGS"]["ALL_SPELLS"] = existingSettings["ALL_SPELLS"];
 		else 
 			tab[TCL_REALM]["SETTINGS"]["ALL_SPELLS"] = "0";
 		end
