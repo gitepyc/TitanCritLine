@@ -77,6 +77,8 @@ combat-log parser:
   standard contract used by every built-in plugin, no migration needed).
 - Hovering immediately after login, before any combat records exist, shows an
   empty summary without a Lua error.
+- The summary separates player and pet damage from healing and displays
+  `No entries yet` for every empty visible section.
 - Left-click follows the existing configured behavior.
 - Right-click opens the new `Titan_Menu` context menu (`registry.menuContextFunction`)
   showing, in order: a title (added by Titan itself), `Settings`, a divider,
