@@ -3,7 +3,7 @@ DEBUG = false; -- for internal testing only, leave it set to false!
 
 --[[ global addon variables ]]
 local TITAN_CRITLINE_ID =  "CritLine";
-local TITAN_CRITLINE_VERSION = "0.8.3-dev";
+local TITAN_CRITLINE_VERSION = "0.8.4-dev";
 local TITAN_CRITLINE_BUTTON_LABEL = "CL: ";
 local TITAN_CRITLINE_BUTTON_ICON = "Interface\\AddOns\\TitanCritLine\\TitanCritLine";
 local TITAN_CRITLINE_BUTTON_TEXT = "%s/%s/%s";
