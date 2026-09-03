@@ -3,10 +3,11 @@ DEBUG = false; -- for internal testing only, leave it set to false!
 
 --[[ global addon variables ]]
 local TITAN_CRITLINE_ID =  "CritLine";
-local TITAN_CRITLINE_VERSION = "0.8.2-dev";
+local TITAN_CRITLINE_VERSION = "0.8.3-dev";
 local TITAN_CRITLINE_BUTTON_LABEL = "CL: ";
 local TITAN_CRITLINE_BUTTON_ICON = "Interface\\AddOns\\TitanCritLine\\TitanCritLine";
 local TITAN_CRITLINE_BUTTON_TEXT = "%s/%s/%s";
+local TITAN_CRITLINE_RECORD_SOUND = 888; -- SOUNDKIT.LEVEL_UP
 
 local HEADER_TEXT_COLOR  = "|cffffffff";
 local SUBHEADER_TEXT_COLOR  = "|cffCEA208";
@@ -1366,6 +1367,9 @@ function tcl_CreateMobFilter()
 end
 
 function tcl_IsMobInFilter(mobname)
+	if (mobname == nil) then
+		return false;
+	end
 	local returnvalue = false;
 	for k, v in pairs(TCL_MOBFILTER) do
 		if ( v == mobname ) then
@@ -1380,20 +1384,19 @@ end
 
 function tcl_DeleteAllRecordsWithMobsInFilter()
 	tcl_DEBUG("Search for filtered mobs and delete them ...");
-	for attackType, v in pairs(TCL_SETTINGS[TCL_REALM]["DATA"]) do
-		for hitType, v in pairs(TCL_SETTINGS[TCL_REALM]["DATA"][attackType]) do
-			if ( hitType == "CRIT" or hitType == "NORMAL" ) then
-				if ( tcl_IsMobInFilter(TCL_SETTINGS[TCL_REALM]["DATA"][attackType][hitType]["Target"]) ) then
-					tcl_DEBUG("Mob found, backup stats ...");
+	for i = 1, #(TCL_SOURCETYPE) do
+		local sourceData = TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]];
+		for attackType, attackData in pairs(sourceData) do
+			for j = 1, #(TCL_HITTYPE) do
+				local hitType = TCL_HITTYPE[j];
+				local record = attackData[hitType];
+				if (record ~= nil and tcl_IsMobInFilter(record["Target"])) then
+					tcl_DEBUG("Filtered mob found for "..attackType..", backing up stats ...");
 					local filtered = "FILTER_"..hitType;
 					local backup = "OLD_"..hitType;
-					TCL_SETTINGS[TCL_REALM]["DATA"][attackType][filtered] = {};
-					TCL_SETTINGS[TCL_REALM]["DATA"][attackType][filtered] = TCL_SETTINGS[TCL_REALM]["DATA"][attackType][hitType];
-					if ( TCL_SETTINGS[TCL_REALM]["DATA"][attackType][backup] == nil ) then
-						table.remove(TCL_SETTINGS[TCL_REALM]["DATA"][attackType], hitType);
-					else
-						TCL_SETTINGS[TCL_REALM]["DATA"][attackType][hitType] = TCL_SETTINGS[TCL_REALM]["DATA"][attackType][backup];
-					end
+					attackData[filtered] = record;
+					attackData[hitType] = attackData[backup];
+					attackData[backup] = nil;
 				end
 			end
 		end
@@ -1404,20 +1407,18 @@ end
 
 function tcl_RestoreAllRecordsWithMobsInFilter()
 	tcl_DEBUG("Restore all records with filtered mobs ...");
-	for attackType, v in pairs(TCL_SETTINGS[TCL_REALM]["DATA"]) do
-		for hitType, v in pairs(TCL_SETTINGS[TCL_REALM]["DATA"][attackType]) do
-			if ( hitType == "CRIT" or hitType == "NORMAL" ) then
-				if ( tcl_IsMobInFilter(TCL_SETTINGS[TCL_REALM]["DATA"][attackType][hitType]["Target"]) ) then
-					tcl_DEBUG("Mob found, restoring stats ...");
-					local filtered = "FILTER_"..hitType;
-					local backup = "OLD_"..hitType;
-					if ( TCL_SETTINGS[TCL_REALM]["DATA"][attackType][filtered] ~= nil ) then
-						if ( TCL_SETTINGS[TCL_REALM]["DATA"][attackType][backup] == nil ) then
-							TCL_SETTINGS[TCL_REALM]["DATA"][attackType][backup] = {};
-							TCL_SETTINGS[TCL_REALM]["DATA"][attackType][backup] = TCL_SETTINGS[TCL_REALM]["DATA"][attackType][hitType];
-						end
-						TCL_SETTINGS[TCL_REALM]["DATA"][attackType][hitType] = TCL_SETTINGS[TCL_REALM]["DATA"][attackType][filtered];
-					end
+	for i = 1, #(TCL_SOURCETYPE) do
+		local sourceData = TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]];
+		for attackType, attackData in pairs(sourceData) do
+			for j = 1, #(TCL_HITTYPE) do
+				local hitType = TCL_HITTYPE[j];
+				local filtered = "FILTER_"..hitType;
+				local backup = "OLD_"..hitType;
+				if (attackData[filtered] ~= nil) then
+					tcl_DEBUG("Restoring filtered mob stats for "..attackType.." ...");
+					attackData[backup] = attackData[hitType];
+					attackData[hitType] = attackData[filtered];
+					attackData[filtered] = nil;
 				end
 			end
 		end
@@ -1584,8 +1585,8 @@ function tcl_DisplayNewRecord(AttackType, DamageAmount, HitType)
 		TitanCritLineSplashFrame:AddMessage(format(splash_msg, AttackType), 1, 1, 0, 1, 3);
 	end
 	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
-	if(TCL_SETTINGS[TCL_REALM]["SETTINGS"]["PLAYSOUND"] == "1" and SOUNDKIT and SOUNDKIT.LEVEL_UP) then
-		PlaySound(SOUNDKIT.LEVEL_UP);
+	if(TCL_SETTINGS[TCL_REALM]["SETTINGS"]["PLAYSOUND"] == "1") then
+		PlaySound(TITAN_CRITLINE_RECORD_SOUND);
 	end
 	if(TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SNAPSHOT"] == "1") then 
 		TakeScreenshot(); 
@@ -1867,7 +1868,9 @@ end
 function tcl_GetAboutRichText()
 	return 
 		COLOR(HEADER_TEXT_COLOR, TITAN_CRITLINE_ID.." v"..TITAN_CRITLINE_VERSION).."\n\n"..
-		COLOR(SUBHEADER_TEXT_COLOR, "Developers: ").."\n\n"..
+		COLOR(SUBHEADER_TEXT_COLOR, "Current maintainer:").."\n"..
+		COLOR(BODY_TEXT_COLOR, "Epyc").."\n\n"..
+		COLOR(SUBHEADER_TEXT_COLOR, "History:").."\n"..
 		COLOR(BODY_TEXT_COLOR, "Sordit: Concept and Stand-Alone version").."\n"..
 		COLOR(BODY_TEXT_COLOR, "Uggh: Titan Panel version < 0.3.7").."\n"..
 		COLOR(BODY_TEXT_COLOR, "Falli: Titan Panel version > 0.3.7").."\n"..

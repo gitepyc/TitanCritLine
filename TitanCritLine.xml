@@ -362,7 +362,7 @@
 	</Frame>
 	<Frame name="TitanCritLine_AboutFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" inherits="BackdropTemplate" movable="true" parent="UIParent" toplevel="true">
 		<Size>
-			<AbsDimension x="400" y="240"/>
+			<AbsDimension x="400" y="280"/>
 		</Size>
 		<Anchors>
 			<Anchor point="CENTER" relativeTo="TitanCritLine_SettingsFrame" relativePoint="CENTER"/>

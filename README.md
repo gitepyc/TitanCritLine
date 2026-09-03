@@ -5,7 +5,7 @@ damage highscores.
 
 ## Current state
 
-- Addon version: `0.8.2-dev`
+- Addon version: `0.8.3-dev`
 - Current development target: WoW Classic Era / Season of Discovery (`11509`)
 - Titan Panel baseline: unified Titan Panel `9.3.2`
 - Required dependency: Titan Panel (`Titan`)
@@ -37,6 +37,8 @@ functional parity has been demonstrated.
   the verified package layout and the 2026 plugin API transition.
 - [Manual testing](docs/TESTING.md) defines the supported baseline and the
   compatibility checks required before a change can be declared working.
+- [Feature reference](docs/FEATURES.md) explains the settings, filters, and
+  record notification behavior.
 
 ## Installation
 
