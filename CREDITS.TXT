@@ -1,20 +1,37 @@
-DEVELOPERS:
--------------
-CritLine Concept by Sordit
-Titan Conversion until version 0.3.7 by Uggh
-Continued Development from 0.3.7 by FALLI
-Continued Development from 0.4.0e by AidenK
-Continued Development from 0.4.0i by Penddor/Lowpinger
-Continued Development from 4.5 by Penddor
+TitanCritLine credits
+=====================
 
+Current maintenance
+-------------------
 
-Others:
--------------
-Snowblind - Added more vulnerable mobs
-Coani - Hunter autoshoot fix
+Epyc maintains the current Classic Era / Season of Discovery compatibility
+port.
 
-Localization:
--------------
-English (enUS): Sordit
-French (frFR): ArKoS, Franael, Feu
-German (deDE): Nebel, BobTheMage, Sordit, SEmteX, Callas
+Original development history
+----------------------------
+
+- Sordit: original CritLine concept and standalone addon
+- Uggh: Titan Panel conversion through version 0.3.7
+- FALLI: continued development from version 0.3.7
+- AidenK: continued development from version 0.4.0e
+- Penddor and Lowpinger: continued development from version 0.4.0i
+- Penddor: continued development from version 0.4.5
+
+Additional contributions
+------------------------
+
+- Snowblind: expanded the vulnerable-mob filter
+- Coani: Hunter Auto Shot fix
+- gogusrl: special-mob filtering contributions
+- KindDragon: Russian localization
+
+Localization
+------------
+
+- English (enUS): Sordit
+- French (frFR): ArKoS, Franael, Feu
+- German (deDE): Nebel, BobTheMage, Sordit, SEmteX, Callas
+- Russian (ruRU): KindDragon
+
+Names and version ranges above are retained from the original project files and
+changelog. They document authorship history; they do not imply current support.

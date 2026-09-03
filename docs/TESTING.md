@@ -16,20 +16,21 @@ only the game client can validate WoW and Titan Panel APIs.
 | Titan distribution | Unified Titan Panel |
 | Titan version | `9.3.2` |
 | Titan dependency name | `Titan` |
-| Titan Classic compatibility addon | `TitanClassic`, supplied by Titan Panel |
+| Titan package | Complete unified package from CurseForge |
 
-Interface `11509` is shared with CritLog, which is actively used in the target
-Season of Discovery client. Titan Panel 9.3.2 was the newest CurseForge release
-when the compatibility work began. Re-check both values when the client or
-Titan Panel is updated.
+Interface `11509` is used by the tested Season of Discovery client. Titan Panel
+9.3.2, released on 21 August 2026, remained the newest CurseForge release when
+this documentation was reviewed on 3 September 2026. Re-check both values when
+the client or Titan Panel is updated.
 
 ## Installation
 
 1. Install the unified Titan Panel package from CurseForge.
 2. Copy this repository to
    `_classic_era_/Interface/AddOns/TitanCritLine`.
-3. Enable `Titan Panel [Core]`, the applicable Titan Classic compatibility
-   addon, and `Titan Panel [CritLine]` on the character selection screen.
+3. Enable `Titan Panel [Core]`, any Classic component enabled by the unified
+   package for this client, and `Titan Panel [CritLine]` on the character
+   selection screen.
 4. Enable Lua error dialogs once:
 
    ```text
@@ -93,8 +94,8 @@ combat-log parser:
   mark.
 - Enabling the special-mob filter hides an existing record whose target is on
   the localized special-mob list; disabling it restores that record.
-- Settings, Filter, and About can be dismissed with Escape. About also has a
-  visible Close button at the bottom.
+- Escape closes only the topmost CritLine dialog. About also has a visible Close
+  button at the bottom.
 - After at least one normal hit and one critical hit of the same ability, its
   displayed critical percentage is below 100% and matches the recorded counts.
 - Entering combat produces no missing-argument error from

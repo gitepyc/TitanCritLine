@@ -1,3 +1,6 @@
+ARCHIVED LEGACY DOCUMENT — these upgrade instructions apply only to historical
+versions and must not be followed for the current addon.
+
 IMPORTANT UPDATE NOTES: 
 -----------------------
 abcd
