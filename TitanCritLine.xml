@@ -4,6 +4,12 @@
 	<Script file="localizationFR.lua"></Script>
 	<Script file="localizationRU.lua"></Script>
 	<Script file="TitanCritLine.lua"></Script>
+	<Script file="Core\Filters.lua"></Script>
+	<Script file="Core\Records.lua"></Script>
+	<Script file="Core\CombatLog.lua"></Script>
+	<Script file="UI\Summary.lua"></Script>
+	<Script file="Chat.lua"></Script>
+	<Script file="UI\About.lua"></Script>
 	<Frame parent="UIParent">
 		<Frames>
 			<Button frameStrata="FULLSCREEN" inherits="TitanPanelComboTemplate" name="TitanPanelCritLineButton" toplevel="true">
