@@ -66,6 +66,13 @@ setting does not describe the share of highscore entries. Current combat-log
 booleans are interpreted explicitly so a normal hit is no longer mistaken for
 a critical hit merely because the event field exists with the value `false`.
 
+## Titan Panel button values
+
+The three values before the optional healing separator are the highest normal
+direct hit, highest critical direct hit, and highest periodic damage record:
+`normal / critical / DoT`. When healing is included, the values after the
+separator use the same order for direct heal, critical heal, and periodic heal.
+
 ## Record sound
 
 When `Play sound` is enabled, every new normal-hit, critical-hit, or periodic
