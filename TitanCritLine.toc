@@ -1,8 +1,9 @@
 ## Interface: 11509
-## Title: Titan Panel [|cffeda55fCritLine|r] |cff00aa009.3.2|r
+## Title: Titan Panel [|cffeda55fCritLine|r] |cff00aa000.8.8-dev|r
 ## IconTexture: Interface\AddOns\TitanCritLine\TitanCritLine
 ## Notes: Records your highest normal, critical, and periodic damage and healing.
-## Author: Epyc
+## Author: Sordit, Uggh, FALLI, AidenK, Lowpinger, Penddor
+## X-Maintainer: Epyc
 ## OptionalDeps:
 ## Dependencies: Titan
 ## SavedVariables: TitanCritLineSettings
