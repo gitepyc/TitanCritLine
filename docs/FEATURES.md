@@ -58,6 +58,10 @@ separator use the same order for direct heal, critical heal, and HoT. Periodic
 healing is labeled `HOT` in tooltips, chat output, and new-record messages while
 retaining the legacy aggregate-over-the-effect calculation.
 
+The hover summary separates damage and healing records for the player and,
+when enabled, the player's pet. A section with no visible records displays
+`No entries yet`.
+
 ## Record sound
 
 When `Play sound` is enabled, every new normal-hit, critical-hit, or periodic

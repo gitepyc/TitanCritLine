@@ -168,66 +168,73 @@ end
 
 function tcl_GetSummaryRichText()
 	TitanCritLine.EnsureInitialized();
-	local rtfAttack="";
+	local summary = "";
 	local line = "    -------------------------------------------------------------------  \n";
+
+	local function appendSection(sourceType, label, entries)
+		summary = summary..COLOR(HEADER_TEXT_COLOR, sourceType.." "..label).."\n";
+		summary = summary..line;
+		if (entries == "") then
+			summary = summary..COLOR(BODY_TEXT_COLOR, "  No entries yet").."\n";
+		else
+			summary = summary..entries;
+		end
+		summary = summary..line;
+	end
+
 	for i = 1, #(TCL_SOURCETYPE) do
-		local hicrit = tcl_GetHighDMG(TCL_SOURCETYPE[i], "CRIT");
-		local hicritperc = tcl_GetHighestCritPercentage(TCL_SOURCETYPE[i]);	
-		local hidmg = tcl_GetHighDMG(TCL_SOURCETYPE[i]);
-		local hihealcrit = tcl_GetHighDMG(TCL_SOURCETYPE[i], "CRIT", "1");
-		local hihealdmg = tcl_GetHighDMG(TCL_SOURCETYPE[i], "NORMAL", "1");
-		local hidot = tcl_GetHighDMG(TCL_SOURCETYPE[i], "DOT");
-		local hihealdot = tcl_GetHighDMG(TCL_SOURCETYPE[i], "DOT", "1");
-		
-		
-		if ( TCL_SOURCETYPE[i] == "MY") then
-			rtfAttack = rtfAttack..COLOR(HEADER_TEXT_COLOR, TCL_SOURCETYPE[i].." DAMAGE").."\n";
-			rtfAttack = rtfAttack..line;
-		end
-		if ( TCL_SOURCETYPE[i] == "PET" ) then
-			if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOW_PET"] == "1" ) then 
-				rtfAttack = rtfAttack..COLOR(HEADER_TEXT_COLOR, TCL_SOURCETYPE[i].." DAMAGE").."\n";
-				rtfAttack = rtfAttack..line;
-			else
-				break;
-			end
-		end
-		for attackType,v in pairs (TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]]) do
-			if ( TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["Filter"] == "0" ) then
-				local crithits, dothits, normhits, critperc, dotperc, normperc;
-				local normAtk = "";
-				local critAtk = "";
-				local dotAtk = "";
-				
-				if ( TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["CRIT"] == nil) then
+		local sourceType = TCL_SOURCETYPE[i];
+		if (sourceType ~= "PET" or TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOW_PET"] == "1") then
+			local sourceData = TCL_SETTINGS[TCL_REALM]["DATA"][sourceType];
+			local damageEntries = "";
+			local healingEntries = "";
+			local hicrit = tcl_GetHighDMG(sourceType, "CRIT");
+			local hicritperc = tcl_GetHighestCritPercentage(sourceType);
+			local hidmg = tcl_GetHighDMG(sourceType);
+			local hihealcrit = tcl_GetHighDMG(sourceType, "CRIT", "1");
+			local hihealdmg = tcl_GetHighDMG(sourceType, "NORMAL", "1");
+			local hidot = tcl_GetHighDMG(sourceType, "DOT");
+			local hihealdot = tcl_GetHighDMG(sourceType, "DOT", "1");
+
+			for attackType,v in pairs (sourceData) do
+				local attackData = sourceData[attackType];
+				if (attackData["Filter"] == "0") then
+					local crithits, dothits, normhits, critperc, dotperc, normperc;
+					local normAtk = "";
+					local critAtk = "";
+					local dotAtk = "";
+					local representativeRecord = attackData["NORMAL"] or attackData["CRIT"] or attackData["DOT"];
+					local isHealing = representativeRecord and representativeRecord["IsHeal"] == DAMAGE_TYPE_HEAL;
+
+				if (attackData["CRIT"] == nil) then
 					crithits = 0;
 				else
-					if ( TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["CRIT"]["Value"] == nil) then
+					if (attackData["CRIT"]["Value"] == nil) then
 						crithits = 0;
 					else
-						crithits = TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["CRIT"]["Value"];
+						crithits = attackData["CRIT"]["Value"];
 					end
 				end
-				if ( TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["DOT"] == nil) then
+				if (attackData["DOT"] == nil) then
 					dothits = 0;
 				else
-					if ( TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["DOT"]["Value"] == nil) then
+					if (attackData["DOT"]["Value"] == nil) then
 						dothits = 0;
 					else
-						dothits = TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["DOT"]["Value"];
+						dothits = attackData["DOT"]["Value"];
 					end
 				end
-				if ( TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["NORMAL"] == nil) then
+				if (attackData["NORMAL"] == nil) then
 					normhits = 0;
 				else
-					if ( TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["NORMAL"]["Value"] == nil) then
+					if (attackData["NORMAL"]["Value"] == nil) then
 						normhits = 0;
 					else
-						normhits = TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["NORMAL"]["Value"];
+						normhits = attackData["NORMAL"]["Value"];
 					end
 				end
 				local allhits = normhits + crithits + dothits;
-				
+
 				if ( crithits == 0 ) then
 					critperc = 0;
 				else
@@ -244,45 +251,56 @@ function tcl_GetSummaryRichText()
 					normperc = format("%.2f", normhits / ( allhits / 100 ) );
 				end
 				local allmisses;
-				if ( TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["Misses"] == nil) then
+				if (attackData["Misses"] == nil) then
 					allmisses = 0;
 				else
-					allmisses = TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["Misses"];
+					allmisses = attackData["Misses"];
 				end
 				local allswings = allmisses + allhits;
-				local hitperc = format("%.2f", allhits / ( allswings / 100 ) );
-				if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOWHITS"] == "1" ) then
-					rtfAttack = rtfAttack..COLOR(HEADER_TEXT_COLOR, attackType).."\t "..COLOR(HEADER_TEXT_COLOR, allhits).." "..HIT_TEXT.." ("..COLOR(HEADER_TEXT_COLOR, hitperc.." %")..")\n";
-				else
-					rtfAttack = rtfAttack..COLOR(HEADER_TEXT_COLOR, attackType).."\n";
+				local hitperc = 0;
+				if (allswings > 0) then
+					hitperc = format("%.2f", allhits / ( allswings / 100 ) );
 				end
-				for hitType,v in pairs (TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]) do
-					if (hitType == "NORMAL") then 
+				local attackText;
+				if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOWHITS"] == "1" ) then
+					attackText = COLOR(HEADER_TEXT_COLOR, attackType).."\t "..COLOR(HEADER_TEXT_COLOR, allhits).." "..HIT_TEXT.." ("..COLOR(HEADER_TEXT_COLOR, hitperc.." %")..")\n";
+				else
+					attackText = COLOR(HEADER_TEXT_COLOR, attackType).."\n";
+				end
+				for _,hitType in ipairs ({ "NORMAL", "CRIT", "DOT" }) do
+					if (attackData[hitType] ~= nil) then
+						if (hitType == "NORMAL") then
 						local normOrHeal = hidmg;
-						if  (TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType][hitType]["IsHeal"] == "1") then
+						if (attackData[hitType]["IsHeal"] == DAMAGE_TYPE_HEAL) then
 							normOrHeal = hihealdmg;
 						end
-						normAtk = tcl_GenToolDMG(TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType], hitType, normOrHeal, normperc, 0);
-					elseif ( hitType == "CRIT" ) then
+						normAtk = tcl_GenToolDMG(attackData, hitType, normOrHeal, normperc, 0);
+						elseif ( hitType == "CRIT" ) then
 						local normOrHeal = hicrit;
-						if  (TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType][hitType]["IsHeal"] == "1") then
+						if (attackData[hitType]["IsHeal"] == DAMAGE_TYPE_HEAL) then
 							normOrHeal = hihealcrit;
-						end		
-						critAtk = tcl_GenToolDMG(TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType], hitType, normOrHeal, critperc, hicritperc);						
-					elseif ( hitType == "DOT" ) then
+						end
+						critAtk = tcl_GenToolDMG(attackData, hitType, normOrHeal, critperc, hicritperc);
+						elseif ( hitType == "DOT" ) then
 						local normOrHeal = hidot;
-						if  (TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType][hitType]["IsHeal"] == "1") then
+						if (attackData[hitType]["IsHeal"] == DAMAGE_TYPE_HEAL) then
 							normOrHeal = hihealdot;
 						end
-						dotAtk = tcl_GenToolDMG(TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType], hitType, normOrHeal, dotperc, 0);
+						dotAtk = tcl_GenToolDMG(attackData, hitType, normOrHeal, dotperc, 0);
+						end
 					end
 				end
-				rtfAttack = rtfAttack..normAtk..critAtk..dotAtk;
+				attackText = attackText..normAtk..critAtk..dotAtk;
+				if (isHealing) then
+					healingEntries = healingEntries..attackText;
+				else
+					damageEntries = damageEntries..attackText;
+				end
+				end
 			end
+			appendSection(sourceType, "DAMAGE", damageEntries);
+			appendSection(sourceType, "HEALING", healingEntries);
 		end
-		rtfAttack = rtfAttack..line;
 	end
-	return rtfAttack
+	return summary;
 end
-
-
