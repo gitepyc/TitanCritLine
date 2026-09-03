@@ -362,7 +362,22 @@ function tcl_Reset()
 	for index = 1, #(TCL_SOURCETYPE) do
 		TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[index]] = {};
 	end
-	TitanPanelButton_UpdateTooltip( self );
+	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
+end
+
+StaticPopupDialogs["TITAN_CRITLINE_CONFIRM_RESET"] = {
+	text = "Are you sure you want to reset all CritLine records?",
+	button1 = YES,
+	button2 = NO,
+	OnAccept = tcl_Reset,
+	timeout = 0,
+	whileDead = true,
+	hideOnEscape = true,
+	preferredIndex = 3,
+};
+
+function tcl_RequestReset()
+	StaticPopup_Show("TITAN_CRITLINE_CONFIRM_RESET");
 end
 
 function tcl_SettingsClose()
@@ -437,10 +452,6 @@ function tcl_FilterClose()
 		text:Hide();
 	end
 	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
-end
-
-function tcl_ManualUpdate()
-	tcl_Update(TCL_SETTINGS["VERSION"]);
 end
 
 --[[ titan panel functions ]]
