@@ -1,8 +1,8 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-	<Script file="localizationEN.lua"></Script>
-	<Script file="localizationDE.lua"></Script>
-	<Script file="localizationFR.lua"></Script>
-	<Script file="localizationRU.lua"></Script>
+	<Script file="Localization\enUS.lua"></Script>
+	<Script file="Localization\deDE.lua"></Script>
+	<Script file="Localization\frFR.lua"></Script>
+	<Script file="Localization\ruRU.lua"></Script>
 	<Script file="TitanCritLine.lua"></Script>
 	<Script file="Core\Filters.lua"></Script>
 	<Script file="Core\Records.lua"></Script>

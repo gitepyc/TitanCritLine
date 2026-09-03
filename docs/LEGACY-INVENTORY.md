@@ -4,6 +4,10 @@ This document inventories TitanCritLine 0.7.1 as imported. It describes what
 the source appears to do; it does not claim that those paths work on a current
 World of Warcraft client.
 
+This is a historical snapshot, not current architecture documentation. For the
+current code and completed compatibility work, see the
+[compatibility roadmap](MODERNIZATION-PLAN.md).
+
 ## Baseline
 
 | Item | Legacy value |

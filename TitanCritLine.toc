@@ -1,8 +1,9 @@
 ## Interface: 11509
 ## Title: Titan Panel [|cffeda55fCritLine|r] |cff00aa000.8.8-dev|r
 ## IconTexture: Interface\AddOns\TitanCritLine\TitanCritLine
-## Notes: Saves your high normal and critical damage records and flashes a message if your break the record.
-## Author: AidenK, Penddor of Eitrigg
+## Notes: Records your highest normal, critical, and periodic damage and healing.
+## Author: Sordit, Uggh, FALLI, AidenK, Lowpinger, Penddor
+## X-Maintainer: Epyc
 ## OptionalDeps:
 ## Dependencies: Titan
 ## SavedVariables: TitanCritLineSettings
