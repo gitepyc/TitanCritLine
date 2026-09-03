@@ -10,6 +10,23 @@ release. The original changelog is preserved in
 actual wording in the commit message, not here - this file (and each
 GitHub release's notes) are a mechanical render of it, not a second
 drafting pass.
+## [0.8.1](https://github.com/gitepyc/TitanCritLine/tree/0.8.1) (2026-09-07)
+[Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.0...0.8.1) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
+
+- **fix:** initialize legacy UI data before use
+
+- **fix:** adapt legacy runtime inputs to current client
+
+- **fix:** update UI sounds and refresh records immediately
+
+- **fix:** restore record sound and update credits
+
+- **fix:** restore reversible special mob filtering
+
+- **fix:** modernize crit and special mob detection
+
+- **fix:** improve nested dialog behavior
+
 ## [0.8.0](https://github.com/gitepyc/TitanCritLine/tree/0.8.0) (2026-09-07)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.7.1...0.8.0) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
 
