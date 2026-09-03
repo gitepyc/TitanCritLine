@@ -1,3 +1,6 @@
+ARCHIVED LEGACY DOCUMENT — retained unchanged apart from this heading.
+For current changes, see ../../CHANGELOG.md.
+
 Titan [CritLine] Changelog
 --------------------------
 v0.7.1

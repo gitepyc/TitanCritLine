@@ -1,9 +1,15 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-	<Script file="localizationEN.lua"></Script>
-	<Script file="localizationDE.lua"></Script>
-	<Script file="localizationFR.lua"></Script>
-	<Script file="localizationRU.lua"></Script>
+	<Script file="Localization\enUS.lua"></Script>
+	<Script file="Localization\deDE.lua"></Script>
+	<Script file="Localization\frFR.lua"></Script>
+	<Script file="Localization\ruRU.lua"></Script>
 	<Script file="TitanCritLine.lua"></Script>
+	<Script file="Core\Filters.lua"></Script>
+	<Script file="Core\Records.lua"></Script>
+	<Script file="Core\CombatLog.lua"></Script>
+	<Script file="UI\Summary.lua"></Script>
+	<Script file="Chat.lua"></Script>
+	<Script file="UI\About.lua"></Script>
 	<Frame parent="UIParent">
 		<Frames>
 			<Button frameStrata="FULLSCREEN" inherits="TitanPanelComboTemplate" name="TitanPanelCritLineButton" toplevel="true">
@@ -22,18 +28,6 @@
 				</Scripts>
 			</Button>
 		</Frames>
-	</Frame>
-	<Frame hidden="true" id="1" inherits="UIDropDownMenuTemplate" name="TitanPanelCritLine_Button_Menu">
-		<Size>
-			<AbsDimension x="10" y="10"></AbsDimension>
-		</Size>
-		<Anchors>
-			<Anchor point="TOP">
-				<Offset>
-					<AbsDimension x="10" y="-60" />
-				</Offset>
-			</Anchor>
-		</Anchors>
 	</Frame>
 	<MessageFrame frameStrata="PARENT" insertMode="TOP" name="TitanCritLineSummaryFrame" parent="UIParent" toplevel="true">
 		<Size>
@@ -69,9 +63,9 @@
 			<OnClick>
 					tcl_SettingsOptionButton_OnClick(self, self:GetID());
 					if ( self:GetChecked() ) then
-						PlaySound("igMainMenuOptionCheckBoxOff");
+						PlaySound(857); <!-- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF -->
 					else
-						PlaySound("igMainMenuOptionCheckBoxOn");
+						PlaySound(856); <!-- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON -->
 					end
 			</OnClick>
 			<OnEnter>
@@ -118,7 +112,7 @@
 			</OnLeave>
 		</Scripts>
 	</Slider>
-	<Frame name="TitanCritLine_SettingsFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" movable="true" parent="UIParent" toplevel="true">
+	<Frame name="TitanCritLine_SettingsFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" inherits="BackdropTemplate" movable="true" parent="UIParent" toplevel="true">
 		<Size>
 			<AbsDimension x="325" y="640"/>
 		</Size>
@@ -129,17 +123,24 @@
 				</Offset>
 			</Anchor>
 		</Anchors>
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11"/>
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32"/>
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="32"/>
-			</EdgeSize>
-		</Backdrop>
+		<Scripts>
+			<OnLoad>
+				self:RegisterForDrag("LeftButton");
+				self:SetClampedToScreen(true);
+			</OnLoad>
+			<OnShow>
+				tcl_PushEscapeFrame(self:GetName());
+			</OnShow>
+			<OnHide>
+				tcl_PopEscapeFrame(self:GetName());
+			</OnHide>
+			<OnDragStart>
+				self:StartMoving();
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing();
+			</OnDragStop>
+		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">
 				<Texture name="$parent_Header" file="Interface\DialogFrame\UI-DialogBox-Header">
@@ -274,8 +275,8 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						getglobal(self:GetName().."Low"):SetText("Off");
-						getglobal(self:GetName().."High"):SetText("10");
+						_G[self:GetName().."Low"]:SetText("Off");
+						_G[self:GetName().."High"]:SetText("10");
 					</OnLoad>
 					<OnValueChanged>
 						tcl_SettingsSlider_OnValueChanged(self);
@@ -322,7 +323,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						PlaySound("gsTitleOptionOK");
+						PlaySound(852); <!-- SOUNDKIT.IG_MAINMENU_OPTION -->
 						tcl_About();
 					</OnClick>
 				</Scripts>
@@ -340,12 +341,12 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						PlaySound("gsTitleOptionOK");
-						tcl_Reset();
+						PlaySound(852); <!-- SOUNDKIT.IG_MAINMENU_OPTION -->
+						tcl_RequestReset();
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="$parent_Update" inherits="GameMenuButtonTemplate" text="TITAN_CRITLINE_OPTION_UPDATE_TEXT">
+			<Button name="$parent_Filter" inherits="GameMenuButtonTemplate" text="TITAN_CRITLINE_OPTION_FILTER_TEXT">
 				<Size>
 					<AbsDimension x="200" y="24"/>
 				</Size>
@@ -358,49 +359,38 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						PlaySound("gsTitleOptionOK");
-						tcl_ManualUpdate();
-					</OnClick>
-				</Scripts>
-			</Button>
-			<Button name="$parent_Filter" inherits="GameMenuButtonTemplate" text="TITAN_CRITLINE_OPTION_FILTER_TEXT">
-				<Size>
-					<AbsDimension x="200" y="24"/>
-				</Size>
-				<Anchors>
-					<Anchor point="BOTTOM" relativeTo="$parent_Update" relativePoint="TOP">
-						<Offset>
-							<AbsDimension x="0" y="15"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						PlaySound("gsTitleOptionOK");
+						PlaySound(852); <!-- SOUNDKIT.IG_MAINMENU_OPTION -->
 						tcl_Filter();
 					</OnClick>
 				</Scripts>
 			</Button>
 		</Frames>
 	</Frame>
-	<Frame name="TitanCritLine_AboutFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" movable="true" parent="UIParent" toplevel="true">
+	<Frame name="TitanCritLine_AboutFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" inherits="BackdropTemplate" movable="true" parent="UIParent" toplevel="true">
 		<Size>
-			<AbsDimension x="400" y="240"/>
+			<AbsDimension x="400" y="320"/>
 		</Size>
 		<Anchors>
 			<Anchor point="CENTER" relativeTo="TitanCritLine_SettingsFrame" relativePoint="CENTER"/>
 		</Anchors>
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11"/>
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32"/>
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="32"/>
-			</EdgeSize>
-		</Backdrop>
+		<Scripts>
+			<OnLoad>
+				self:RegisterForDrag("LeftButton");
+				self:SetClampedToScreen(true);
+			</OnLoad>
+			<OnShow>
+				tcl_PushEscapeFrame(self:GetName());
+			</OnShow>
+			<OnHide>
+				tcl_PopEscapeFrame(self:GetName());
+			</OnHide>
+			<OnDragStart>
+				self:StartMoving();
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing();
+			</OnDragStop>
+		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">
 				<Texture name="$parentHeader" file="Interface\DialogFrame\UI-DialogBox-Header">
@@ -424,9 +414,25 @@
 						</Anchor>
 					</Anchors>
 				</FontString>
-				<FontString name="$parent_Text" inherits="GameFontNormalLarge" >
+				<FontString name="$parent_Text" inherits="GameFontNormalLarge" justifyH="CENTER">
 					<Anchors>
-						<Anchor point="CENTER"/>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-42"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parent_History" inherits="GameFontNormalSmall" justifyH="CENTER">
+					<Size>
+						<AbsDimension x="350" y="130"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parent_Text" relativePoint="BOTTOM">
+							<Offset>
+								<AbsDimension x="0" y="-18"/>
+							</Offset>
+						</Anchor>
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -446,6 +452,24 @@
 					</OnClick>
 				</Scripts>
 			</Button>
+			<Button inherits="GameMenuButtonTemplate" name="$parent_Close" text="CLOSE">
+				<Size>
+					<AbsDimension x="140" y="24"/>
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="20"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						PlaySound(852); <!-- SOUNDKIT.IG_MAINMENU_OPTION -->
+						tcl_AboutClose();
+					</OnClick>
+				</Scripts>
+			</Button>
 		</Frames>
 	</Frame>
 	<CheckButton name="TitanCritLine_FilterOptionButtonTemplate" inherits="UICheckButtonTemplate" hidden="true" virtual="true">
@@ -459,14 +483,14 @@
 			<OnClick>
 					tcl_FilterOptionButton_OnClick(self, self:GetID());
 					if ( self:GetChecked() ) then
-						PlaySound("igMainMenuOptionCheckBoxOff");
+						PlaySound(857); <!-- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF -->
 					else
-						PlaySound("igMainMenuOptionCheckBoxOn");
+						PlaySound(856); <!-- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON -->
 					end
 			</OnClick>
 		</Scripts>
 	</CheckButton>
-	<Frame name="TitanCritLine_FilterFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" movable="true" parent="UIParent" toplevel="true">
+	<Frame name="TitanCritLine_FilterFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" inherits="BackdropTemplate" movable="true" parent="UIParent" toplevel="true">
 		<Size>
 			<AbsDimension x="300" y="490"/>
 		</Size>
@@ -477,17 +501,14 @@
 				</Offset>
 			</Anchor>
 		</Anchors>
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11"/>
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32"/>
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="32"/>
-			</EdgeSize>
-		</Backdrop>
+		<Scripts>
+			<OnShow>
+				tcl_PushEscapeFrame(self:GetName());
+			</OnShow>
+			<OnHide>
+				tcl_PopEscapeFrame(self:GetName());
+			</OnHide>
+		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">
 				<Texture name="$parentHeader" file="Interface\DialogFrame\UI-DialogBox-Header">
@@ -890,7 +911,7 @@
 			</CheckButton>
 		</Frames>
 	</Frame>
-	<Frame name="TitanCritLine_OverviewFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" movable="true" parent="UIParent" toplevel="true">
+	<Frame name="TitanCritLine_OverviewFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" inherits="BackdropTemplate" movable="true" parent="UIParent" toplevel="true">
 		<Size>
 			<AbsDimension x="600" y="450"/>
 		</Size>
@@ -901,17 +922,6 @@
 				</Offset>
 			</Anchor>
 		</Anchors>
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11"/>
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32"/>
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="32"/>
-			</EdgeSize>
-		</Backdrop>
 		<Layers>
 			<Layer level="ARTWORK">
 				<Texture name="$parentHeader" file="Interface\DialogFrame\UI-DialogBox-Header">
