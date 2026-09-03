@@ -1,65 +1,78 @@
 # TitanCritLine
 
-TitanCritLine is a legacy Titan Panel addon that records normal and critical
-damage highscores.
+TitanCritLine is a Titan Panel plugin for WoW Classic Era and Season of
+Discovery. It records personal highscores for normal, critical, and periodic
+damage and healing, including pet and guardian records.
 
-## Current state
+This project is a compatibility restoration of TitanCritLine 0.7.1. The goal
+is to preserve its original behavior on a current client, not to add unrelated
+features. The imported source remains archived on `main` and tag `0.7.1`;
+active development happens on `dev`.
 
-- Addon version: `0.8.8-dev`
-- Current development target: WoW Classic Era / Season of Discovery (`11509`)
-- Titan Panel baseline: unified Titan Panel `9.3.2`
-- Required dependency: Titan Panel (`Titan`)
-- Original authors and contributors are listed in `CREDITS.TXT`.
+## Supported baseline
 
-This repository initially preserves the addon as received, apart from line
-ending normalization and exclusion of local Eclipse/LDT workspace metadata.
-The metadata now matches the working Season of Discovery baseline used by
-CritLog. Runtime compatibility validation is in progress; follow the
-[manual test guide](docs/TESTING.md) when testing in game.
+| Component | Baseline |
+| --- | --- |
+| Addon version | `0.8.8-dev` |
+| WoW flavor | Classic Era / Season of Discovery |
+| WoW interface | `11509` |
+| Titan Panel | Unified Titan Panel 9.x |
+| Verified Titan release | `9.3.2` (21 August 2026) |
+| Required addon | `Titan` |
 
-The legacy source is preserved on `main` and by the `0.7.1` tag. Active work
-targets `dev`; feature and modernization branches should open pull requests
-against `dev`.
-
-## Modernization
-
-The addon predates the current WoW and Titan Panel APIs. No compatibility claim
-should be made until the first in-game test has passed. The immediate goal is a
-conservative compatibility port that restores the 0.7.1 behavior without adding
-features or redesigning the addon. Structural refactoring is deferred until
-functional parity has been demonstrated.
-
-- [Legacy inventory](docs/LEGACY-INVENTORY.md) describes the current behavior,
-  structure, data, and known risks.
-- [Modernization plan](docs/MODERNIZATION-PLAN.md) defines the target
-  architecture, priorities, migration path, and acceptance criteria.
-- [Titan Panel 9 compatibility](docs/TITAN-PANEL-9-COMPATIBILITY.md) records
-  the verified package layout and the 2026 plugin API transition.
-- [Manual testing](docs/TESTING.md) defines the supported baseline and the
-  compatibility checks required before a change can be declared working.
-- [Feature reference](docs/FEATURES.md) explains the settings, filters, and
-  record notification behavior.
+TitanCritLine has been tested in game with Titan Panel 9.x. Registration,
+context menus, settings, damage and healing tracking, record notifications,
+and sound playback are confirmed working. See the [manual test guide](docs/TESTING.md)
+for the remaining regression checklist.
 
 ## Installation
 
-Copy the repository contents into a directory named `TitanCritLine` below the
-client's `Interface/AddOns` directory. Install and enable Titan Panel as well.
+1. Install the current unified [Titan Panel](https://www.curseforge.com/wow/addons/titan-panel)
+   package.
+2. Copy or extract this addon as
+   `_classic_era_/Interface/AddOns/TitanCritLine`.
+3. Enable Titan Panel and Titan Panel CritLine for the character.
+4. Add CritLine to a Titan bar from Titan Panel's plugin menu.
 
-## Repository contents
+## Usage
 
-- `TitanCritLine.toc`: addon metadata and load entry point
-- `TitanCritLine.xml`: UI and script declarations
-- `TitanCritLine.lua`: bootstrap, settings, and persistence
-- `Core/CombatLog.lua`: current combat-log decoding and event routing
-- `Core/Filters.lua`: special-mob IDs and reversible record filtering
-- `Core/Records.lua`: record creation, miss accounting, and notifications
-- `Chat.lua`: record formatting and group/guild chat output
-- `UI/About.lua`: About dialog behavior and content
-- `UI/Summary.lua`: record queries and Titan tooltip rendering
-- `localization*.lua`: bundled translations
-- `TitanCritLine.tga`: addon icon
-- `CHANGELOG.TXT`, `NOTES.TXT`, `BUGS.TXT`, `CREDITS.TXT`: legacy project documentation
+- Hover over CritLine for the record summary.
+- Right-click it for Titan Panel options and CritLine settings.
+- Use `Filter` to include or exclude individual recorded abilities from the
+  displayed highscores.
+- Use `Reset All` to erase all stored records after confirming the prompt.
+
+The complete behavior of every setting and displayed value is documented in
+the [feature reference](docs/FEATURES.md).
+
+## Documentation
+
+- [Feature reference](docs/FEATURES.md) — settings, filters, records, and notifications
+- [Manual testing](docs/TESTING.md) — supported baseline and regression checklist
+- [Compatibility roadmap](docs/MODERNIZATION-PLAN.md) — completed and deferred modernization work
+- [Titan Panel 9 integration](docs/TITAN-PANEL-9-COMPATIBILITY.md) — verified dependency and API contracts
+- [Legacy inventory](docs/LEGACY-INVENTORY.md) — original 0.7.1 design and risks
+- [Legacy documents](docs/legacy/) — original changelog, upgrade notes, and retired support instructions
+- [Credits](CREDITS.TXT) — current maintenance and original contributors
+- [Changelog](CHANGELOG.md) — development history after the 0.7.1 import
+
+## Project layout
+
+- `TitanCritLine.toc` — addon metadata and entry point
+- `TitanCritLine.xml` — frames and UI declarations
+- `TitanCritLine.lua` — bootstrap, settings, and persistence
+- `Core/` — combat-log decoding, record handling, and special-mob filters
+- `UI/` — summary tooltip and About dialog
+- `Localization/` — bundled enUS, deDE, frFR, and ruRU strings
+- `Chat.lua` — explicit party, raid, and guild record output
+
+## Development
+
+Open compatibility and maintenance pull requests against `dev`. Keep user
+documentation, code comments, commit messages, and new UI text in English.
+Run the repository lint workflow and the relevant sections of the manual test
+guide before merging runtime changes.
 
 ## License
 
-TitanCritLine is distributed under the MIT License. See [LICENSE](LICENSE).
+TitanCritLine is distributed under the [MIT License](LICENSE).
