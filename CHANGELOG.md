@@ -10,6 +10,21 @@ release. The original changelog is preserved in
 actual wording in the commit message, not here - this file (and each
 GitHub release's notes) are a mechanical render of it, not a second
 drafting pass.
+## [0.8.4](https://github.com/gitepyc/TitanCritLine/tree/0.8.4) (2026-09-07)
+[Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.3...0.8.4) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
+
+- **chore:** update addon author metadata
+
+- **chore:** show Titan Panel version in addon title
+
+- **chore:** align Titan title version format
+
+- **docs:** refresh project documentation and layout
+
+- **fix:** correct level adjustment help text
+
+- **fix:** separate damage and healing tooltip sections
+
 ## [0.8.3](https://github.com/gitepyc/TitanCritLine/tree/0.8.3) (2026-09-07)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.2...0.8.3) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
 
