@@ -33,9 +33,22 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Titan", true)
 local LB = LibStub("AceLocale-3.0"):GetLocale("Titan_CritLine", true)
 local TitanCritLine = LibStub("AceAddon-3.0"):NewAddon("TitanCritLine", "AceHook-3.0", "AceTimer-3.0")
 
+local function tcl_EnsureInitialized()
+	if (TCL_SETTINGS == nil) then
+		TCL_SETTINGS = {};
+	end
+	if (TCL_DOT == nil) then
+		TCL_DOT = {};
+	end
+
+	tcl_Initialize();
+	tcl_InitDOT();
+end
+
 
 --[[ functions for the setup dialog ]]
 function tcl_DisplaySettings()
+	tcl_EnsureInitialized();
 	TitanCritLine_SettingsFrame_HeaderText:SetText(TITAN_CRITLINE_ID.." "..TITAN_CRITLINE_MENU_SETTINGS);
 	TitanCritLine_SettingsFrame_Option1Text:SetText(COLOR(SUBHEADER_TEXT_COLOR, TITAN_CRITLINE_OPTION_SPLASH_TEXT));
 	TitanCritLine_SettingsFrame_Option1.HelpText = TITAN_CRITLINE_OPTION_SPLASH_HELPTEXT;
@@ -1692,6 +1705,7 @@ function tcl_GenToolDMG(dbSource, hitType, hidmg, dmgperc, hidmgperc)
 end
 
 function tcl_GetSummaryRichText()
+	tcl_EnsureInitialized();
 	local rtfAttack="";
 	local line = "    -------------------------------------------------------------------  \n";
 	for i = 1, #(TCL_SOURCETYPE) do
