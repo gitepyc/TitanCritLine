@@ -10,6 +10,13 @@ release. The original changelog is preserved in
 actual wording in the commit message, not here - this file (and each
 GitHub release's notes) are a mechanical render of it, not a second
 drafting pass.
+## [0.8.3](https://github.com/gitepyc/TitanCritLine/tree/0.8.3) (2026-09-07)
+[Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.2...0.8.3) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
+
+- **fix:** simplify settings actions and polish about dialog
+
+- **fix:** Escape closes only the topmost panel, not all three at once
+
 ## [0.8.2](https://github.com/gitepyc/TitanCritLine/tree/0.8.2) (2026-09-07)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.1...0.8.2) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
 
