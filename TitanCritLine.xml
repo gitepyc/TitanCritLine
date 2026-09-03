@@ -374,8 +374,16 @@
 		</Anchors>
 		<Scripts>
 			<OnLoad>
-				table.insert(UISpecialFrames, self:GetName());
+				table.insert(UISpecialFrames, 1, self:GetName());
+				self:RegisterForDrag("LeftButton");
+				self:SetClampedToScreen(true);
 			</OnLoad>
+			<OnDragStart>
+				self:StartMoving();
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing();
+			</OnDragStop>
 		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">
@@ -489,7 +497,7 @@
 		</Anchors>
 		<Scripts>
 			<OnLoad>
-				table.insert(UISpecialFrames, self:GetName());
+				table.insert(UISpecialFrames, 1, self:GetName());
 			</OnLoad>
 		</Scripts>
 		<Layers>
