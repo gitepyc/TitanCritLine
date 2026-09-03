@@ -19,7 +19,7 @@ changes target `dev` through pull requests.
 | Titan distribution | Unified Titan Panel |
 | Verified Titan version | `9.3.2` |
 | Titan dependency | `Titan` |
-| Addon version | `0.8.8-dev` |
+| Addon version | `0.8.9-dev` |
 
 ## Completed work
 

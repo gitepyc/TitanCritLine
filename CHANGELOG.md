@@ -4,6 +4,14 @@ This file records the compatibility port developed after the archived 0.7.1
 release. The original changelog is preserved in
 [`docs/legacy/CHANGELOG-0.7.1.txt`](docs/legacy/CHANGELOG-0.7.1.txt).
 
+## 0.8.9-dev
+
+- Split the Titan hover summary into separate damage and healing sections for
+  the player and enabled pet records.
+- Added `No entries yet` placeholders to empty summary sections.
+- Updated the active addon author metadata while preserving original credits.
+- Displayed the verified Titan Panel version in the addon-list title.
+
 ## 0.8.8-dev
 
 - Removed the redundant Manual Update action.

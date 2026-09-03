@@ -7,5 +7,5 @@
 ## Dependencies: Titan
 ## SavedVariables: TitanCritLineSettings
 ## SavedVariablesPerCharacter: TCL_SETTINGS, TCL_DOT
-## Version: 0.8.8-dev
+## Version: 0.8.9-dev
 TitanCritLine.xml
