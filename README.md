@@ -13,7 +13,7 @@ active development happens on `dev`.
 
 | Component | Baseline |
 | --- | --- |
-| Addon version | `0.8.8-dev` |
+| Addon version | `0.8.9-dev` |
 | WoW flavor | Classic Era / Season of Discovery |
 | WoW interface | `11509` |
 | Titan Panel | Unified Titan Panel 9.x |

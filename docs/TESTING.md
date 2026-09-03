@@ -88,6 +88,8 @@ combat-log parser:
   dead XML.
 - Selecting `Settings` opens the settings frame with its backdrop, labels,
   checkboxes, and level-adjustment slider visible.
+- The Settings window can be moved by dragging its background and remains
+  clamped to the screen.
 - `Filter`, `Reset All`, and `About` execute their actions without a `PlaySound`
   argument error.
 - `Reset All` displays a Yes/No confirmation and changes records only after

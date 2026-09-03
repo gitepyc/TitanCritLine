@@ -124,12 +124,22 @@
 			</Anchor>
 		</Anchors>
 		<Scripts>
+			<OnLoad>
+				self:RegisterForDrag("LeftButton");
+				self:SetClampedToScreen(true);
+			</OnLoad>
 			<OnShow>
 				tcl_PushEscapeFrame(self:GetName());
 			</OnShow>
 			<OnHide>
 				tcl_PopEscapeFrame(self:GetName());
 			</OnHide>
+			<OnDragStart>
+				self:StartMoving();
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing();
+			</OnDragStop>
 		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">
