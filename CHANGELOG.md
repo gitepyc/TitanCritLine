@@ -4,6 +4,11 @@ This file records the compatibility port developed after the archived 0.7.1
 release. The original changelog is preserved in
 [`docs/legacy/CHANGELOG-0.7.1.txt`](docs/legacy/CHANGELOG-0.7.1.txt).
 
+## 0.9
+
+- Made the Settings window movable and clamped it to the visible screen.
+- Promoted the tested compatibility work to the 0.9 release.
+
 ## 0.8.9-dev
 
 - Split the Titan hover summary into separate damage and healing sections for
