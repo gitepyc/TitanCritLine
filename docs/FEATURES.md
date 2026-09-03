@@ -71,7 +71,9 @@ a critical hit merely because the event field exists with the value `false`.
 The three values before the optional healing separator are the highest normal
 direct hit, highest critical direct hit, and highest periodic damage record:
 `normal / critical / DoT`. When healing is included, the values after the
-separator use the same order for direct heal, critical heal, and periodic heal.
+separator use the same order for direct heal, critical heal, and HoT. Periodic
+healing is labeled `HOT` in tooltips, chat output, and new-record messages while
+retaining the legacy aggregate-over-the-effect calculation.
 
 ## Record sound
 

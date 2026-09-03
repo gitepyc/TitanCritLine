@@ -8,6 +8,8 @@ local TITAN_CRITLINE_BUTTON_LABEL = "CL: ";
 local TITAN_CRITLINE_BUTTON_ICON = "Interface\\AddOns\\TitanCritLine\\TitanCritLine";
 local TITAN_CRITLINE_BUTTON_TEXT = "%s/%s/%s";
 local TITAN_CRITLINE_RECORD_SOUND = 888; -- SOUNDKIT.LEVEL_UP
+local TITAN_CRITLINE_NEW_HOT_RECORD_MSG = "New HOT %s Record!";
+local HOT_TEXT = "HOT";
 
 local HEADER_TEXT_COLOR  = "|cffffffff";
 local SUBHEADER_TEXT_COLOR  = "|cffCEA208";
@@ -39,7 +41,21 @@ local TRACK_DMG = true;
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Titan", true)
 local LB = LibStub("AceLocale-3.0"):GetLocale("Titan_CritLine", true)
-local TitanCritLine = LibStub("AceAddon-3.0"):NewAddon("TitanCritLine", "AceHook-3.0", "AceTimer-3.0")
+TitanCritLine = LibStub("AceAddon-3.0"):NewAddon("TitanCritLine", "AceHook-3.0", "AceTimer-3.0")
+TitanCritLine.ID = TITAN_CRITLINE_ID;
+TitanCritLine.VERSION = TITAN_CRITLINE_VERSION;
+TitanCritLine.COLORS = {
+	HEADER = HEADER_TEXT_COLOR,
+	SUBHEADER = SUBHEADER_TEXT_COLOR,
+	BODY = BODY_TEXT_COLOR,
+};
+TitanCritLine.HIT_TYPES = TCL_HITTYPE;
+TitanCritLine.SOURCE_TYPES = TCL_SOURCETYPE;
+TitanCritLine.SPECIAL_MOB_IDS = TCL_SPECIAL_MOB_IDS;
+
+function TitanCritLine:GetRealmKey()
+	return TCL_REALM;
+end
 
 local TITAN_CRITLINE_DIALOG_BACKDROP = {
 	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
@@ -53,6 +69,7 @@ local TITAN_CRITLINE_DIALOG_BACKDROP = {
 local function tcl_ApplyDialogBackdrop(frame)
 	frame:SetBackdrop(TITAN_CRITLINE_DIALOG_BACKDROP);
 end
+TitanCritLine.ApplyDialogBackdrop = tcl_ApplyDialogBackdrop;
 
 local function tcl_EnsureInitialized()
 	if (TCL_SETTINGS == nil) then
@@ -349,26 +366,6 @@ function tcl_SettingsClose()
 		tcl_FilterClose();
 	end
 	TitanCritLine_SettingsFrame:Hide();
-	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
-end
-
-function tcl_About()
-	if ( TitanCritLine_AboutFrame:IsVisible() ) then
-		tcl_AboutClose();
-	else 
-		local text = _G["TitanCritLine_AboutFrame_Text"];
-		local history = _G["TitanCritLine_AboutFrame_History"];
-		text:Show();
-		text:SetText( tcl_GetAboutRichText() );
-		history:Show();
-		history:SetText( tcl_GetAboutHistoryRichText() );
-		tcl_ApplyDialogBackdrop(TitanCritLine_AboutFrame);
-		TitanCritLine_AboutFrame:Show();
-	end
-end
-
-function tcl_AboutClose()
-	TitanCritLine_AboutFrame:Hide();
 	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
 end
 
@@ -1366,79 +1363,6 @@ function tcl_Initialize(tcl_Table)
 	tcl_DEBUG("Initialization Complete.");
 end
 
-local function tcl_GetNpcId(unitGUID)
-	if (type(unitGUID) ~= "string") then
-		return nil;
-	end
-	local unitType, _, _, _, _, npcId = strsplit("-", unitGUID);
-	if (unitType ~= "Creature" and unitType ~= "Vehicle") then
-		return nil;
-	end
-	return tonumber(npcId);
-end
-
-local function tcl_GetLegacyMobId(mobname)
-	local legacyMobs = {
-		[TITAN_CRITLINE_MOBFILTER_01] = 14020,
-		[TITAN_CRITLINE_MOBFILTER_02] = 12461,
-		[TITAN_CRITLINE_MOBFILTER_03] = 12460,
-		[TITAN_CRITLINE_MOBFILTER_04] = 15339,
-		[TITAN_CRITLINE_MOBFILTER_05] = 13020,
-	};
-	return legacyMobs[mobname];
-end
-
-function tcl_IsMobInFilter(npcId)
-	return npcId ~= nil and TCL_SPECIAL_MOB_IDS[tonumber(npcId)] == true;
-end
-
-function tcl_DeleteAllRecordsWithMobsInFilter()
-	tcl_DEBUG("Search for filtered mobs and delete them ...");
-	for i = 1, #(TCL_SOURCETYPE) do
-		local sourceData = TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]];
-		for attackType, attackData in pairs(sourceData) do
-			for j = 1, #(TCL_HITTYPE) do
-				local hitType = TCL_HITTYPE[j];
-				local record = attackData[hitType];
-				local targetNpcId = record and (record["TargetNpcID"] or tcl_GetLegacyMobId(record["Target"]));
-				if (record ~= nil and tcl_IsMobInFilter(targetNpcId)) then
-					record["TargetNpcID"] = targetNpcId;
-					tcl_DEBUG("Filtered mob found for "..attackType..", backing up stats ...");
-					local filtered = "FILTER_"..hitType;
-					local backup = "OLD_"..hitType;
-					attackData[filtered] = record;
-					attackData[hitType] = attackData[backup];
-					attackData[backup] = nil;
-				end
-			end
-		end
-	end
-	tcl_DEBUG("All filtered mobs deleted if found.");
-	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
-end
-
-function tcl_RestoreAllRecordsWithMobsInFilter()
-	tcl_DEBUG("Restore all records with filtered mobs ...");
-	for i = 1, #(TCL_SOURCETYPE) do
-		local sourceData = TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]];
-		for attackType, attackData in pairs(sourceData) do
-			for j = 1, #(TCL_HITTYPE) do
-				local hitType = TCL_HITTYPE[j];
-				local filtered = "FILTER_"..hitType;
-				local backup = "OLD_"..hitType;
-				if (attackData[filtered] ~= nil) then
-					tcl_DEBUG("Restoring filtered mob stats for "..attackType.." ...");
-					attackData[backup] = attackData[hitType];
-					attackData[hitType] = attackData[filtered];
-					attackData[filtered] = nil;
-				end
-			end
-		end
-	end
-	tcl_DEBUG("All records with filtered mobs are restored.");
-	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
-end
-
 function tcl_RecordHit(AttackType, HitType, Damage, uname, IsHealing, sourceType, targetGUID)
 	local targetlvl = UnitLevel("target");
 	local source = sourceType or TCL_SOURCETYPE[1];
@@ -1539,7 +1463,7 @@ function tcl_RecordHit(AttackType, HitType, Damage, uname, IsHealing, sourceType
 		TCL_SETTINGS[TCL_REALM]["DATA"][source][AttackType][HitType]["Date"] = date();
 		TCL_SETTINGS[TCL_REALM]["DATA"][source][AttackType][HitType]["IsHeal"] = IsHealing;
 		if ( Damage > 0 ) then
-			tcl_DisplayNewRecord(AttackType, Damage, HitType);
+			tcl_DisplayNewRecord(AttackType, Damage, HitType, IsHealing);
 		end
 	end
 end
@@ -1586,12 +1510,16 @@ function tcl_RecordMiss(text, sourceType )
 	tcl_DEBUG("RecordMiss found nothing and return.");
 end
 
-function tcl_DisplayNewRecord(AttackType, DamageAmount, HitType)
+function tcl_DisplayNewRecord(AttackType, DamageAmount, HitType, IsHealing)
 	local splash_msg = TITAN_CRITLINE_NEW_RECORD_MSG;
 	if ( HitType == "CRIT" ) then
 		splash_msg = TITAN_CRITLINE_NEW_CRIT_RECORD_MSG;
 	elseif ( HitType == "DOT" ) then
-		splash_msg = TITAN_CRITLINE_NEW_DOT_RECORD_MSG;
+		if (IsHealing == DAMAGE_TYPE_HEAL) then
+			splash_msg = TITAN_CRITLINE_NEW_HOT_RECORD_MSG;
+		else
+			splash_msg = TITAN_CRITLINE_NEW_DOT_RECORD_MSG;
+		end
 	end
 	tcl_DEBUG(format(splash_msg, AttackType));
 	if(TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SPLASH"] == "1") then
@@ -1722,7 +1650,11 @@ function tcl_GenToolDMG(dbSource, hitType, hidmg, dmgperc, hidmgperc)
 	elseif ( hitType == "CRIT" ) then
 		textType = CRIT_TEXT;
 	elseif ( hitType == "DOT" ) then
-		textType = DOT_TEXT;
+		if (dbSource[hitType]["IsHeal"] == DAMAGE_TYPE_HEAL) then
+			textType = HOT_TEXT;
+		else
+			textType = DOT_TEXT;
+		end
 	end
 	
 	dmg = dmg.."  "..COLOR(SUBHEADER_TEXT_COLOR, textType).." [";
@@ -1879,26 +1811,6 @@ function tcl_GetSummaryRichText()
 	return rtfAttack
 end
 
-function tcl_GetAboutRichText()
-	return 
-		COLOR(HEADER_TEXT_COLOR, TITAN_CRITLINE_ID.." v"..TITAN_CRITLINE_VERSION).."\n\n"..
-		COLOR(SUBHEADER_TEXT_COLOR, "Current maintainer:").."\n"..
-		COLOR(BODY_TEXT_COLOR, "Epyc").."\n"..
-		COLOR(SUBHEADER_TEXT_COLOR, "Titan Panel baseline:").."\n"..
-		COLOR(BODY_TEXT_COLOR, "9.3.2");
-end
-
-function tcl_GetAboutHistoryRichText()
-	return
-		COLOR(SUBHEADER_TEXT_COLOR, "History:").."\n"..
-		COLOR(BODY_TEXT_COLOR, "Sordit: Concept and Stand-Alone version").."\n"..
-		COLOR(BODY_TEXT_COLOR, "Uggh: Titan Panel version < 0.3.7").."\n"..
-		COLOR(BODY_TEXT_COLOR, "Falli: Titan Panel version > 0.3.7").."\n"..
-		COLOR(BODY_TEXT_COLOR, "AidenK: Titan Panel version > 0.4.0e").."\n"..
-		COLOR(BODY_TEXT_COLOR, "Lowpinger: Titan Panel version > 0.4.1").."\n".. 
-		COLOR(BODY_TEXT_COLOR, "Penddor: Titan Panel version > 0.4.5");
-end
-
 --[[ chat functions ]]
 function tcl_PostMessage(message_array,channel)
 	if ( message_array == nil or type(message_array) ~= "table") then
@@ -1960,7 +1872,7 @@ function tcl_GetRecordChatText()
 			table.insert(text, CRIT_TEXT..": "..hcrit.." ("..hihealcrit..")".." ["..ehcrit.."]");
 		end
 		if ( hihealdot > 0 ) then
-			table.insert(text, NORMAL_TEXT..": "..hdot.." ("..hihealdot..")".." ["..ehdot.."]");
+			table.insert(text, HOT_TEXT..": "..hdot.." ("..hihealdot..")".." ["..ehdot.."]");
 		end
 		if ( hihealdmg > 0 ) then
 			table.insert(text, NORMAL_TEXT..": "..hnormal.." ("..hihealdmg..")".." ["..ehnormal.."]");
