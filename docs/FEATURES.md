@@ -10,6 +10,11 @@ modern meaning.
 routine for the currently installed version. It does not download an addon
 update, contact a server, or refresh the Titan Panel display directly.
 
+The same routine runs automatically at login when saved data is missing, has no
+version, or was written by a different addon version. The button merely forces
+that routine to run again for the current version, so it is normally not
+needed.
+
 The routine recreates missing settings and data containers and attempts to
 carry existing records into the current saved-variable layout. It exists for
 compatibility with old installations. A future refactor should replace it with
@@ -42,11 +47,11 @@ When enabled, a matching hit increments the hit counter but cannot replace the
 stored highscore. The list was intended to exclude encounters with unusual
 damage modifiers from meaningful records.
 
-The legacy routines intended to remove an already stored special-mob record or
-restore it after disabling the option traverse the saved-data hierarchy
-incorrectly and currently have no reliable effect. This behavior is documented
-instead of changed during the compatibility baseline so it can receive a
-separate, testable fix.
+When the setting is enabled, an existing highscore against a listed mob is
+archived and the best record collected while filtering was previously enabled
+is restored, if one exists. Disabling the setting archives the current
+non-special record and restores the special-mob highscore. This makes the
+setting reversible without discarding either record.
 
 ## Record sound
 
