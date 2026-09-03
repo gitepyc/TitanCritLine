@@ -3,7 +3,7 @@ DEBUG = false; -- for internal testing only, leave it set to false!
 
 --[[ global addon variables ]]
 local TITAN_CRITLINE_ID =  "CritLine";
-local TITAN_CRITLINE_VERSION = "0.8.5-dev";
+local TITAN_CRITLINE_VERSION = "0.8.6-dev";
 local TITAN_CRITLINE_BUTTON_LABEL = "CL: ";
 local TITAN_CRITLINE_BUTTON_ICON = "Interface\\AddOns\\TitanCritLine\\TitanCritLine";
 local TITAN_CRITLINE_BUTTON_TEXT = "%s/%s/%s";
@@ -1881,7 +1881,7 @@ end
 
 function tcl_GetAboutRichText()
 	return 
-		COLOR(HEADER_TEXT_COLOR, TITAN_CRITLINE_ID.." v"..TITAN_CRITLINE_VERSION).."\n"..
+		COLOR(HEADER_TEXT_COLOR, TITAN_CRITLINE_ID.." v"..TITAN_CRITLINE_VERSION).."\n\n"..
 		COLOR(SUBHEADER_TEXT_COLOR, "Current maintainer:").."\n"..
 		COLOR(BODY_TEXT_COLOR, "Epyc").."\n"..
 		COLOR(SUBHEADER_TEXT_COLOR, "Titan Panel baseline:").."\n"..
