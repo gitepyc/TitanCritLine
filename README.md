@@ -49,7 +49,9 @@ client's `Interface/AddOns` directory. Install and enable Titan Panel as well.
 
 - `TitanCritLine.toc`: addon metadata and load entry point
 - `TitanCritLine.xml`: UI and script declarations
-- `TitanCritLine.lua`: addon logic
+- `TitanCritLine.lua`: bootstrap, legacy event handling, records, and persistence
+- `Core/Filters.lua`: special-mob IDs and reversible record filtering
+- `UI/About.lua`: About dialog behavior and content
 - `localization*.lua`: bundled translations
 - `TitanCritLine.tga`: addon icon
 - `CHANGELOG.TXT`, `NOTES.TXT`, `BUGS.TXT`, `CREDITS.TXT`: legacy project documentation
