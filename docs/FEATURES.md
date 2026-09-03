@@ -34,14 +34,15 @@ a later cleanup.
 
 ## Special mobs
 
-`Don't count damage on special mobs` compares the combat-log target name with
-a hard-coded, localized list using exact string equality. The English list is:
+`Don't count damage on special mobs` compares the numeric NPC ID extracted from
+the combat-log target GUID with a central list. It is independent of the client
+language. The list is:
 
-- Chromaggus
-- Death Talon Overseer
-- Death Talon Wyrmguard
-- Ossirian the Unscarred
-- Vaelastrasz the Corrupt
+- `12460`: Death Talon Wyrmguard
+- `12461`: Death Talon Overseer
+- `13020`: Vaelastrasz the Corrupt
+- `14020`: Chromaggus
+- `15339`: Ossirian the Unscarred
 
 When enabled, a matching hit increments the hit counter but cannot replace the
 stored highscore. The list was intended to exclude encounters with unusual
@@ -52,6 +53,18 @@ archived and the best record collected while filtering was previously enabled
 is restored, if one exists. Disabling the setting archives the current
 non-special record and restores the special-mob highscore. This makes the
 setting reversible without discarding either record.
+
+Records written by older versions do not contain an NPC ID. When such a record
+uses one of the old localized names, CritLine converts it to the corresponding
+ID the first time the special-mob filter processes it.
+
+## Critical percentage
+
+`Show Critical Percentage` displays the share of recorded hits for an ability
+that were critical. CritLine records normal hits as well as critical hits; the
+setting does not describe the share of highscore entries. Current combat-log
+booleans are interpreted explicitly so a normal hit is no longer mistaken for
+a critical hit merely because the event field exists with the value `false`.
 
 ## Record sound
 

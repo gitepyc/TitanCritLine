@@ -117,6 +117,11 @@
 				</Offset>
 			</Anchor>
 		</Anchors>
+		<Scripts>
+			<OnLoad>
+				table.insert(UISpecialFrames, self:GetName());
+			</OnLoad>
+		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">
 				<Texture name="$parent_Header" file="Interface\DialogFrame\UI-DialogBox-Header">
@@ -362,11 +367,16 @@
 	</Frame>
 	<Frame name="TitanCritLine_AboutFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" inherits="BackdropTemplate" movable="true" parent="UIParent" toplevel="true">
 		<Size>
-			<AbsDimension x="400" y="280"/>
+			<AbsDimension x="400" y="320"/>
 		</Size>
 		<Anchors>
 			<Anchor point="CENTER" relativeTo="TitanCritLine_SettingsFrame" relativePoint="CENTER"/>
 		</Anchors>
+		<Scripts>
+			<OnLoad>
+				table.insert(UISpecialFrames, self:GetName());
+			</OnLoad>
+		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">
 				<Texture name="$parentHeader" file="Interface\DialogFrame\UI-DialogBox-Header">
@@ -390,9 +400,25 @@
 						</Anchor>
 					</Anchors>
 				</FontString>
-				<FontString name="$parent_Text" inherits="GameFontNormalLarge" >
+				<FontString name="$parent_Text" inherits="GameFontNormalLarge" justifyH="CENTER">
 					<Anchors>
-						<Anchor point="CENTER"/>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-42"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parent_History" inherits="GameFontNormal" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="350" y="130"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parent_Text" relativePoint="BOTTOM">
+							<Offset>
+								<AbsDimension x="0" y="-18"/>
+							</Offset>
+						</Anchor>
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -408,6 +434,24 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
+						tcl_AboutClose();
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button inherits="GameMenuButtonTemplate" name="$parent_Close" text="CLOSE">
+				<Size>
+					<AbsDimension x="140" y="24"/>
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="20"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						PlaySound(852); <!-- SOUNDKIT.IG_MAINMENU_OPTION -->
 						tcl_AboutClose();
 					</OnClick>
 				</Scripts>
@@ -443,6 +487,11 @@
 				</Offset>
 			</Anchor>
 		</Anchors>
+		<Scripts>
+			<OnLoad>
+				table.insert(UISpecialFrames, self:GetName());
+			</OnLoad>
+		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">
 				<Texture name="$parentHeader" file="Interface\DialogFrame\UI-DialogBox-Header">

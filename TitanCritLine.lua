@@ -3,7 +3,7 @@ DEBUG = false; -- for internal testing only, leave it set to false!
 
 --[[ global addon variables ]]
 local TITAN_CRITLINE_ID =  "CritLine";
-local TITAN_CRITLINE_VERSION = "0.8.4-dev";
+local TITAN_CRITLINE_VERSION = "0.8.5-dev";
 local TITAN_CRITLINE_BUTTON_LABEL = "CL: ";
 local TITAN_CRITLINE_BUTTON_ICON = "Interface\\AddOns\\TitanCritLine\\TitanCritLine";
 local TITAN_CRITLINE_BUTTON_TEXT = "%s/%s/%s";
@@ -19,9 +19,16 @@ local HINT_TEXT_COLOR  = "|cff00ff00";
 local TCL_REALM = GetRealmName() or GetNormalizedRealmName();
 local TitanCritLine_PlayerRealmName = ""; -- only stored for compability reasons
 local TCL_PUID = nil;						-- tracks the player UID to determine whom casted spells/effects
+local TCL_EVENT_TARGET_GUID = nil;			-- target GUID for the combat-log event currently being processed
 local TCL_FINALIZE_DOT = false;  			-- flag used to force dot effects to finalize healing dots.  Without this healing dot effects will register forever.
 
-local TCL_MOBFILTER = {};
+local TCL_SPECIAL_MOB_IDS = {
+	[12460] = true, -- Death Talon Wyrmguard
+	[12461] = true, -- Death Talon Overseer
+	[13020] = true, -- Vaelastrasz the Corrupt
+	[14020] = true, -- Chromaggus
+	[15339] = true, -- Ossirian the Unscarred
+};
 local TCL_HITTYPE = { "NORMAL", "CRIT", "DOT" };
 local TCL_SOURCETYPE = { "MY", "PET" };  --TCL_SOURCETYPE = { "MY", "PET", "GUARDIAN" };
 
@@ -350,8 +357,11 @@ function tcl_About()
 		tcl_AboutClose();
 	else 
 		local text = _G["TitanCritLine_AboutFrame_Text"];
+		local history = _G["TitanCritLine_AboutFrame_History"];
 		text:Show();
 		text:SetText( tcl_GetAboutRichText() );
+		history:Show();
+		history:SetText( tcl_GetAboutHistoryRichText() );
 		tcl_ApplyDialogBackdrop(TitanCritLine_AboutFrame);
 		TitanCritLine_AboutFrame:Show();
 	end
@@ -417,7 +427,7 @@ end
 
 function tcl_FilterClose()
 	TitanCritLine_FilterFrame:Hide();
-	for i = 1, 20, 1 do
+	for i = 1, 40, 1 do
 		local button = _G["TitanCritLine_FilterFrame_Option"..tostring(i)];
 		local text = _G["TitanCritLine_FilterFrame_Option"..tostring(i).."Text"];
 		button:SetChecked(false);
@@ -524,6 +534,7 @@ function tcl_OnEvent(self, event, ...)
 	if (event == "COMBAT_LOG_EVENT_UNFILTERED") then
 		arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
 			arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20 = tcl_GetLegacyCombatLogEventInfo();
+		TCL_EVENT_TARGET_GUID = arg7;
 	end
 	
 	if ( event ~= nil and event ~= "COMBAT_LOG_EVENT_UNFILTERED" ) then 
@@ -578,7 +589,6 @@ function tcl_OnEvent(self, event, ...)
 				end
 			end
 		end
-		tcl_CreateMobFilter();
 		TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
 		TitanPanelButton_UpdateTooltip( self );
 	elseif (event == "PLAYER_LEAVING_WORLD") then
@@ -650,7 +660,7 @@ function tcl_OnEvent(self, event, ...)
 			if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] == "0") then
 				if ( arg5 == UnitName("player") and bit.band(arg6, COMBATLOG_FILTER_ME) ) then 
 					if (arg8 == UnitName("player")) then
-						if (arg15 ~= nil) then
+						if (arg16 == true) then
  							tcl_DEBUG("Crit Heal: Yourself for "..arg13);
  							tcl_RecordHit(arg11, "CRIT", tonumber(arg13), "You", DAMAGE_TYPE_HEAL);
 						else
@@ -659,7 +669,7 @@ function tcl_OnEvent(self, event, ...)
 						end
 					else
 						creaturename = arg8;
-						if (arg15 ~= nil) then
+						if (arg16 == true) then
 							tcl_DEBUG("Crit Heal: "..creaturename.." for "..arg13);
 							tcl_RecordHit(arg11, "CRIT", tonumber(arg13), creaturename, DAMAGE_TYPE_HEAL);
 						else
@@ -671,7 +681,7 @@ function tcl_OnEvent(self, event, ...)
 			end
 		elseif (arg2 == "RANGE_DAMAGE" ) then
 			if ( arg5 == UnitName("player") and bit.band(arg6, COMBATLOG_FILTER_ME) ~= 0 ) then 
-				if (arg19 ~= nil ) then
+				if (arg19 == true) then
 					tcl_DEBUG("Range Crit Hit: "..arg8.." with "..arg11.." for "..arg13);
 					tcl_RecordHit(arg11, "CRIT", tonumber(arg13), arg8, DAMAGE_TYPE_NONHEAL);
 				else
@@ -683,7 +693,7 @@ function tcl_OnEvent(self, event, ...)
 				and bit.band( arg6, COMBATLOG_FILTER_MY_PET ) ~= 0 ) then
                 
                 if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOW_PET"] == "1" ) then
-					if (arg19 ~= nil ) then
+					if (arg19 == true) then
 						tcl_DEBUG("Range Crit Hit: "..arg5.." crit "..arg8.." with "..arg11.." for "..arg13);
 						tcl_RecordHit(arg5.."'s "..arg11, "CRIT", tonumber(arg13), arg8, DAMAGE_TYPE_NONHEAL, "PET");
 					else
@@ -695,7 +705,7 @@ function tcl_OnEvent(self, event, ...)
 			end
 		elseif (arg2 == "SWING_DAMAGE" or arg2 == "SWING_EXTRA_ATTACKS" ) then
 			if ( arg5 == UnitName("player") and bit.band(arg6, COMBATLOG_FILTER_ME) ~= 0 ) then 
-				if (arg16 ~= nil ) then
+				if (arg16 == true) then
 					tcl_DEBUG("Crit Hit: "..arg8.." for "..arg10);
 					tcl_RecordHit(NORMAL_HIT_TEXT, "CRIT", tonumber(arg10), arg8, DAMAGE_TYPE_NONHEAL);
 				else
@@ -707,7 +717,7 @@ function tcl_OnEvent(self, event, ...)
 				and bit.band( arg6, COMBATLOG_FILTER_MY_PET ) ~= 0 ) then
 				
 				if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOW_PET"] == "1" ) then
-					if (arg16 ~= nil ) then
+					if (arg16 == true) then
 						tcl_DEBUG("Pet Crit Hit: "..arg5.." crit "..arg8.." for "..arg10);
 						tcl_RecordHit(arg5.."'s "..NORMAL_HIT_TEXT, "CRIT", tonumber(arg10), arg8, DAMAGE_TYPE_NONHEAL, "PET");
 					else
@@ -718,7 +728,7 @@ function tcl_OnEvent(self, event, ...)
 			end
 		elseif (arg2 == "SPELL_DAMAGE" ) then
 			if ( arg5 == UnitName("player") and bit.band(arg6, COMBATLOG_FILTER_ME) ~= 0 ) then 
-				if ( arg19 ~= nil ) then
+				if (arg19 == true) then
 					tcl_DEBUG(arg11.." Crit: "..arg8.." for "..arg13);
 					tcl_RecordHit(arg11, "CRIT", tonumber(arg13), arg8, DAMAGE_TYPE_NONHEAL);
 				else
@@ -729,7 +739,7 @@ function tcl_OnEvent(self, event, ...)
 				and bit.band( arg6, COMBATLOG_OBJECT_AFFILIATION_MINE) ~= 0 
 				and bit.band( arg6, COMBATLOG_FILTER_MY_PET ) ~= 0 ) then
 				if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOW_PET"] == "1" ) then
-					if ( arg19 ~= nil ) then
+					if (arg19 == true) then
 						tcl_DEBUG(arg5.."'s "..arg11.." Crit: "..arg8.." for "..arg13);
 						tcl_RecordHit(arg5.."'s "..arg11, "CRIT", tonumber(arg13), arg8, DAMAGE_TYPE_NONHEAL, "PET");
 					else
@@ -1356,30 +1366,30 @@ function tcl_Initialize(tcl_Table)
 	tcl_DEBUG("Initialization Complete.");
 end
 
-function tcl_CreateMobFilter()
-	tcl_DEBUG("Creating Mob Filter...");
-	table.insert(TCL_MOBFILTER, TITAN_CRITLINE_MOBFILTER_01);
-	table.insert(TCL_MOBFILTER, TITAN_CRITLINE_MOBFILTER_02);
-	table.insert(TCL_MOBFILTER, TITAN_CRITLINE_MOBFILTER_03);
-	table.insert(TCL_MOBFILTER, TITAN_CRITLINE_MOBFILTER_04);
-	table.insert(TCL_MOBFILTER, TITAN_CRITLINE_MOBFILTER_05);
-	tcl_DEBUG("Creation complete.");
+local function tcl_GetNpcId(unitGUID)
+	if (type(unitGUID) ~= "string") then
+		return nil;
+	end
+	local unitType, _, _, _, _, npcId = strsplit("-", unitGUID);
+	if (unitType ~= "Creature" and unitType ~= "Vehicle") then
+		return nil;
+	end
+	return tonumber(npcId);
 end
 
-function tcl_IsMobInFilter(mobname)
-	if (mobname == nil) then
-		return false;
-	end
-	local returnvalue = false;
-	for k, v in pairs(TCL_MOBFILTER) do
-		if ( v == mobname ) then
-			tcl_DEBUG("Name of Mob ("..mobname..") is in Filter ...");
-			returnvalue = true;
-			do break end;
-		end
-	end
-	tcl_DEBUG("Name of Mob ("..mobname..") is NOT in Filter ...");
-	return returnvalue;
+local function tcl_GetLegacyMobId(mobname)
+	local legacyMobs = {
+		[TITAN_CRITLINE_MOBFILTER_01] = 14020,
+		[TITAN_CRITLINE_MOBFILTER_02] = 12461,
+		[TITAN_CRITLINE_MOBFILTER_03] = 12460,
+		[TITAN_CRITLINE_MOBFILTER_04] = 15339,
+		[TITAN_CRITLINE_MOBFILTER_05] = 13020,
+	};
+	return legacyMobs[mobname];
+end
+
+function tcl_IsMobInFilter(npcId)
+	return npcId ~= nil and TCL_SPECIAL_MOB_IDS[tonumber(npcId)] == true;
 end
 
 function tcl_DeleteAllRecordsWithMobsInFilter()
@@ -1390,7 +1400,9 @@ function tcl_DeleteAllRecordsWithMobsInFilter()
 			for j = 1, #(TCL_HITTYPE) do
 				local hitType = TCL_HITTYPE[j];
 				local record = attackData[hitType];
-				if (record ~= nil and tcl_IsMobInFilter(record["Target"])) then
+				local targetNpcId = record and (record["TargetNpcID"] or tcl_GetLegacyMobId(record["Target"]));
+				if (record ~= nil and tcl_IsMobInFilter(targetNpcId)) then
+					record["TargetNpcID"] = targetNpcId;
 					tcl_DEBUG("Filtered mob found for "..attackType..", backing up stats ...");
 					local filtered = "FILTER_"..hitType;
 					local backup = "OLD_"..hitType;
@@ -1427,7 +1439,7 @@ function tcl_RestoreAllRecordsWithMobsInFilter()
 	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
 end
 
-function tcl_RecordHit(AttackType, HitType, Damage, uname, IsHealing, sourceType)
+function tcl_RecordHit(AttackType, HitType, Damage, uname, IsHealing, sourceType, targetGUID)
 	local targetlvl = UnitLevel("target");
 	local source = sourceType or TCL_SOURCETYPE[1];
 	local ulevel = false;
@@ -1509,14 +1521,16 @@ function tcl_RecordHit(AttackType, HitType, Damage, uname, IsHealing, sourceType
 	end
 	local oldhitvalue = TCL_SETTINGS[TCL_REALM]["DATA"][source][AttackType][HitType]["Value"];
 	TCL_SETTINGS[TCL_REALM]["DATA"][source][AttackType][HitType]["Value"] = oldhitvalue + 1;
+	local targetNpcId = tcl_GetNpcId(targetGUID or TCL_EVENT_TARGET_GUID);
 	if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_MOBS"] == "1" ) then
-		if ( tcl_IsMobInFilter(uname) ) then
+		if ( tcl_IsMobInFilter(targetNpcId) ) then
 			return;
 		end
 	end
 	if ( TCL_SETTINGS[TCL_REALM]["DATA"][source][AttackType][HitType]["Damage"] == nil or TCL_SETTINGS[TCL_REALM]["DATA"][source][AttackType][HitType]["Damage"] < Damage ) then
 		TCL_SETTINGS[TCL_REALM]["DATA"][source][AttackType][HitType]["Damage"] = Damage;
 		TCL_SETTINGS[TCL_REALM]["DATA"][source][AttackType][HitType]["Target"] = uname;
+		TCL_SETTINGS[TCL_REALM]["DATA"][source][AttackType][HitType]["TargetNpcID"] = targetNpcId;
 		if ( ulevel ) then
 			TCL_SETTINGS[TCL_REALM]["DATA"][source][AttackType][HitType]["Level"] = ulevel;
 		else
@@ -1867,9 +1881,15 @@ end
 
 function tcl_GetAboutRichText()
 	return 
-		COLOR(HEADER_TEXT_COLOR, TITAN_CRITLINE_ID.." v"..TITAN_CRITLINE_VERSION).."\n\n"..
+		COLOR(HEADER_TEXT_COLOR, TITAN_CRITLINE_ID.." v"..TITAN_CRITLINE_VERSION).."\n"..
 		COLOR(SUBHEADER_TEXT_COLOR, "Current maintainer:").."\n"..
-		COLOR(BODY_TEXT_COLOR, "Epyc").."\n\n"..
+		COLOR(BODY_TEXT_COLOR, "Epyc").."\n"..
+		COLOR(SUBHEADER_TEXT_COLOR, "Titan Panel baseline:").."\n"..
+		COLOR(BODY_TEXT_COLOR, "9.3.2");
+end
+
+function tcl_GetAboutHistoryRichText()
+	return
 		COLOR(SUBHEADER_TEXT_COLOR, "History:").."\n"..
 		COLOR(BODY_TEXT_COLOR, "Sordit: Concept and Stand-Alone version").."\n"..
 		COLOR(BODY_TEXT_COLOR, "Uggh: Titan Panel version < 0.3.7").."\n"..
