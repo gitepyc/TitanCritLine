@@ -91,6 +91,10 @@ combat-log parser:
   mark.
 - Enabling the special-mob filter hides an existing record whose target is on
   the localized special-mob list; disabling it restores that record.
+- Settings, Filter, and About can be dismissed with Escape. About also has a
+  visible Close button at the bottom.
+- After at least one normal hit and one critical hit of the same ability, its
+  displayed critical percentage is below 100% and matches the recorded counts.
 - Entering combat produces no missing-argument error from
   `COMBAT_LOG_EVENT_UNFILTERED`.
 - A new record updates the Titan bar immediately, even when sound or screenshot
