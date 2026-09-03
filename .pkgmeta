@@ -2,11 +2,19 @@
 
 package-as: TitanCritLine
 
+# Ship the hand-maintained changelog as-is instead of letting the packager
+# auto-generate one from raw git log messages (same convention as the
+# sibling CritLog project).
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
+
 ignore:
   - README.md
   - LICENSE
   - tests
   - scripts
+  - docs
   - .github
   - .luacheckrc
   - .editorconfig
