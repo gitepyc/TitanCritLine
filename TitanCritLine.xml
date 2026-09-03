@@ -106,7 +106,7 @@
 			</OnLeave>
 		</Scripts>
 	</Slider>
-	<Frame name="TitanCritLine_SettingsFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" movable="true" parent="UIParent" toplevel="true">
+	<Frame name="TitanCritLine_SettingsFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" inherits="BackdropTemplate" movable="true" parent="UIParent" toplevel="true">
 		<Size>
 			<AbsDimension x="325" y="640"/>
 		</Size>
@@ -262,8 +262,8 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						getglobal(self:GetName().."Low"):SetText("Off");
-						getglobal(self:GetName().."High"):SetText("10");
+						_G[self:GetName().."Low"]:SetText("Off");
+						_G[self:GetName().."High"]:SetText("10");
 					</OnLoad>
 					<OnValueChanged>
 						tcl_SettingsSlider_OnValueChanged(self);
@@ -371,7 +371,7 @@
 			</Button>
 		</Frames>
 	</Frame>
-	<Frame name="TitanCritLine_AboutFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" movable="true" parent="UIParent" toplevel="true">
+	<Frame name="TitanCritLine_AboutFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" inherits="BackdropTemplate" movable="true" parent="UIParent" toplevel="true">
 		<Size>
 			<AbsDimension x="400" y="240"/>
 		</Size>
@@ -454,7 +454,7 @@
 			</OnClick>
 		</Scripts>
 	</CheckButton>
-	<Frame name="TitanCritLine_FilterFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" movable="true" parent="UIParent" toplevel="true">
+	<Frame name="TitanCritLine_FilterFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" inherits="BackdropTemplate" movable="true" parent="UIParent" toplevel="true">
 		<Size>
 			<AbsDimension x="300" y="490"/>
 		</Size>
@@ -878,7 +878,7 @@
 			</CheckButton>
 		</Frames>
 	</Frame>
-	<Frame name="TitanCritLine_OverviewFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" movable="true" parent="UIParent" toplevel="true">
+	<Frame name="TitanCritLine_OverviewFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" inherits="BackdropTemplate" movable="true" parent="UIParent" toplevel="true">
 		<Size>
 			<AbsDimension x="600" y="450"/>
 		</Size>
