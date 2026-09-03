@@ -10,3 +10,26 @@ release. The original changelog is preserved in
 actual wording in the commit message, not here - this file (and each
 GitHub release's notes) are a mechanical render of it, not a second
 drafting pass.
+## [0.8.0](https://github.com/gitepyc/TitanCritLine/tree/0.8.0) (2026-09-07)
+[Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.7.1...0.8.0) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
+
+- **chore:** adopt the MIT License
+
+- **chore:** add repository scaffolding
+
+- **chore:** add tagged release workflow
+
+- **chore:** adopt git-cliff for automated changelog and release-note generation
+
+- **docs:** propose TitanCritLine modernization
+
+- **docs:** verify Titan Panel 9 compatibility
+
+- **docs:** focus plan on compatibility parity
+
+- **feature:** migrate right-click menu to Titan_Menu (registry.menuContextFunction)
+
+- **fix:** set current SoD compatibility baseline
+
+- **fix:** replace removed Lua 5.0 globals with modern equivalents
+
