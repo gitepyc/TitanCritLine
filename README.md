@@ -51,6 +51,7 @@ client's `Interface/AddOns` directory. Install and enable Titan Panel as well.
 - `TitanCritLine.xml`: UI and script declarations
 - `TitanCritLine.lua`: bootstrap, legacy event handling, records, and persistence
 - `Core/Filters.lua`: special-mob IDs and reversible record filtering
+- `Chat.lua`: record formatting and group/guild chat output
 - `UI/About.lua`: About dialog behavior and content
 - `localization*.lua`: bundled translations
 - `TitanCritLine.tga`: addon icon

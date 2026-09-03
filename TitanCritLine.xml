@@ -5,6 +5,7 @@
 	<Script file="localizationRU.lua"></Script>
 	<Script file="TitanCritLine.lua"></Script>
 	<Script file="Core\Filters.lua"></Script>
+	<Script file="Chat.lua"></Script>
 	<Script file="UI\About.lua"></Script>
 	<Frame parent="UIParent">
 		<Frames>
