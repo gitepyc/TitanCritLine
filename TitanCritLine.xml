@@ -329,25 +329,7 @@
 				<Scripts>
 					<OnClick>
 						PlaySound(852); <!-- SOUNDKIT.IG_MAINMENU_OPTION -->
-						tcl_Reset();
-					</OnClick>
-				</Scripts>
-			</Button>
-			<Button name="$parent_Update" inherits="GameMenuButtonTemplate" text="TITAN_CRITLINE_OPTION_UPDATE_TEXT">
-				<Size>
-					<AbsDimension x="200" y="24"/>
-				</Size>
-				<Anchors>
-					<Anchor point="BOTTOM" relativeTo="$parent_Reset" relativePoint="TOP">
-						<Offset>
-							<AbsDimension x="0" y="15"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						PlaySound(852); <!-- SOUNDKIT.IG_MAINMENU_OPTION -->
-						tcl_ManualUpdate();
+						tcl_RequestReset();
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -356,7 +338,7 @@
 					<AbsDimension x="200" y="24"/>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOM" relativeTo="$parent_Update" relativePoint="TOP">
+					<Anchor point="BOTTOM" relativeTo="$parent_Reset" relativePoint="TOP">
 						<Offset>
 							<AbsDimension x="0" y="15"/>
 						</Offset>
@@ -423,7 +405,7 @@
 						</Anchor>
 					</Anchors>
 				</FontString>
-				<FontString name="$parent_History" inherits="GameFontNormal" justifyH="LEFT">
+				<FontString name="$parent_History" inherits="GameFontNormalSmall" justifyH="CENTER">
 					<Size>
 						<AbsDimension x="350" y="130"/>
 					</Size>

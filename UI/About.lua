@@ -20,10 +20,10 @@ end
 function tcl_GetAboutRichText()
 	return
 		COLOR(addon.COLORS.HEADER, addon.ID.." v"..addon.VERSION).."\n\n"..
-		COLOR(addon.COLORS.SUBHEADER, "Current maintainer:").."\n"..
+		COLOR(addon.COLORS.SUBHEADER, "Maintained by:").."\n"..
 		COLOR(addon.COLORS.BODY, "Epyc").."\n"..
-		COLOR(addon.COLORS.SUBHEADER, "Titan Panel baseline:").."\n"..
-		COLOR(addon.COLORS.BODY, "9.3.2");
+		COLOR(addon.COLORS.SUBHEADER, "Titan Panel compatibility:").."\n"..
+		COLOR(addon.COLORS.BODY, "9.x (2026 baseline)");
 end
 
 function tcl_GetAboutHistoryRichText()

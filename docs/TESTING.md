@@ -85,8 +85,10 @@ combat-log parser:
   dead XML.
 - Selecting `Settings` opens the settings frame with its backdrop, labels,
   checkboxes, and level-adjustment slider visible.
-- `Filter`, `Manual Update`, `Reset All`, and `About` execute their actions
-  without a `PlaySound` argument error.
+- `Filter`, `Reset All`, and `About` execute their actions without a `PlaySound`
+  argument error.
+- `Reset All` displays a Yes/No confirmation and changes records only after
+  confirmation.
 - The WoW addon list displays the bundled CritLine icon instead of a question
   mark.
 - Enabling the special-mob filter hides an existing record whose target is on
