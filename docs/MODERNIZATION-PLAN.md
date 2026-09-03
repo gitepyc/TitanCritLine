@@ -212,7 +212,15 @@ After the compatibility release is proven, separate proposals may consider:
 
 - replacing spell-name keys with spell IDs;
 - introducing a new saved-variable schema and importer;
-- splitting the monolith into modules;
+- splitting the monolith into modules, following CritLog's proven boundaries:
+  bootstrap, combat-log decoding, records, filters, persistence, Titan Panel
+  integration, UI, chat output, and event wiring;
+- separating periodic healing from periodic damage in the data model and UI so
+  Renew and similar spells are represented as HoTs rather than DoTs;
+- deciding whether periodic healing records should remain the aggregate value
+  over one completed effect, as in the legacy addon, or track the largest
+  individual tick; retain aggregate recording until that behavior change has
+  been explicitly tested and approved;
 - replacing the custom settings UI;
 - reducing globals and removing the `table` extension;
 - broadening support to other WoW flavors;
