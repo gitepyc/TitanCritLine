@@ -67,6 +67,7 @@ combat-log parser:
 - TitanCritLine appears in the addon list without an out-of-date warning.
 - Titan Panel loads normally.
 - TitanCritLine produces no XML or Lua error during login.
+- Login produces no XML warnings for legacy backdrop attributes.
 - `CritLine` appears in Titan's available plugin list under Combat.
 - The plugin can be placed on a Titan bar.
 - Its icon, label, and initial `0/0/0` text are visible.
@@ -84,6 +85,8 @@ combat-log parser:
   dead XML.
 - Selecting `Settings` opens the settings frame with its backdrop, labels,
   checkboxes, and level-adjustment slider visible.
+- Entering combat produces no missing-argument error from
+  `COMBAT_LOG_EVENT_UNFILTERED`.
 - `/reload` preserves the Titan placement and produces no additional error.
 - Disabling TitanCritLine and reloading does not affect Titan Panel.
 
