@@ -74,6 +74,54 @@ local function tcl_ApplyDialogBackdrop(frame)
 end
 TitanCritLine.ApplyDialogBackdrop = tcl_ApplyDialogBackdrop;
 
+-- UISpecialFrames's native Escape behavior hides every registered frame that
+-- is currently shown, all at once - fine for a single frame, wrong once
+-- Settings, Filter, and About can all be open at the same time (About and
+-- Filter both open from Settings). Only the most-recently-shown frame's name
+-- is ever actually present in UISpecialFrames; on hide, the next-most-recent
+-- one (if any) is re-registered, so Escape closes them one at a time, in the
+-- order they were opened, like a normal window stack. Same bug and fix as
+-- CritLog's UI/Shared.lua (pushEscapeFrame/popEscapeFrame).
+local tcl_EscapeFrameStack = {};
+-- The one name currently sitting in UISpecialFrames, or nil. Tracked
+-- explicitly rather than inferred from stack position: assuming "whatever
+-- was just popped is the one in UISpecialFrames" only holds if frames are
+-- always closed in the reverse of the order they were opened. Closing a
+-- non-topmost frame directly (e.g. closing Settings while About, opened
+-- from it, is still shown) breaks that assumption and leaves a stale entry
+-- behind instead of removing it.
+local tcl_RegisteredEscapeFrame = nil;
+
+local function tcl_RemoveFromTable(t, value)
+	for i, existing in ipairs(t) do
+		if (existing == value) then
+			table.remove(t, i);
+			return;
+		end
+	end
+end
+
+local function tcl_SetRegisteredEscapeFrame(name)
+	if (tcl_RegisteredEscapeFrame) then
+		tcl_RemoveFromTable(UISpecialFrames, tcl_RegisteredEscapeFrame);
+	end
+	tcl_RegisteredEscapeFrame = name;
+	if (tcl_RegisteredEscapeFrame) then
+		tinsert(UISpecialFrames, tcl_RegisteredEscapeFrame);
+	end
+end
+
+function tcl_PushEscapeFrame(name)
+	tcl_RemoveFromTable(tcl_EscapeFrameStack, name);
+	table.insert(tcl_EscapeFrameStack, name);
+	tcl_SetRegisteredEscapeFrame(name);
+end
+
+function tcl_PopEscapeFrame(name)
+	tcl_RemoveFromTable(tcl_EscapeFrameStack, name);
+	tcl_SetRegisteredEscapeFrame(tcl_EscapeFrameStack[#tcl_EscapeFrameStack]);
+end
+
 local function tcl_EnsureInitialized()
 	if (TCL_SETTINGS == nil) then
 		TCL_SETTINGS = {};
@@ -362,7 +410,22 @@ function tcl_Reset()
 	for index = 1, #(TCL_SOURCETYPE) do
 		TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[index]] = {};
 	end
-	TitanPanelButton_UpdateTooltip( self );
+	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
+end
+
+StaticPopupDialogs["TITAN_CRITLINE_CONFIRM_RESET"] = {
+	text = "Are you sure you want to reset all CritLine records?",
+	button1 = YES,
+	button2 = NO,
+	OnAccept = tcl_Reset,
+	timeout = 0,
+	whileDead = true,
+	hideOnEscape = true,
+	preferredIndex = 3,
+};
+
+function tcl_RequestReset()
+	StaticPopup_Show("TITAN_CRITLINE_CONFIRM_RESET");
 end
 
 function tcl_SettingsClose()
@@ -437,10 +500,6 @@ function tcl_FilterClose()
 		text:Hide();
 	end
 	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
-end
-
-function tcl_ManualUpdate()
-	tcl_Update(TCL_SETTINGS["VERSION"]);
 end
 
 --[[ titan panel functions ]]

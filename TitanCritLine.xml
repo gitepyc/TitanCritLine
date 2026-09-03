@@ -124,9 +124,12 @@
 			</Anchor>
 		</Anchors>
 		<Scripts>
-			<OnLoad>
-				table.insert(UISpecialFrames, self:GetName());
-			</OnLoad>
+			<OnShow>
+				tcl_PushEscapeFrame(self:GetName());
+			</OnShow>
+			<OnHide>
+				tcl_PopEscapeFrame(self:GetName());
+			</OnHide>
 		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">
@@ -329,25 +332,7 @@
 				<Scripts>
 					<OnClick>
 						PlaySound(852); <!-- SOUNDKIT.IG_MAINMENU_OPTION -->
-						tcl_Reset();
-					</OnClick>
-				</Scripts>
-			</Button>
-			<Button name="$parent_Update" inherits="GameMenuButtonTemplate" text="TITAN_CRITLINE_OPTION_UPDATE_TEXT">
-				<Size>
-					<AbsDimension x="200" y="24"/>
-				</Size>
-				<Anchors>
-					<Anchor point="BOTTOM" relativeTo="$parent_Reset" relativePoint="TOP">
-						<Offset>
-							<AbsDimension x="0" y="15"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						PlaySound(852); <!-- SOUNDKIT.IG_MAINMENU_OPTION -->
-						tcl_ManualUpdate();
+						tcl_RequestReset();
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -356,7 +341,7 @@
 					<AbsDimension x="200" y="24"/>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOM" relativeTo="$parent_Update" relativePoint="TOP">
+					<Anchor point="BOTTOM" relativeTo="$parent_Reset" relativePoint="TOP">
 						<Offset>
 							<AbsDimension x="0" y="15"/>
 						</Offset>
@@ -380,10 +365,15 @@
 		</Anchors>
 		<Scripts>
 			<OnLoad>
-				table.insert(UISpecialFrames, 1, self:GetName());
 				self:RegisterForDrag("LeftButton");
 				self:SetClampedToScreen(true);
 			</OnLoad>
+			<OnShow>
+				tcl_PushEscapeFrame(self:GetName());
+			</OnShow>
+			<OnHide>
+				tcl_PopEscapeFrame(self:GetName());
+			</OnHide>
 			<OnDragStart>
 				self:StartMoving();
 			</OnDragStart>
@@ -423,7 +413,7 @@
 						</Anchor>
 					</Anchors>
 				</FontString>
-				<FontString name="$parent_History" inherits="GameFontNormal" justifyH="LEFT">
+				<FontString name="$parent_History" inherits="GameFontNormalSmall" justifyH="CENTER">
 					<Size>
 						<AbsDimension x="350" y="130"/>
 					</Size>
@@ -502,9 +492,12 @@
 			</Anchor>
 		</Anchors>
 		<Scripts>
-			<OnLoad>
-				table.insert(UISpecialFrames, 1, self:GetName());
-			</OnLoad>
+			<OnShow>
+				tcl_PushEscapeFrame(self:GetName());
+			</OnShow>
+			<OnHide>
+				tcl_PopEscapeFrame(self:GetName());
+			</OnHide>
 		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">
