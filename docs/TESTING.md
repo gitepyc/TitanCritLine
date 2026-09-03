@@ -85,8 +85,12 @@ combat-log parser:
   dead XML.
 - Selecting `Settings` opens the settings frame with its backdrop, labels,
   checkboxes, and level-adjustment slider visible.
+- `Filter`, `Manual Update`, `Reset All`, and `About` execute their actions
+  without a `PlaySound` argument error.
 - Entering combat produces no missing-argument error from
   `COMBAT_LOG_EVENT_UNFILTERED`.
+- A new record updates the Titan bar immediately, even when sound or screenshot
+  notifications are enabled.
 - `/reload` preserves the Titan placement and produces no additional error.
 - Disabling TitanCritLine and reloading does not affect Titan Panel.
 

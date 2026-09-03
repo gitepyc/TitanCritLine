@@ -5,7 +5,7 @@ damage highscores.
 
 ## Current state
 
-- Addon version: `0.7.1`
+- Addon version: `0.8.1`
 - Current development target: WoW Classic Era / Season of Discovery (`11509`)
 - Titan Panel baseline: unified Titan Panel `9.3.2`
 - Required dependency: Titan Panel (`Titan`)
@@ -14,7 +14,7 @@ damage highscores.
 This repository initially preserves the addon as received, apart from line
 ending normalization and exclusion of local Eclipse/LDT workspace metadata.
 The metadata now matches the working Season of Discovery baseline used by
-CritLog. Runtime compatibility is not yet verified; follow the
+CritLog. Runtime compatibility validation is in progress; follow the
 [manual test guide](docs/TESTING.md) when testing in game.
 
 The legacy source is preserved on `main` and by the `0.7.1` tag. Active work
