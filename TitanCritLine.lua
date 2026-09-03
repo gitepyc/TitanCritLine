@@ -1583,13 +1583,13 @@ function tcl_DisplayNewRecord(AttackType, DamageAmount, HitType)
 		TitanCritLineSplashFrame:AddMessage(DamageAmount, 1, 1, 1, 1, 3);
 		TitanCritLineSplashFrame:AddMessage(format(splash_msg, AttackType), 1, 1, 0, 1, 3);
 	end
-	if(TCL_SETTINGS[TCL_REALM]["SETTINGS"]["PLAYSOUND"] == "1") then 
-		PlaySound("LEVELUP", 1, 1, 0, 1, 3); 
+	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
+	if(TCL_SETTINGS[TCL_REALM]["SETTINGS"]["PLAYSOUND"] == "1" and SOUNDKIT and SOUNDKIT.LEVEL_UP) then
+		PlaySound(SOUNDKIT.LEVEL_UP);
 	end
 	if(TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SNAPSHOT"] == "1") then 
 		TakeScreenshot(); 
 	end
-	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
 end
 
 function tcl_GetHighDMG( sourceType, dmgType, healType )

@@ -57,9 +57,9 @@
 			<OnClick>
 					tcl_SettingsOptionButton_OnClick(self, self:GetID());
 					if ( self:GetChecked() ) then
-						PlaySound("igMainMenuOptionCheckBoxOff");
+						PlaySound(857); <!-- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF -->
 					else
-						PlaySound("igMainMenuOptionCheckBoxOn");
+						PlaySound(856); <!-- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON -->
 					end
 			</OnClick>
 			<OnEnter>
@@ -299,7 +299,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						PlaySound("gsTitleOptionOK");
+						PlaySound(852); <!-- SOUNDKIT.IG_MAINMENU_OPTION -->
 						tcl_About();
 					</OnClick>
 				</Scripts>
@@ -317,7 +317,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						PlaySound("gsTitleOptionOK");
+						PlaySound(852); <!-- SOUNDKIT.IG_MAINMENU_OPTION -->
 						tcl_Reset();
 					</OnClick>
 				</Scripts>
@@ -335,7 +335,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						PlaySound("gsTitleOptionOK");
+						PlaySound(852); <!-- SOUNDKIT.IG_MAINMENU_OPTION -->
 						tcl_ManualUpdate();
 					</OnClick>
 				</Scripts>
@@ -353,7 +353,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						PlaySound("gsTitleOptionOK");
+						PlaySound(852); <!-- SOUNDKIT.IG_MAINMENU_OPTION -->
 						tcl_Filter();
 					</OnClick>
 				</Scripts>
@@ -425,9 +425,9 @@
 			<OnClick>
 					tcl_FilterOptionButton_OnClick(self, self:GetID());
 					if ( self:GetChecked() ) then
-						PlaySound("igMainMenuOptionCheckBoxOff");
+						PlaySound(857); <!-- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF -->
 					else
-						PlaySound("igMainMenuOptionCheckBoxOn");
+						PlaySound(856); <!-- SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON -->
 					end
 			</OnClick>
 		</Scripts>
