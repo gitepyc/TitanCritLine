@@ -20,32 +20,43 @@ function tcl_PostMessage(messages, channel)
 	end
 end
 
--- Deliberately does not fall back to getDefaultChannel() when the specific
--- condition (in a raid / in a non-raid group) doesn't hold: that fallback is
--- itself context-sensitive and happens to resolve to "RAID" whenever you are
--- in a raid, which made "Post to Party" silently post to the raid channel
--- instead of party while in a raid (in-game reported), and symmetrically
--- made "Post to Raid" post to party/guild while not in a raid. Falls back to
--- a local-only echo instead, matching tcl_PostToGuild's existing behavior
--- when its own condition (being in a guild) doesn't hold.
-function tcl_PostToRaid()
-	if (IsInRaid()) then
-		tcl_PostMessage(tcl_GetRecordChatText(), "RAID");
-		return;
-	end
+-- Shared fallback for every Post-to-X action below when their specific
+-- channel doesn't apply (not grouped/raided/guilded) - echoes to your own
+-- chat frame only, nobody else sees it. Also exposed as its own explicit
+-- menu action (tcl_PostToLocal) for testing without posting anywhere.
+local function tcl_PostLocal()
 	for _, message in ipairs(tcl_GetRecordChatText()) do
 		tcl_Msg(message);
 	end
 end
 
+function tcl_PostToLocal()
+	tcl_PostLocal();
+end
+
+-- Each of these targets its own specific channel unconditionally whenever
+-- that channel could plausibly apply, and never substitutes a different
+-- real chat channel - only ever RAID for Raid, PARTY for Party (even while
+-- in a raid; the WoW client itself may reject SendChatMessage(..., "PARTY")
+-- while raided, needs in-game verification), GUILD for Guild. Falls back to
+-- a local-only echo, never to a different real channel (in-game reported:
+-- both used to fall back to a context-sensitive getDefaultChannel(), which
+-- made Post to Party post to the raid channel while in a raid, and Post to
+-- Raid post to party/guild chat while not in a raid).
+function tcl_PostToRaid()
+	if (IsInRaid()) then
+		tcl_PostMessage(tcl_GetRecordChatText(), "RAID");
+		return;
+	end
+	tcl_PostLocal();
+end
+
 function tcl_PostToParty()
-	if (IsInGroup() and not IsInRaid()) then
+	if (IsInGroup()) then
 		tcl_PostMessage(tcl_GetRecordChatText(), "PARTY");
 		return;
 	end
-	for _, message in ipairs(tcl_GetRecordChatText()) do
-		tcl_Msg(message);
-	end
+	tcl_PostLocal();
 end
 
 function tcl_PostToGuild()
@@ -53,9 +64,7 @@ function tcl_PostToGuild()
 		tcl_PostMessage(tcl_GetRecordChatText(), "GUILD");
 		return;
 	end
-	for _, message in ipairs(tcl_GetRecordChatText()) do
-		tcl_Msg(message);
-	end
+	tcl_PostLocal();
 end
 
 function tcl_GetRecordChatText()
