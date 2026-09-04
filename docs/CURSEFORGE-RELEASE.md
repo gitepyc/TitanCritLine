@@ -29,7 +29,16 @@ owner, instead of starting a duplicate listing under a similar name.
    (`curseforge.com/wow/addons/titan-panel-crit-line-agr8`).
 3. Include as evidence: this Gitea repository and the GitHub releases
    already published (`github.com/gitepyc/TitanCritLine`).
-4. Wait for support to process the transfer. This step has no fixed
+4. In the same request, ask to rename the project slug from
+   `titan-panel-crit-line-agr8` (carries the previous owner's username) to
+   a generic `titancritline`. Slug changes historically required a support
+   ticket rather than self-service on the older Curse platform; unclear
+   whether that's still the case on the current CurseForge/Overwolf
+   platform, so ask directly rather than assuming a self-service option
+   exists. Also ask whether the old slug will keep redirecting, since
+   external links/bookmarks to the current URL exist from the addon's
+   264k-download history.
+5. Wait for support to process the transfer. This step has no fixed
    timeline and cannot be done from this repository or automated.
 
 ## Step 2: Project page setup (after ownership transfer)
