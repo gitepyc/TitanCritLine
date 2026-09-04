@@ -31,7 +31,7 @@ owner, instead of starting a duplicate listing under a similar name.
    already published (`github.com/gitepyc/TitanCritLine`).
 4. In the same request, ask to rename the project slug from
    `titan-panel-crit-line-agr8` (carries the previous owner's username) to
-   a generic `titancritline`. Slug changes historically required a support
+   `titan-panel-crit-line`. Slug changes historically required a support
    ticket rather than self-service on the older Curse platform; unclear
    whether that's still the case on the current CurseForge/Overwolf
    platform, so ask directly rather than assuming a self-service option
