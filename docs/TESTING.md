@@ -84,7 +84,7 @@ combat-log parser:
 - Left-click follows the existing configured behavior.
 - Right-click opens the new `Titan_Menu` context menu (`registry.menuContextFunction`)
   showing, in order: a title (added by Titan itself), `Settings`, a divider,
-  `Post record to GUILD/PARTY/RAID chat`, then Titan's automatic `Show Icon`,
+  `Post record to GUILD/PARTY/RAID chat`, `Post record locally`, then Titan's automatic `Show Icon`,
   `Show Label Text`, `Display on Right Side`, and `Hide` controls. No addon-owned
   dropdown frame should appear; `TitanPanelCritLine_Button_Menu` was removed as
   dead XML.

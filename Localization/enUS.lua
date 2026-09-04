@@ -11,6 +11,7 @@ if ( GetLocale() == "enEN" or GetLocale() == "enUS" ) then
 	TITAN_CRITLINE_MENU_POSTGUILD		= "Post record to GUILD chat";
 	TITAN_CRITLINE_MENU_POSTPARTY		= "Post record to PARTY chat";
 	TITAN_CRITLINE_MENU_POSTRAID		= "Post record to RAID chat";
+	TITAN_CRITLINE_MENU_POSTLOCAL		= "Post record locally (only you see it)";
 
 	TITAN_CRITLINE_OPTION_SPLASH_TEXT	= "Display new high record splash screen";
 	TITAN_CRITLINE_OPTION_PLAYSOUNDS_TEXT	= "Play Sounds.";
