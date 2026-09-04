@@ -60,8 +60,7 @@ retaining the legacy aggregate-over-the-effect calculation.
 
 The hover summary separates damage and healing records for the player and,
 when enabled, the player's pet. A section with no visible records displays
-`No entries yet`. Healing sections are hidden entirely while healing tracking
-is disabled.
+`No entries yet`.
 
 ## Record sound
 

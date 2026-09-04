@@ -299,9 +299,7 @@ function tcl_GetSummaryRichText()
 				end
 			end
 			appendSection(sourceType, "DAMAGE", damageEntries);
-			if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] == "0") then
-				appendSection(sourceType, "HEALING", healingEntries);
-			end
+			appendSection(sourceType, "HEALING", healingEntries);
 		end
 	end
 	return summary;
