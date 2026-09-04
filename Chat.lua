@@ -20,13 +20,32 @@ function tcl_PostMessage(messages, channel)
 	end
 end
 
+-- Deliberately does not fall back to getDefaultChannel() when the specific
+-- condition (in a raid / in a non-raid group) doesn't hold: that fallback is
+-- itself context-sensitive and happens to resolve to "RAID" whenever you are
+-- in a raid, which made "Post to Party" silently post to the raid channel
+-- instead of party while in a raid (in-game reported), and symmetrically
+-- made "Post to Raid" post to party/guild while not in a raid. Falls back to
+-- a local-only echo instead, matching tcl_PostToGuild's existing behavior
+-- when its own condition (being in a guild) doesn't hold.
 function tcl_PostToRaid()
-	tcl_PostMessage(tcl_GetRecordChatText(), IsInRaid() and "RAID" or getDefaultChannel());
+	if (IsInRaid()) then
+		tcl_PostMessage(tcl_GetRecordChatText(), "RAID");
+		return;
+	end
+	for _, message in ipairs(tcl_GetRecordChatText()) do
+		tcl_Msg(message);
+	end
 end
 
 function tcl_PostToParty()
-	local channel = IsInGroup() and not IsInRaid() and "PARTY" or getDefaultChannel();
-	tcl_PostMessage(tcl_GetRecordChatText(), channel);
+	if (IsInGroup() and not IsInRaid()) then
+		tcl_PostMessage(tcl_GetRecordChatText(), "PARTY");
+		return;
+	end
+	for _, message in ipairs(tcl_GetRecordChatText()) do
+		tcl_Msg(message);
+	end
 end
 
 function tcl_PostToGuild()
