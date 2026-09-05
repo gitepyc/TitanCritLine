@@ -4,6 +4,10 @@ This file records the compatibility port developed after the archived 0.7.1
 release. The original changelog is preserved in
 [`docs/legacy/CHANGELOG-0.7.1.txt`](docs/legacy/CHANGELOG-0.7.1.txt).
 
+## 0.9.1-dev
+
+- Hid the player and pet healing summary sections while healing tracking is disabled.
+
 ## 0.9
 
 - Made the Settings window movable and clamped it to the visible screen.
