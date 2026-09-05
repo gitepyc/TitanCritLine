@@ -10,6 +10,27 @@ release. The original changelog is preserved in
 actual wording in the commit message, not here - this file (and each
 GitHub release's notes) are a mechanical render of it, not a second
 drafting pass.
+## [0.8.5](https://github.com/gitepyc/TitanCritLine/tree/0.8.5) (2026-09-07)
+[Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.4...0.8.5) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
+
+- **docs:** add CurseForge release plan
+
+- **docs:** note slug rename request alongside the ownership transfer
+
+- **docs:** use titan-panel-crit-line as the requested slug
+
+- **feature:** hide disabled healing summary sections
+
+- **feature:** Post to Party always uses /p, add explicit Post to Local
+
+- **fix:** make settings window movable
+
+- **fix:** hide GameTooltip before re-showing settings/filter help tooltips
+
+- **fix:** HoT/DoT records never finalized for any target but yourself
+
+- **fix:** Post to Party posted to raid chat while in a raid
+
 ## [0.8.4](https://github.com/gitepyc/TitanCritLine/tree/0.8.4) (2026-09-07)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.3...0.8.4) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
 
