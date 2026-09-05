@@ -11,11 +11,11 @@ sections get folded into one consolidated summary under the next real
 release heading rather than kept individually forever (same convention as
 the sibling CritLog project).
 
-## Unreleased
+## 0.9.1.2-dev
 
 - **fix:** hostile mobs' periodic damage/debuffs on you or on party members were tracked and displayed as your own pet's DOT damage - any source that isn't you or your own pet is no longer tracked at all
-- **docs:** added `CONTRIBUTING.md` (bug report checklist, PR-against-`dev` guideline)
 - **feature:** declared TOC compatibility with TBC Classic, Cataclysm Classic, and Mainline/Retail (`## Interface: 120100, 50504, 20506, 11509`), matching the multi-flavor interface list the `Titan` dependency itself already declares - only Classic Era/SoD has been verified in a real client so far
+- **docs:** added `CONTRIBUTING.md` (bug report checklist, PR-against-`dev` guideline)
 
 ## 0.9.1.1-dev
 
