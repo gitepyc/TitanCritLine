@@ -7,7 +7,6 @@ local DAMAGE_TYPE_NONHEAL = addon.DAMAGE_TYPE_NONHEAL;
 local DAMAGE_TYPE_HEAL = addon.DAMAGE_TYPE_HEAL;
 local SHOW_WELCOME = 0;
 local TRACK_DMG = true;
-local TCL_PUID = nil;
 local TCL_EVENT_TARGET_GUID = nil;
 
 function addon:GetCurrentTargetGUID()
@@ -142,11 +141,7 @@ function tcl_OnEvent(self, event, ...)
 	    -- String - The UnitId to query (e.g. "player", "party2", "pet", "target" etc.)
 		if ( arg5 == UnitName("player") and bit.band(arg6, COMBATLOG_FILTER_ME) ~= 0 ) then
 			srcType = TCL_SOURCETYPE[1];
-			if (TCL_PUID == nil ) then
-				TCL_PUID = arg4;
-				tcl_DEBUG("TCL_PUID = "..TCL_PUID);
-			end
-		elseif ( bit.band(arg6, COMBATLOG_OBJECT_TYPE_PLAYER) == 0 
+		elseif ( bit.band(arg6, COMBATLOG_OBJECT_TYPE_PLAYER) == 0
 				and bit.band( arg6, COMBATLOG_OBJECT_AFFILIATION_MINE) ~= 0 
 				and bit.band( arg6, COMBATLOG_FILTER_MY_PET ) ~= 0 ) then
 				srcType = TCL_SOURCETYPE[2];
@@ -311,48 +306,51 @@ function tcl_OnEvent(self, event, ...)
 					end
 		   		end
 		   end
+		   -- SPELL_AURA_REMOVED/REFRESH used to gate on "arg8 == UnitName("player")"
+		   -- (the buff's target being yourself) and then match table entries against
+		   -- TCL_PUID (your own source GUID, not the target's). That only ever
+		   -- resolved for HoTs/DoTs you put on yourself; casting Renew (or any
+		   -- periodic effect) on someone else never finalized or cleaned up its
+		   -- entry, since neither the gate nor the GUID comparison could ever be
+		   -- true for another target. SPELL_AURA_APPLIED and SPELL_PERIODIC_HEAL/
+		   -- DAMAGE already key entries by arg7 (the actual target GUID of this
+		   -- event) under the correctly-detected srcType (not hardcoded to "MY") -
+		   -- REMOVED/REFRESH now do the same, so any target's effect resolves.
 		   if ( srcType ~= nil ) then
-		   		if ( arg2 == "SPELL_AURA_REMOVED" ) then		   				 		
-		 			if ( arg8 == UnitName("player") and TCL_PUID ~= nil ) then		 				
-		 				if ( TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[1]][arg11] ~= nil ) then
+		   		if ( arg2 == "SPELL_AURA_REMOVED" ) then
+		 			if ( TCL_DOT["DOT_DATA"][srcType][arg11] ~= nil ) then
+		 				local entry = TCL_DOT["DOT_DATA"][srcType][arg11][arg7];
+		 				if ( entry ~= nil ) then
 		 					tcl_DEBUG("AURA_REMOVED: Removing "..arg11.." from the DOT database from "..arg8);
-			 				for gUID,v in pairs(TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[1]][arg11]) do	
-			 					tcl_DEBUG("gUID["..gUID.."] TCL_PUID ["..TCL_PUID.."]");			 					 						
-			 					if ( gUID == TCL_PUID ) then			 								 								 							
-			 						if ( v[2] == true ) then		 								
-									   	tcl_RecordHit(arg11, "DOT", tonumber(v[1]), "You", DAMAGE_TYPE_HEAL);
-									else
-										tcl_RecordHit(arg11, "DOT", tonumber(v[1]), arg8, DAMAGE_TYPE_NONHEAL);								    
-									end
-									removeVal = table.removekey(TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[1]][arg11], arg4);
-			 						tcl_DEBUG("SPELL_AURA_REMOVED [SELF]: Removed ["..removeVal[1].."] from "..arg11.." K "..arg4);
-			 					end
-			 				end
-			 			end
-		 			end			 				
+		 					if ( entry[2] == true ) then
+		 						tcl_RecordHit(arg11, "DOT", tonumber(entry[1]), "You", DAMAGE_TYPE_HEAL);
+		 					else
+		 						tcl_RecordHit(arg11, "DOT", tonumber(entry[1]), arg8, DAMAGE_TYPE_NONHEAL);
+		 					end
+		 					TCL_DOT["DOT_DATA"][srcType][arg11][arg7] = nil;
+		 					tcl_DEBUG("SPELL_AURA_REMOVED: Removed ["..entry[1].."] from "..arg11.." K "..arg7);
+		 				end
+		 			end
 		   		end
 		   end
 		   if ( srcType ~= nil ) then
-		   		if ( arg2 == "SPELL_AURA_REFRESH" ) then			   			
-		   			-- since we refreshed the spell, we need to lock down the damage store now so we do not overlap the results	 			
-		 			if ( arg8 == UnitName("player") and TCL_PUID ~= nil ) then
-		 				if ( TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[1]][arg11] ~= nil ) then
-			 				tcl_DEBUG("AURA_REFRESH: Removing "..arg11.." from the DOT database from"..arg8);		 				
-			 				for gUID,v in pairs(TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[1]][arg11]) do		 						
-			 					if ( gUID == TCL_PUID ) then		 								 							
-			 						if ( v[2] == true ) then		 								
-									   	tcl_RecordHit(arg11, "DOT", tonumber(v[1]), "You", DAMAGE_TYPE_HEAL);	
-									else 
-										tcl_RecordHit(arg11, "DOT", tonumber(v[1]), arg8, DAMAGE_TYPE_NONHEAL);							    
-									end
-									removeVal = table.removekey(TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[1]][arg11], arg4);
-			 						tcl_DEBUG("SPELL_AURA_REFESH [SELF]: Removed ["..removeVal[1].."] from "..arg11.." K "..arg4);
-			 					end
-			 				end
-			 			end
-		 			end									
+		   		if ( arg2 == "SPELL_AURA_REFRESH" ) then
+		   			-- since we refreshed the spell, we need to lock down the damage store now so we do not overlap the results
+		 			if ( TCL_DOT["DOT_DATA"][srcType][arg11] ~= nil ) then
+		 				local entry = TCL_DOT["DOT_DATA"][srcType][arg11][arg7];
+		 				if ( entry ~= nil ) then
+		 					tcl_DEBUG("AURA_REFRESH: Removing "..arg11.." from the DOT database from "..arg8);
+		 					if ( entry[2] == true ) then
+		 						tcl_RecordHit(arg11, "DOT", tonumber(entry[1]), "You", DAMAGE_TYPE_HEAL);
+		 					else
+		 						tcl_RecordHit(arg11, "DOT", tonumber(entry[1]), arg8, DAMAGE_TYPE_NONHEAL);
+		 					end
+		 					TCL_DOT["DOT_DATA"][srcType][arg11][arg7] = nil;
+		 					tcl_DEBUG("SPELL_AURA_REFRESH: Removed ["..entry[1].."] from "..arg11.." K "..arg7);
+		 				end
+		 			end
 			   end
-		   end		
+		   end
 		elseif ( arg2 == "SPELL_SUMMON" ) then
 			local isHeal = false;
 			
