@@ -47,6 +47,7 @@ the [feature reference](docs/FEATURES.md).
 
 ## Documentation
 
+- [Contributing](CONTRIBUTING.md) — bug report checklist and pull request guidelines
 - [Feature reference](docs/FEATURES.md) — settings, filters, records, and notifications
 - [Manual testing](docs/TESTING.md) — supported baseline and regression checklist
 - [Compatibility roadmap](docs/MODERNIZATION-PLAN.md) — completed and deferred modernization work
