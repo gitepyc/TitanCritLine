@@ -13,6 +13,7 @@ the sibling CritLog project).
 
 ## Unreleased
 
+- **docs:** added `CONTRIBUTING.md` (bug report checklist, PR-against-`dev` guideline)
 - **feature:** declared TOC compatibility with TBC Classic, Cataclysm Classic, and Mainline/Retail (`## Interface: 120100, 50504, 20506, 11509`), matching the multi-flavor interface list the `Titan` dependency itself already declares - only Classic Era/SoD has been verified in a real client so far
 
 ## 0.9.1.1-dev
