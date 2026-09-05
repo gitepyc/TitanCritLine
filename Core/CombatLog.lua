@@ -34,7 +34,6 @@ end
 function tcl_OnEvent(self, event, ...)
     local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20 = select(1, ...);
 	local srcType;
-	local myUnit = false;
 
 	if (event == "COMBAT_LOG_EVENT_UNFILTERED") then
 		arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
@@ -142,19 +141,20 @@ function tcl_OnEvent(self, event, ...)
 		if ( arg5 == UnitName("player") and bit.band(arg6, COMBATLOG_FILTER_ME) ~= 0 ) then
 			srcType = TCL_SOURCETYPE[1];
 		elseif ( bit.band(arg6, COMBATLOG_OBJECT_TYPE_PLAYER) == 0
-				and bit.band( arg6, COMBATLOG_OBJECT_AFFILIATION_MINE) ~= 0 
+				and bit.band( arg6, COMBATLOG_OBJECT_AFFILIATION_MINE) ~= 0
 				and bit.band( arg6, COMBATLOG_FILTER_MY_PET ) ~= 0 ) then
 				srcType = TCL_SOURCETYPE[2];
-		elseif ( bit.band(arg6, COMBATLOG_OBJECT_TYPE_GUARDIAN) == 0 and
-				 bit.band(arg6, COMBATLOG_OBJECT_CONTROL_PLAYER) == 0 and
-				 bit.band(arg6, COMBATLOG_OBJECT_REACTION_FRIENDLY) == 0 and
-				 bit.band(arg6, COMBATLOG_OBJECT_AFFILIATION_MINE) == 0 ) then
-					 
-				srcType = TCL_SOURCETYPE[2];  -- for now use pet, may create GUARDIAN grouping later
-				myUnit = true;
 		end
-			    
-	    if ( event ~= nil ) then 
+		-- Any other source (a hostile mob, another player, another player's pet,
+		-- ...) leaves srcType nil on purpose - this is not you or your own pet
+		-- dealing/receiving damage, so it has no place in a personal crit
+		-- tracker and every DOT/HOT block below is already gated on
+		-- srcType ~= nil. Used to fall through to the "PET" bucket ("for now
+		-- use pet, may create GUARDIAN grouping later"), which meant a mob's
+		-- DoT on you or on another party member got recorded and displayed as
+		-- if it were your own pet's damage.
+
+	    if ( event ~= nil ) then
 	        tcl_DEBUG("Received Event: ["..(arg2 or "none").."]");	    
 	    end  
 		if ( arg2 == "SPELL_HEAL" ) then 
@@ -369,40 +369,10 @@ function tcl_OnEvent(self, event, ...)
 		elseif ( arg2 == "UNIT_DIED" or arg2 == "PARTY_KILL" or arg2 == "UNIT_DESTROYED" ) then
 			local removeVal, dest;
 			local destID = arg7;
-			
-			if ( myUnit == true ) then
-				destID = arg4;
-			end
-					
+
 			-- check DOT table for spells that may have damaged this unit
 			tcl_DEBUG("High DOT "..tcl_GetHighDMG("MY", "DOT"));
-			
-			if ( arg5 == UnitName("player") and bit.band(arg6, COMBATLOG_FILTER_ME) ~= 0 ) then
-				srcType = TCL_SOURCETYPE[1];
-			elseif ( bit.band(arg6, COMBATLOG_OBJECT_TYPE_PLAYER) == 0 
-					and bit.band( arg6, COMBATLOG_OBJECT_AFFILIATION_MINE) ~= 0 
-					and bit.band( arg6, COMBATLOG_FILTER_MY_PET ) ~= 0 ) then
-					srcType = TCL_SOURCETYPE[2];
-			elseif ( bit.band(arg6, COMBATLOG_OBJECT_TYPE_GUARDIAN) == 0 and
-					 bit.band(arg6, COMBATLOG_OBJECT_CONTROL_PLAYER) == 0 and
-					 bit.band(arg6, COMBATLOG_OBJECT_REACTION_FRIENDLY) == 0 and
-					 bit.band(arg6, COMBATLOG_OBJECT_AFFILIATION_MINE) == 0 ) then
-					 					 					 
-					 -- cleaning DOT table for damage associated to this mob
-					 	
-					 for spellName,v in pairs(TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[2]]) do							
-					 	for gUID,v in pairs(TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[2]][spellName]) do	
-					 		removeVal = table.removekey(TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[2]][spellName], gUID);
-				     		if ( removeVal == nil) then
-								removeVal = "nil";
-					 		end
-					 		tcl_DEBUG("MOB: Removed ["..removeVal[1].."] from "..spellName.." K "..gUID.." V "..v[1]);
-					 	end
-					 end			 
-			else
-				-- for now unit items like totem healing dots are not stored.
-				tcl_DEBUG("arg6 : "..arg6.." is not stored.");
-			end
+
 			for i = 1, #(TCL_SOURCETYPE) do
 				for spellName,v in pairs(TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[i]]) do							
 					for gUID,v in pairs(TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[i]][spellName]) do					  								 				 	
@@ -445,10 +415,7 @@ function tcl_OnEvent(self, event, ...)
 			local oDOT, nTotal;
 			local destID = arg7;
 			local temp = "FALSE";
-			
-			if ( myUnit == true ) then
-				destID = arg4;
-			end
+
 			if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] == "0") then
 				if ( arg5 == UnitName("player") ) then
 					if ( TCL_DOT["DOT_DATA"][srcType][arg11] ~= nil ) then

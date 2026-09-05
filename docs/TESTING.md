@@ -115,6 +115,9 @@ combat-log parser:
   button at the bottom.
 - After at least one normal hit and one critical hit of the same ability, its
   displayed critical percentage is below 100% and matches the recorded counts.
+- A mob's periodic damage/debuff on you or on a party member produces no
+  DOT record and no pet-summary entry - only your own and your own pet's
+  effects are tracked.
 - Entering combat produces no missing-argument error from
   `COMBAT_LOG_EVENT_UNFILTERED`.
 - A new record updates the Titan bar immediately, even when sound or screenshot
