@@ -4,16 +4,23 @@ This file records the compatibility port developed after the archived 0.7.1
 release. The original changelog is preserved in
 [`docs/legacy/CHANGELOG-0.7.1.txt`](docs/legacy/CHANGELOG-0.7.1.txt).
 
+**Entry format:** one line per change, `**type:** short bullet`
+(`feature`/`fix`/etc., bolded) - as terse as possible, no prose, no
+rationale. Save the "why" for the commit message/PR, not here. `-dev`
+sections get folded into one consolidated summary under the next real
+release heading rather than kept individually forever (same convention as
+the sibling CritLog project).
+
 ## 0.9.1.1-dev
 
-- Fixed the settings/filter help tooltip sometimes rendering oversized (GameTooltip now hidden before every re-show).
-- Fixed HoT/DoT records never finalizing for any target but yourself (e.g. Renew cast on someone else never produced a record).
-- Fixed Post to Party posting to raid chat while in a raid; Post to Party now always posts to `/p`, Post to Raid always to `/ra`, both falling back to a local-only echo instead of substituting a different channel.
-- Added an explicit "Post record locally" menu action.
+- **fix:** settings/filter help tooltip sometimes rendered oversized (`GameTooltip` now hidden before every re-show)
+- **fix:** HoT/DoT records never finalized for any target but yourself (e.g. Renew cast on someone else never produced a record)
+- **fix:** Post to Party posted to raid chat while in a raid - Post to Party now always posts to `/p`, Post to Raid always to `/ra`, both falling back to a local-only echo instead of substituting a different channel
+- **feature:** explicit "Post record locally" menu action
 
 ## 0.9.1-dev
 
-- Hid the player and pet healing summary sections while healing tracking is disabled.
+- **feature:** hid the player and pet healing summary sections while healing tracking is disabled
 
 ## 0.9
 
