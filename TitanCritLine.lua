@@ -525,6 +525,7 @@ function TitanCritLine_MenuGenerator(owner, rootDescription)
 	Titan_Menu.AddCommand(root, id, TITAN_CRITLINE_MENU_POSTGUILD, tcl_PostToGuild);
 	Titan_Menu.AddCommand(root, id, TITAN_CRITLINE_MENU_POSTPARTY, tcl_PostToParty);
 	Titan_Menu.AddCommand(root, id, TITAN_CRITLINE_MENU_POSTRAID, tcl_PostToRaid);
+	Titan_Menu.AddCommand(root, id, TITAN_CRITLINE_MENU_POSTLOCAL, tcl_PostToLocal);
 end
 
 function tcl_GetButtonText( id )
