@@ -3,7 +3,7 @@ DEBUG = false; -- for internal testing only, leave it set to false!
 
 --[[ global addon variables ]]
 local TITAN_CRITLINE_ID =  "CritLine";
-local TITAN_CRITLINE_VERSION = "0.8.5";
+local TITAN_CRITLINE_VERSION = "0.9.1.1-dev";
 local TITAN_CRITLINE_BUTTON_LABEL = "CL: ";
 local TITAN_CRITLINE_BUTTON_ICON = "Interface\\AddOns\\TitanCritLine\\TitanCritLine";
 local TITAN_CRITLINE_BUTTON_TEXT = "%s/%s/%s";
@@ -248,6 +248,15 @@ function table.removekey(table, key)
 end
 
 function tcl_SettingsOptionButton_OnEnter( self )
+	-- GameTooltip is a single shared frame (every addon and Blizzard UI
+	-- element uses the same instance), and it doesn't always shrink back
+	-- down to a new SetText's actual size if it's still showing when
+	-- SetText is called again - in-game reported: the tooltip sometimes
+	-- rendered much too large, fixed by moving the mouse away and
+	-- re-hovering (which hides and re-shows it). Hiding first forces a
+	-- clean reset every time instead of relying on that happening on its
+	-- own. Same bug and fix as CritLog's UI/Shared.lua (attachTooltip).
+	GameTooltip:Hide();
     GameTooltip:SetOwner(UIParent, "ANCHOR_NONE");
 	GameTooltip:SetPoint("TOPLEFT", self:GetName(), "BOTTOMLEFT", -10, -4);
 	GameTooltip:SetText(self.HelpText);
