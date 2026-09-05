@@ -4,6 +4,13 @@ This file records the compatibility port developed after the archived 0.7.1
 release. The original changelog is preserved in
 [`docs/legacy/CHANGELOG-0.7.1.txt`](docs/legacy/CHANGELOG-0.7.1.txt).
 
+## 0.9.1.1-dev
+
+- Fixed the settings/filter help tooltip sometimes rendering oversized (GameTooltip now hidden before every re-show).
+- Fixed HoT/DoT records never finalizing for any target but yourself (e.g. Renew cast on someone else never produced a record).
+- Fixed Post to Party posting to raid chat while in a raid; Post to Party now always posts to `/p`, Post to Raid always to `/ra`, both falling back to a local-only echo instead of substituting a different channel.
+- Added an explicit "Post record locally" menu action.
+
 ## 0.9.1-dev
 
 - Hid the player and pet healing summary sections while healing tracking is disabled.
