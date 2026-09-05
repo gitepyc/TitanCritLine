@@ -10,18 +10,29 @@ only the game client can validate WoW and Titan Panel APIs.
 
 | Component | Version |
 | --- | --- |
-| WoW flavor | Classic Era / Season of Discovery |
-| WoW interface | `11509` |
-| Interface source | The current working CritLog addon in the same workspace |
+| WoW flavor tested | Classic Era / Season of Discovery |
+| WoW flavors declared | Classic Era/SoD, TBC Classic, Cataclysm Classic, Mainline/Retail |
+| WoW interface (tested) | `11509` |
+| WoW interface (declared, all flavors) | `120100, 50504, 20506, 11509` |
+| Interface source | Verified against the real `Titan.toc` (and every bundled Titan plugin's `.toc`) in Titan Panel 9.3.2, which declares the same four values for its own core |
 | Titan distribution | Unified Titan Panel |
 | Titan version | `9.3.2` |
 | Titan dependency name | `Titan` |
 | Titan package | Complete unified package from CurseForge |
 
-Interface `11509` is used by the tested Season of Discovery client. Titan Panel
-9.3.2, released on 21 August 2026, remained the newest CurseForge release when
-this documentation was reviewed on 3 September 2026. Re-check both values when
-the client or Titan Panel is updated.
+Only `11509` (Classic Era/SoD) has been verified in an actual game client. The
+other three interface values are declared because the `Titan` dependency
+itself already supports all four in a single `.toc` (comma-separated
+`## Interface:` list, the same pattern used here) and TitanCritLine's own code
+uses no flavor-specific API (`CombatLogGetCurrentEventInfo()`, `Titan_Menu`,
+`GameTooltip` are all identical across these flavors). Run the smoke test
+below on TBC/Cata/Retail before relying on this declaration in practice - if a
+real difference turns up, split into per-flavor `.toc` files (e.g.
+`TitanCritLine_TBC.toc`) instead of the single combined list, following the
+pattern Titan's own `TitanAmmo`/`TitanRegen` plugins use for flavor-specific
+code. Titan Panel 9.3.2, released on 21 August 2026, remained the newest
+CurseForge release when this documentation was reviewed on 3 September 2026.
+Re-check all interface values when the client or Titan Panel is updated.
 
 ## Installation
 

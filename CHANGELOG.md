@@ -11,6 +11,10 @@ sections get folded into one consolidated summary under the next real
 release heading rather than kept individually forever (same convention as
 the sibling CritLog project).
 
+## Unreleased
+
+- **feature:** declared TOC compatibility with TBC Classic, Cataclysm Classic, and Mainline/Retail (`## Interface: 120100, 50504, 20506, 11509`), matching the multi-flavor interface list the `Titan` dependency itself already declares - only Classic Era/SoD has been verified in a real client so far
+
 ## 0.9.1.1-dev
 
 - **fix:** settings/filter help tooltip sometimes rendered oversized (`GameTooltip` now hidden before every re-show)
