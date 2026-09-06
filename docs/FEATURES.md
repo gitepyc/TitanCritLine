@@ -63,6 +63,14 @@ when enabled, the player's pet. A section with no visible records displays
 `No entries yet`. Healing sections are hidden entirely while healing tracking
 is disabled.
 
+`Do not count DoT/HoT effects` stops tracking periodic damage and healing
+entirely - the button text shrinks to `normal / critical` (and, with healing
+included, `direct heal / critical heal`), and the hover summary shows no DoT
+or HoT lines. Only the player and the player's own pet were ever tracked as a
+DoT/HoT source in the first place; a hostile mob's periodic damage/debuffs on
+you or on a party member were never meant to be, and are always ignored
+regardless of this setting.
+
 ## Record sound
 
 When `Play sound` is enabled, every new normal-hit, critical-hit, or periodic

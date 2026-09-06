@@ -182,6 +182,9 @@ function tcl_GetSummaryRichText()
 		summary = summary..line;
 	end
 
+	local trackDOT = TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_DOT"] ~= "1";
+	local hitTypes = trackDOT and { "NORMAL", "CRIT", "DOT" } or { "NORMAL", "CRIT" };
+
 	for i = 1, #(TCL_SOURCETYPE) do
 		local sourceType = TCL_SOURCETYPE[i];
 		if (sourceType ~= "PET" or TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOW_PET"] == "1") then
@@ -215,7 +218,7 @@ function tcl_GetSummaryRichText()
 						crithits = attackData["CRIT"]["Value"];
 					end
 				end
-				if (attackData["DOT"] == nil) then
+				if (not trackDOT or attackData["DOT"] == nil) then
 					dothits = 0;
 				else
 					if (attackData["DOT"]["Value"] == nil) then
@@ -267,7 +270,7 @@ function tcl_GetSummaryRichText()
 				else
 					attackText = COLOR(HEADER_TEXT_COLOR, attackType).."\n";
 				end
-				for _,hitType in ipairs ({ "NORMAL", "CRIT", "DOT" }) do
+				for _,hitType in ipairs (hitTypes) do
 					if (attackData[hitType] ~= nil) then
 						if (hitType == "NORMAL") then
 						local normOrHeal = hidmg;

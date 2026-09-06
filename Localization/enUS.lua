@@ -30,7 +30,8 @@ if ( GetLocale() == "enEN" or GetLocale() == "enUS" ) then
 	TITAN_CRITLINE_OPTION_SHOWHITS_TEXT	= "Show all hits on tooltip";
 	TITAN_CRITLINE_OPTION_MOBFILTER_TEXT	= "Don't count damage on special mobs";
 	TITAN_CRITLINE_OPTION_ALL_SPELLS_TEXT	= "Store all spells casted (Includes non-damage)";
-	
+	TITAN_CRITLINE_OPTION_FILTER_DOT_TEXT	= "Do not count DoT/HoT effects.";
+
 	TITAN_CRITLINE_OPTION_SPLASH_HELPTEXT	= "Splash Screen\nShows the new record on the middle of the screen.";
 	TITAN_CRITLINE_OPTION_PLAYSOUNDS_HELPTEXT = "Sounds\nPlays a sound on a new record.";
 	TITAN_CRITLINE_OPTION_PVPONLY_HELPTEXT	= "PvP\nIf marked only hits against other players are recorded.";
@@ -44,7 +45,8 @@ if ( GetLocale() == "enEN" or GetLocale() == "enUS" ) then
 	TITAN_CRITLINE_OPTION_SHOWHITS_HELPTEXT	= "Overall Hits\nIf marked, all hits for each attack will be shown.";
 	TITAN_CRITLINE_OPTION_MOBFILTER_HELPTEXT = "In some high end instances are special mobs that are very vulnarable against\nspecial magical attacks, if you activate this option\nthey are not counted in CritLine.";
 	TITAN_CRITLINE_OPTION_ALL_SPELLS_HELPTEXT = "Store All Spells casted \nEnable if you want to see all spells that you casted, all pet spells are already processed.";
-	
+	TITAN_CRITLINE_OPTION_FILTER_DOT_HELPTEXT = "Filter DoT/HoT\nIf marked, periodic damage and healing effects are not tracked and hidden from the summary and button text.";
+
 	TITAN_CRITLINE_TOOLTIP_HEADER		= "Summary";
 
 	TITAN_CRITLINE_NEW_RECORD_MSG		= "New %s Record!";

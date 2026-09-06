@@ -3,10 +3,11 @@ DEBUG = false; -- for internal testing only, leave it set to false!
 
 --[[ global addon variables ]]
 local TITAN_CRITLINE_ID =  "CritLine";
-local TITAN_CRITLINE_VERSION = "0.9.1.1-dev";
+local TITAN_CRITLINE_VERSION = "0.9.1.2-dev";
 local TITAN_CRITLINE_BUTTON_LABEL = "CL: ";
 local TITAN_CRITLINE_BUTTON_ICON = "Interface\\AddOns\\TitanCritLine\\TitanCritLine";
 local TITAN_CRITLINE_BUTTON_TEXT = "%s/%s/%s";
+local TITAN_CRITLINE_BUTTON_TEXT_NODOT = "%s/%s";
 local TITAN_CRITLINE_RECORD_SOUND = 888; -- SOUNDKIT.LEVEL_UP
 local TITAN_CRITLINE_NEW_HOT_RECORD_MSG = "New HOT %s Record!";
 local HOT_TEXT = "HOT";
@@ -209,6 +210,11 @@ function tcl_DisplaySettings()
 	if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["ALL_SPELLS"] == "1" ) then
 		TitanCritLine_SettingsFrame_Option11:SetChecked(true);
 	end
+	TitanCritLine_SettingsFrame_Option13Text:SetText(COLOR(SUBHEADER_TEXT_COLOR, TITAN_CRITLINE_OPTION_FILTER_DOT_TEXT));
+	TitanCritLine_SettingsFrame_Option13.HelpText = TITAN_CRITLINE_OPTION_FILTER_DOT_HELPTEXT;
+	if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_DOT"] == "1" ) then
+		TitanCritLine_SettingsFrame_Option13:SetChecked(true);
+	end
 	TitanCritLine_SettingsFrame_Slider1:Show();
 	TitanCritLine_SettingsFrame:Show();
 end 
@@ -238,6 +244,8 @@ function tcl_SettingsOptionButton_OnClick( self, button )
 		tcl_TogglePet();
 	elseif ( button == 12 ) then
 		tcl_ToggleAllSpells();
+	elseif ( button == 13 ) then
+		tcl_ToggleDOT();
 	end
 	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
 end
@@ -412,6 +420,17 @@ function tcl_ToggleAllSpells()
 	TitanPanelButton_UpdateTooltip( self );
 end
 
+function tcl_ToggleDOT()
+	if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_DOT"] == "0" ) then
+		TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_DOT"] = "1";
+		tcl_DEBUG(TITAN_CRITLINE_ID.." filter DoT/HoT on");
+	else
+		TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_DOT"] = "0";
+		tcl_DEBUG(TITAN_CRITLINE_ID.." filter DoT/HoT off");
+	end
+	TitanPanelButton_UpdateTooltip( self );
+end
+
 function tcl_Reset()
 	for index = 1, #(TCL_SOURCETYPE) do
 		TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[index]] = {};
@@ -530,16 +549,37 @@ end
 
 function tcl_GetButtonText( id )
 	local id = TitanUtils_GetButton( id );
-	local buttonRichText = format(TITAN_CRITLINE_BUTTON_TEXT, COLOR(BODY_TEXT_COLOR, 0), COLOR(BODY_TEXT_COLOR, 0), COLOR(BODY_TEXT_COLOR, 0) );
+	local trackDOT = true;
+	local buttonRichText;
+
+	if (TCL_SETTINGS ~= nil and TCL_SETTINGS[TCL_REALM] ~= nil) then
+		trackDOT = TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_DOT"] ~= "1";
+	end
+
+	local function damageText(healType)
+		if (trackDOT) then
+			return format(TITAN_CRITLINE_BUTTON_TEXT,
+				COLOR(BODY_TEXT_COLOR, tcl_GetHighDMG("MY", "NORMAL", healType)),
+				COLOR(BODY_TEXT_COLOR, tcl_GetHighDMG("MY", "CRIT", healType)),
+				COLOR(BODY_TEXT_COLOR, tcl_GetHighDMG("MY", "DOT", healType)));
+		end
+		return format(TITAN_CRITLINE_BUTTON_TEXT_NODOT,
+			COLOR(BODY_TEXT_COLOR, tcl_GetHighDMG("MY", "NORMAL", healType)),
+			COLOR(BODY_TEXT_COLOR, tcl_GetHighDMG("MY", "CRIT", healType)));
+	end
+
+	if (trackDOT) then
+		buttonRichText = format(TITAN_CRITLINE_BUTTON_TEXT, COLOR(BODY_TEXT_COLOR, 0), COLOR(BODY_TEXT_COLOR, 0), COLOR(BODY_TEXT_COLOR, 0));
+	else
+		buttonRichText = format(TITAN_CRITLINE_BUTTON_TEXT_NODOT, COLOR(BODY_TEXT_COLOR, 0), COLOR(BODY_TEXT_COLOR, 0));
+	end
 
 	if (TCL_SETTINGS ~= nil ) then
 		if ( id ~= 0 ) then
 			if ( TCL_SETTINGS[TCL_REALM] ~= nil ) then
-				if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] == "0") then 				
-					buttonRichText = format(TITAN_CRITLINE_BUTTON_TEXT, COLOR(BODY_TEXT_COLOR, tcl_GetHighDMG()), COLOR(BODY_TEXT_COLOR, tcl_GetHighDMG("MY", "CRIT")), COLOR(BODY_TEXT_COLOR, tcl_GetHighDMG("MY", "DOT")));
-					buttonRichText = buttonRichText.." - "..format(TITAN_CRITLINE_BUTTON_TEXT, COLOR(BODY_TEXT_COLOR, tcl_GetHighDMG("MY", "NORMAL", "1")), COLOR(BODY_TEXT_COLOR, tcl_GetHighDMG("MY", "CRIT", "1")), COLOR(BODY_TEXT_COLOR, tcl_GetHighDMG("MY", "DOT", "1"))); 
-				else 
-					buttonRichText = format(TITAN_CRITLINE_BUTTON_TEXT, COLOR(BODY_TEXT_COLOR, tcl_GetHighDMG()), COLOR(BODY_TEXT_COLOR, tcl_GetHighDMG("MY", "CRIT")), COLOR(BODY_TEXT_COLOR, tcl_GetHighDMG("MY", "DOT")));
+				buttonRichText = damageText();
+				if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] == "0") then
+					buttonRichText = buttonRichText.." - "..damageText("1");
 				end
 			end
 		end
@@ -872,8 +912,15 @@ function tcl_Initialize(tcl_Table)
 	if ( tab[TCL_REALM]["SETTINGS"]["ALL_SPELLS"] == nil ) then
 		if (existingSettings["ALL_SPELLS"] ~= nil) then
 			tab[TCL_REALM]["SETTINGS"]["ALL_SPELLS"] = existingSettings["ALL_SPELLS"];
-		else 
+		else
 			tab[TCL_REALM]["SETTINGS"]["ALL_SPELLS"] = "0";
+		end
+	end
+	if ( tab[TCL_REALM]["SETTINGS"]["FILTER_DOT"] == nil ) then
+		if (existingSettings["FILTER_DOT"] ~= nil) then
+			tab[TCL_REALM]["SETTINGS"]["FILTER_DOT"] = existingSettings["FILTER_DOT"];
+		else
+			tab[TCL_REALM]["SETTINGS"]["FILTER_DOT"] = "0";
 		end
 	end
 	if (tab[TCL_REALM]["DATA"] == nil) then

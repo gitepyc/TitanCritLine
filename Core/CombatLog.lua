@@ -145,6 +145,7 @@ function tcl_OnEvent(self, event, ...)
 				and bit.band( arg6, COMBATLOG_FILTER_MY_PET ) ~= 0 ) then
 				srcType = TCL_SOURCETYPE[2];
 		end
+		local trackDOT = TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_DOT"] ~= "1";
 		-- Any other source (a hostile mob, another player, another player's pet,
 		-- ...) leaves srcType nil on purpose - this is not you or your own pet
 		-- dealing/receiving damage, so it has no place in a personal crit
@@ -289,9 +290,9 @@ function tcl_OnEvent(self, event, ...)
 				tcl_DEBUG("AURA: "..arg11.." S: ["..src.."]T: ["..trg.."] TYPE: ["..dmg.."]");				
 			end
 
-			if ( srcType ~= nil ) then
-				local isHeal = nil;				
-				if ( arg2 == "SPELL_AURA_APPLIED" ) then								    	    
+			if ( srcType ~= nil and trackDOT ) then
+				local isHeal = nil;
+				if ( arg2 == "SPELL_AURA_APPLIED" ) then
 					if ( TCL_DOT["DOT_DATA"][srcType][arg11] == nil ) then
 						TCL_DOT["DOT_DATA"][srcType][arg11] = {};
 					end
@@ -316,7 +317,7 @@ function tcl_OnEvent(self, event, ...)
 		   -- DAMAGE already key entries by arg7 (the actual target GUID of this
 		   -- event) under the correctly-detected srcType (not hardcoded to "MY") -
 		   -- REMOVED/REFRESH now do the same, so any target's effect resolves.
-		   if ( srcType ~= nil ) then
+		   if ( srcType ~= nil and trackDOT ) then
 		   		if ( arg2 == "SPELL_AURA_REMOVED" ) then
 		 			if ( TCL_DOT["DOT_DATA"][srcType][arg11] ~= nil ) then
 		 				local entry = TCL_DOT["DOT_DATA"][srcType][arg11][arg7];
@@ -333,7 +334,7 @@ function tcl_OnEvent(self, event, ...)
 		 			end
 		   		end
 		   end
-		   if ( srcType ~= nil ) then
+		   if ( srcType ~= nil and trackDOT ) then
 		   		if ( arg2 == "SPELL_AURA_REFRESH" ) then
 		   			-- since we refreshed the spell, we need to lock down the damage store now so we do not overlap the results
 		 			if ( TCL_DOT["DOT_DATA"][srcType][arg11] ~= nil ) then
@@ -416,7 +417,7 @@ function tcl_OnEvent(self, event, ...)
 			local destID = arg7;
 			local temp = "FALSE";
 
-			if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] == "0") then
+			if (trackDOT and TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] == "0") then
 				if ( arg5 == UnitName("player") ) then
 					if ( TCL_DOT["DOT_DATA"][srcType][arg11] ~= nil ) then
 						if ( TCL_DOT["DOT_DATA"][srcType][arg11][destID] ~= nil ) then
@@ -464,7 +465,7 @@ function tcl_OnEvent(self, event, ...)
 				end
 			end
 											
-			if ( srcType ~= nil ) then
+			if ( srcType ~= nil and trackDOT ) then
 				if ( TCL_DOT["DOT_DATA"][srcType][arg11] == nil ) then
 					TCL_DOT["DOT_DATA"][srcType][arg11] = {};
 			    end
