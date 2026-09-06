@@ -114,7 +114,7 @@
 	</Slider>
 	<Frame name="TitanCritLine_SettingsFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" inherits="BackdropTemplate" movable="true" parent="UIParent" toplevel="true">
 		<Size>
-			<AbsDimension x="325" y="672"/>
+			<AbsDimension x="325" y="656"/>
 		</Size>
 		<Anchors>
 			<Anchor point="CENTER">
@@ -235,9 +235,18 @@
 					</Anchor>
 				</Anchors>
 			</CheckButton>
-			<CheckButton id="7" inherits="TitanCritLine_SettingsOptionButtonTemplate" name="$parent_Option7">
+			<CheckButton id="13" inherits="TitanCritLine_SettingsOptionButtonTemplate" name="$parent_Option13">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option6">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</CheckButton>
+			<CheckButton id="7" inherits="TitanCritLine_SettingsOptionButtonTemplate" name="$parent_Option7">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option13">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
@@ -304,15 +313,6 @@
 			<CheckButton id="12" inherits="TitanCritLine_SettingsOptionButtonTemplate" name="$parent_Option12">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option11">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="13" inherits="TitanCritLine_SettingsOptionButtonTemplate" name="$parent_Option13">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option12">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>

@@ -120,11 +120,9 @@ combat-log parser:
   effects are tracked.
 - Enabling `Do not count DoT/HoT effects` in Settings hides all DoT/HoT
   lines from the hover summary and shrinks the button text to
-  `normal/critical` (no third value); disabling it restores both. The new
-  checkbox (`Option13`) renders below `Store all spells casted` without
-  overlapping the About/Reset/Filter buttons - check this visually, the
-  Settings frame height was hand-adjusted for the extra row and has not
-  been confirmed in a live client.
+  `normal/critical` (no third value); disabling it restores both. The
+  checkbox renders directly below `Do not count healing spells` without
+  overlapping the About/Reset/Filter buttons.
 - Entering combat produces no missing-argument error from
   `COMBAT_LOG_EVENT_UNFILTERED`.
 - A new record updates the Titan bar immediately, even when sound or screenshot
