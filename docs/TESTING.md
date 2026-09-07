@@ -11,7 +11,7 @@ only the game client can validate WoW and Titan Panel APIs.
 | Component | Version |
 | --- | --- |
 | WoW flavor tested | Classic Era / Season of Discovery |
-| WoW flavors declared | Classic Era/SoD, TBC Classic, Cataclysm Classic, Mainline/Retail |
+| WoW flavors declared | Classic Era/SoD, TBC Classic, MoP Classic, Mainline/Retail |
 | WoW interface (tested) | `11509` |
 | WoW interface (declared, all flavors) | `120100, 50504, 20506, 11509` |
 | Interface source | Verified against the real `Titan.toc` (and every bundled Titan plugin's `.toc`) in Titan Panel 9.3.2, which declares the same four values for its own core |
@@ -26,7 +26,7 @@ itself already supports all four in a single `.toc` (comma-separated
 `## Interface:` list, the same pattern used here) and TitanCritLine's own code
 uses no flavor-specific API (`CombatLogGetCurrentEventInfo()`, `Titan_Menu`,
 `GameTooltip` are all identical across these flavors). Run the smoke test
-below on TBC/Cata/Retail before relying on this declaration in practice - if a
+below on TBC/MoP/Retail before relying on this declaration in practice - if a
 real difference turns up, split into per-flavor `.toc` files (e.g.
 `TitanCritLine_TBC.toc`) instead of the single combined list, following the
 pattern Titan's own `TitanAmmo`/`TitanRegen` plugins use for flavor-specific
