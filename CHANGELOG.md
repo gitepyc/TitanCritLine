@@ -10,7 +10,22 @@ release. The original changelog is preserved in
 actual wording in the commit message, not here - this file (and each
 GitHub release's notes) are a mechanical render of it, not a second
 drafting pass.
-## [0.8.5](https://github.com/gitepyc/TitanCritLine/tree/0.8.5) (2026-09-07)
+## [0.8.6](https://github.com/gitepyc/TitanCritLine/tree/0.8.6) (2026-09-07)
+[Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.5...0.8.6) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
+
+- **docs:** add CONTRIBUTING.md with bug report and PR guidelines
+
+- **feature:** declare TOC compatibility with TBC, Cata, and Retail
+
+- **feature:** add setting to disable DoT/HoT tracking entirely
+
+- **fix:** stop tracking hostile mobs' periodic effects as pet DOT damage
+
+- **fix:** correct SPELL_PERIODIC_MISSED typo and Option12 checkbox state bug
+
+- **tweak:** move DoT/HoT toggle under the healing toggle, shrink Settings window
+
+## [0.8.5](https://github.com/gitepyc/TitanCritLine/tree/0.8.5) (2026-09-05)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.4...0.8.5) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
 
 - **docs:** add CurseForge release plan
@@ -31,7 +46,7 @@ drafting pass.
 
 - **fix:** Post to Party posted to raid chat while in a raid
 
-## [0.8.4](https://github.com/gitepyc/TitanCritLine/tree/0.8.4) (2026-09-07)
+## [0.8.4](https://github.com/gitepyc/TitanCritLine/tree/0.8.4) (2026-09-03)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.3...0.8.4) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
 
 - **chore:** update addon author metadata
@@ -46,14 +61,14 @@ drafting pass.
 
 - **fix:** separate damage and healing tooltip sections
 
-## [0.8.3](https://github.com/gitepyc/TitanCritLine/tree/0.8.3) (2026-09-07)
+## [0.8.3](https://github.com/gitepyc/TitanCritLine/tree/0.8.3) (2026-09-03)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.2...0.8.3) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
 
 - **fix:** simplify settings actions and polish about dialog
 
 - **fix:** Escape closes only the topmost panel, not all three at once
 
-## [0.8.2](https://github.com/gitepyc/TitanCritLine/tree/0.8.2) (2026-09-07)
+## [0.8.2](https://github.com/gitepyc/TitanCritLine/tree/0.8.2) (2026-09-03)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.1...0.8.2) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
 
 - **docs:** plan modularization and HoT cleanup
@@ -64,7 +79,7 @@ drafting pass.
 
 - **refactor:** split combat records and summary modules
 
-## [0.8.1](https://github.com/gitepyc/TitanCritLine/tree/0.8.1) (2026-09-07)
+## [0.8.1](https://github.com/gitepyc/TitanCritLine/tree/0.8.1) (2026-09-03)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.0...0.8.1) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
 
 - **fix:** initialize legacy UI data before use
@@ -81,7 +96,7 @@ drafting pass.
 
 - **fix:** improve nested dialog behavior
 
-## [0.8.0](https://github.com/gitepyc/TitanCritLine/tree/0.8.0) (2026-09-07)
+## [0.8.0](https://github.com/gitepyc/TitanCritLine/tree/0.8.0) (2026-09-03)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.7.1...0.8.0) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
 
 - **chore:** adopt the MIT License
@@ -103,4 +118,10 @@ drafting pass.
 - **fix:** set current SoD compatibility baseline
 
 - **fix:** replace removed Lua 5.0 globals with modern equivalents
+
+## [0.7.1](https://github.com/gitepyc/TitanCritLine/tree/0.7.1) (2026-09-02)
+[Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
+
+- **chore:** import archived TitanCritLine 0.7.1 source
+
 
