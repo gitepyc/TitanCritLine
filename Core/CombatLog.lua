@@ -485,7 +485,7 @@ function tcl_OnEvent(self, event, ...)
 		elseif ( arg2 == "SPELL_CAST_FAILED" or 
 			 arg2 == "SPELL_MISSED" or 
 			 arg2 == "SWING_MISSED" or 
-			 arg2 == "SPELL_PERODIC_MISSED" or 
+			 arg2 == "SPELL_PERIODIC_MISSED" or
 			 arg2 == "RANGE_MISSED" ) then
 			missType = arg11 or "Normal Hit";
 			if ( arg5 == UnitName("player") and bit.band(arg6, COMBATLOG_FILTER_ME) ~= 0 ) then 

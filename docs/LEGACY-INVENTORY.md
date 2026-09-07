@@ -124,9 +124,6 @@ against the selected game flavor rather than changed by guesswork.
   library contract of its own.
 - Static linting intentionally suppresses undefined-global diagnostics, which
   hides the most important class of addon errors.
-- `SPELL_PERODIC_MISSED` is misspelled and can never match the intended combat
-  event.
-- Settings rendering checks option 12 but marks option 11 as selected.
 - Several branches depend on implicit globals and ambiguous positional values.
 - There is no reproducible combat-log fixture, migration test, or UI smoke test.
 

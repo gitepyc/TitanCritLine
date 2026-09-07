@@ -3,7 +3,7 @@ DEBUG = false; -- for internal testing only, leave it set to false!
 
 --[[ global addon variables ]]
 local TITAN_CRITLINE_ID =  "CritLine";
-local TITAN_CRITLINE_VERSION = "0.9.1.3-dev";
+local TITAN_CRITLINE_VERSION = "0.9.1.4-dev";
 local TITAN_CRITLINE_BUTTON_LABEL = "CL: ";
 local TITAN_CRITLINE_BUTTON_ICON = "Interface\\AddOns\\TitanCritLine\\TitanCritLine";
 local TITAN_CRITLINE_BUTTON_TEXT = "%s/%s/%s";
@@ -208,7 +208,7 @@ function tcl_DisplaySettings()
 	TitanCritLine_SettingsFrame_Option12Text:SetText(COLOR(SUBHEADER_TEXT_COLOR, TITAN_CRITLINE_OPTION_ALL_SPELLS_TEXT));
 	TitanCritLine_SettingsFrame_Option12.HelpText = TITAN_CRITLINE_OPTION_ALL_SPELLS_HELPTEXT;
 	if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["ALL_SPELLS"] == "1" ) then
-		TitanCritLine_SettingsFrame_Option11:SetChecked(true);
+		TitanCritLine_SettingsFrame_Option12:SetChecked(true);
 	end
 	TitanCritLine_SettingsFrame_Option13Text:SetText(COLOR(SUBHEADER_TEXT_COLOR, TITAN_CRITLINE_OPTION_FILTER_DOT_TEXT));
 	TitanCritLine_SettingsFrame_Option13.HelpText = TITAN_CRITLINE_OPTION_FILTER_DOT_HELPTEXT;
