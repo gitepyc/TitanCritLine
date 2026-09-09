@@ -10,6 +10,15 @@ release. The original changelog is preserved in
 actual wording in the commit message, not here - this file (and each
 GitHub release's notes) are a mechanical render of it, not a second
 drafting pass.
+## [0.8.7](https://github.com/gitepyc/TitanCritLine/tree/0.8.7) (2026-09-09)
+[Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.6...0.8.7) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
+
+- **chore:** bump actions/checkout to v6 (Node.js 24)
+
+- **docs:** correct flavor naming for multi-Interface toc change (MoP, not Cata)
+
+- **fix:** SPELL_HEAL debug log crashed on every non-self regular heal
+
 ## [0.8.6](https://github.com/gitepyc/TitanCritLine/tree/0.8.6) (2026-09-07)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.5...0.8.6) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
 
