@@ -175,7 +175,7 @@ function tcl_OnEvent(self, event, ...)
 							tcl_DEBUG("Crit Heal: "..creaturename.." for "..arg13);
 							tcl_RecordHit(arg11, "CRIT", tonumber(arg13), creaturename, DAMAGE_TYPE_HEAL);
 						else
-							tcl_DEBUG("Regular Heal: "..creaturename.." for "..damage);
+							tcl_DEBUG("Regular Heal: "..creaturename.." for "..arg13);
 							tcl_RecordHit(arg11, "NORMAL", tonumber(arg13), creaturename, DAMAGE_TYPE_HEAL);
 						end
 					end
