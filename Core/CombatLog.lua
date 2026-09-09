@@ -5,7 +5,6 @@ local TCL_REALM = addon:GetRealmKey();
 local TCL_SOURCETYPE = addon.SOURCE_TYPES;
 local DAMAGE_TYPE_NONHEAL = addon.DAMAGE_TYPE_NONHEAL;
 local DAMAGE_TYPE_HEAL = addon.DAMAGE_TYPE_HEAL;
-local SHOW_WELCOME = 0;
 local TRACK_DMG = true;
 local TCL_EVENT_TARGET_GUID = nil;
 
@@ -66,33 +65,15 @@ function tcl_OnEvent(self, event, ...)
 		if (TitanCritLineSettings.LASTUSER == nil) then
 			TitanCritLineSettings.LASTUSER = "";
 		end
-		if ((TCL_SETTINGS == nil) or (TCL_DOT == nil) ) then
-			tcl_Update("NEW");
-		elseif ((TCL_SETTINGS.VERSION == nil) or (TCL_DOT.VERSION == nil)) then
-			tcl_Update("UNKNOWN");
-		elseif (TCL_SETTINGS.VERSION ~= TITAN_CRITLINE_VERSION) then
-			tcl_Update(TCL_SETTINGS.VERSION);
-		else
-			tcl_Initialize();
-			tcl_InitDOT();
-		end		
-				
-		if(TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SPLASH"] ~= nil ) then
-			if(TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SPLASH"] == "1") then
-				local greeting;
-				if (TitanCritLineSettings.LASTUSER ~= nil and TitanCritLineSettings.LASTREALM ~= nil) then
-					if (TitanCritLineSettings.LASTUSER == UnitName("player") 
-						and TitanCritLineSettings.LASTREALM == GetRealmName() ) then
-						greeting = TitanCritLineSettings.LASTUSER..": Welcome back to "..TitanCritLineSettings.LASTREALM;
-						--if (SHOW_WELCOME == 0) then
-						--	TitanCritLineSplashFrame:AddMessage(greeting, 1, 1, 0, 1, 20);
-						--	TitanCritLineSplashFrame:AddMessage("Titan CritLine", 1, 1, 1, 1, 15);
-						--	SHOW_WELCOME = 1;
-						--end
-					end
-				end
-			end
+		if (TCL_SETTINGS == nil) then
+			TCL_SETTINGS = {};
 		end
+		if (TCL_DOT == nil) then
+			TCL_DOT = {};
+		end
+		tcl_Initialize();
+		tcl_InitDOT();
+				
 		TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
 		TitanPanelButton_UpdateTooltip( self );
 	elseif (event == "PLAYER_LEAVING_WORLD") then
@@ -108,35 +89,7 @@ function tcl_OnEvent(self, event, ...)
 				tcl_DEBUG("Removing TCL_DOT table ["..TCL_SOURCETYPE[i].."]");		
 			end
 		end
-	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then	
-		local dot_damage = 0;
-			    	-- for debugging events
-			--if ( event == "UNIT_ENTERED_VEHICLE" ) then
-			--if ( event == "SPELL_SUMMON" ) then
-			--	tcl_Msg("UNIT INFO: ");
-			--	tcl_Msg("   arg1: "..(arg1 or "none")); 
-			--	tcl_Msg("   arg2: "..(arg2 or "none")); 
-			--	tcl_Msg("   arg3: "..(arg3 or "none")); 
-			--	tcl_Msg("   arg4: "..(arg4 or "none"));
-			--	tcl_Msg("   arg5: "..(arg5 or "none"));
-			--	tcl_Msg("   arg6: "..(arg6 or "none"));
-			--	tcl_Msg("   arg7: "..(arg7 or "none"));
-			--	tcl_Msg("   arg8: "..(arg8 or "none"));
-			--	tcl_Msg("   arg9: "..(arg9 or "none"));
-			--	tcl_Msg("   arg10: "..(arg10 or "none"));
-			--	tcl_Msg("   arg11: "..(arg11 or "none"));
-			--	tcl_Msg("   arg12: "..(arg12 or "none"));
-			--	tcl_Msg("   arg13: "..(arg13 or "none"));
-			--	tcl_Msg("   arg14: "..(arg14 or "none"));
-			--	tcl_Msg("   arg15: "..(arg15 or "none"));
-			--	tcl_Msg("   arg16: "..(arg16 or "none"));
-			--	tcl_Msg("   arg17: "..(arg17 or "none"));
-			--	tcl_Msg("   arg18: "..(arg18 or "none"));
-			--	tcl_Msg("   arg19: "..(arg19 or "none"));
-			--	tcl_Msg("   arg20: "..(arg20 or "none"));
-			--end
-			
-    
+	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
 	    -- String - The UnitId to query (e.g. "player", "party2", "pet", "target" etc.)
 		if ( arg5 == UnitName("player") and bit.band(arg6, COMBATLOG_FILTER_ME) ~= 0 ) then
 			srcType = TCL_SOURCETYPE[1];
@@ -495,27 +448,7 @@ function tcl_OnEvent(self, event, ...)
 				and bit.band( arg6, COMBATLOG_FILTER_MY_PET ) ~= 0 ) then
 				tcl_RecordMiss(arg5.."'s "..missType, "PET");
 			end
---		elseif ( arg2 == "PARTY_KILL" ) then
---				tcl_Msg("I killed "..(destName or "UNKNOWN"));
 		else
---			local timestamp, eventtype, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags = ...;
-			local toPlayer, fromPlayer, toPet, fromPet, toTarget;
- --       
---			if (sourceName and not CombatLog_Object_IsA(sourceFlags, COMBATLOG_OBJECT_NONE) ) then
---			  fromPlayer = CombatLog_Object_IsA(sourceFlags, COMBATLOG_FILTER_MINE);
---			  fromPet = CombatLog_Object_IsA(sourceFlags, COMBATLOG_FILTER_MY_PET);
---			end
---
---			if (destName and not CombatLog_Object_IsA(destFlags, COMBATLOG_OBJECT_NONE) ) then
---			  toPlayer = CombatLog_Object_IsA(destFlags, COMBATLOG_FILTER_MINE);
---			  toPet = CombatLog_Object_IsA(destFlags, COMBATLOG_FILTER_MY_PET);
---			  toTarget = CombatLog_Object_IsA(destFlags, COMBATLOG_OBJECT_TARGET);
---			end
-
- --                       if eventtype == "PARTY_KILL" and fromPlayer then
---				tcl_Msg("I killed "..destName);
---			end
-
 			local showMsg = 0;
 						
 			--tcl_DEBUG("Received Event: ["..(arg2 or "none").."]");

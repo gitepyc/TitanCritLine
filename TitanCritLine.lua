@@ -619,15 +619,6 @@ function tcl_OnLoad(self)
 	tcl_Msg(TITAN_CRITLINE_ID.." "..TITAN_CRITLINE_VERSION.." loaded.");
 end
 
-function tcl_OnUpdate( self, elapsed ) 
-end
-
-
-
-
-
-
-
 
 
 function tcl_OnClick(self, button)
@@ -653,131 +644,6 @@ function tcl_OnClick(self, button)
 --		local summary = tcl_GetSummaryRichText();
 --		TitanCritLineSummaryFrame:AddMessage(tcl_GetSummaryRichText(), 1, 1, 0, 1, 1);
 	end
-end
-
-function tcl_Update(version)
-	tcl_Msg("Updating "..TITAN_CRITLINE_ID.." from version "..version.." to version "..TITAN_CRITLINE_VERSION.." ...");
-	-- set local variables;
-	local dbName = {};
-
-	if ( version == "NEW" or version == "UNKNOWN" ) then
-		if ( version == "NEW" ) then
-			if ( TCL_SETTINGS == nil ) then
-				TCL_SETTINGS = {};
-			end
-			if ( TCL_DOT == nil ) then
-				TCL_DOT = {};
-			end
-		end
-		dbName = TCL_SETTINGS;
-	end
-
-	-- set global variables
-	tcl_Initialize(dbName);
-	tcl_InitDOT(TCL_DOT);
-                
-	-- check for old titan critline data
-	if ( version == "NEW" or version == "UNKNOWN") then
-		tcl_Msg("No old Titan Critline database found, creating new database for "..UnitName("player")..".");
-	elseif ( version < "0.5.0" ) then
-		if (dbName == nil) then
-			tcl_Msg("No old Titan Critline database found, creating new database for "..UnitName("player")..".");
-		else
-			realm = GetRealmName().."."..UnitName("player");
-			if (dbName[realm] == nil) then
-				realm = TCL_REALM;
-				if (dbName[realm] == nil ) then 
-					tcl_Msg("Old Titan CritLine database found, but not for "..UnitName("player")..", creating new one.");
-				end
-			end
-
-			if (dbName[realm] ~= nil ) then
-				if ( #(TCL_SETTINGS[realm]["DATA"]) == nil or #(TCL_SETTINGS[realm]["DATA"]) == 0 ) then
-					tcl_Msg("Updating old Titan CritLine data ...");
-					for k,v in pairs(TCL_SETTINGS[realm]["SETTINGS"]) do
-						dbName[TCL_REALM]["SETTINGS"][k] = v;
-					end
-					for attackType,v in pairs(TCL_SETTINGS[realm]["DATA"]) do
-						if (attackType ~= "MY") then
-							dbName[TCL_REALM]["DATA"]["MY"][attackType] = {}; 
-							dbName[TCL_REALM]["DATA"]["MY"][attackType]["Filter"] = "0"; 
-							for hitType,v in pairs(TCL_SETTINGS[realm]["DATA"][attackType]) do 
-								if ( v ~= {} ) then
-									dbName[TCL_REALM]["DATA"]["MY"][attackType][hitType] = v; 
-								elseif ( v == {} ) then 
-									for k,v in pairs(TCL_SETTINGS[realm]["DATA"][attackType][hitType]) do 
-										dbName[TCL_REALM]["DATA"]["MY"][attackType][hitType][k] = v; 
-									end 
-
-									if (TCL_SETTINGS[realm]["DATA"][attackType][hitType]["Value"] == nil) then 
-										dbName[TCL_REALM]["DATA"]["MY"][attackType][hitType]["Value"] = 0; 
-									end 
-								end
-							end
-					        end
-					end
-				else
-					tcl_Msg("New data was found, no update needed ...");
-				end
-			end
-		end
-		--add changes to database
-		tcl_Msg("Updating main database ...");
-		for k, v in pairs(dbName[realm]["DATA"]["MY"]) do
-			if ( dbName[TCL_REALM]["DATA"]["MY"][k]["Misses"] == nil ) then
-				dbName[TCL_REALM]["DATA"]["MY"][k]["Misses"] = 0;
-			end
-		end
-	elseif (version >= "0.5.0" ) then
-		if (dbName == nil) then
-			tcl_Msg("No old Titan Critline database found, creating new database for "..UnitName("player")..".");
-		else
-			if (dbName[TCL_REALM] == nil) then
-				tcl_Msg("Old Titan CritLine database found, but not for "..UnitName("player")..", creating new one.");
-			else
-				if ( #(TCL_SETTINGS[TCL_REALM]["DATA"]) == nil or #(TCL_SETTINGS[TCL_REALM]["DATA"]) == 0 ) then
-					tcl_Msg("Updating old Titan CritLine data ...");
-					for k,v in pairs(TCL_SETTINGS[TCL_REALM]["SETTINGS"]) do
-						dbName[TCL_REALM]["SETTINGS"][k] = v;
-					end
-					for i = 1, #(TCL_SOURCETYPE) do
-						for attackType,v in pairs(TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]]) do
-							dbName[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType] = {};
-							dbName[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["Filter"] = "0";
-							for hitType,v in pairs(TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]) do
-								if ( v ~= {} ) then
-									dbName[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType][hitType] = v; 
-								elseif ( v == {} ) then
-									dbName[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType][hitType] = {};
-									for k,v in pairs(TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType][hitType]) do
-										dbName[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType][hitType][k] = v;
-									end
-									if (TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType][hitType]["Value"] == nil) then
-										dbName[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType][hitType]["Value"] = 0;
-									end
-								end
-							end
-						end
-					end
-				else
-					tcl_Msg("New data was found, no update needed ...");
-				end
-			end
-		end
-		--add changes to database
-		tcl_Msg("Updating main database ...");
-		for i = 1, #(TCL_SOURCETYPE) do
-			for k, v in pairs(dbName[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]]) do
-				if ( dbName[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][k]["Misses"] == nil ) then
-					dbName[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][k]["Misses"] = 0;
-				end
-			end
-		end
-	end
-	TCL_SETTINGS = {};
-	TCL_SETTINGS = dbName;
-	-- update complete
-	tcl_Msg("Conversion complete, read the UPDATE.TXT file in the addon directory!");
 end
 
 function tcl_InitDOT(tcl_Table)
@@ -955,15 +821,6 @@ function tcl_Msg(msg)
 	if (DEFAULT_CHAT_FRAME) then
 		DEFAULT_CHAT_FRAME:AddMessage(msg);
 	end
-end
-
-function tcl_Rebuild()
-	tcl_Msg(TITAN_CRITLINE_ID.." "..TITAN_CRITLINE_VERSION.." rebuilding data.");
-	TCL_SETTINGS[TCL_REALM] = nil;
-	tcl_Initialize();
-	TCL_DOT["DOT_DATA"] = nil;
-	tcl_InitDOT(TCL_DOT);
-	tcl_Msg(TITAN_CRITLINE_ID.." "..TITAN_CRITLINE_VERSION.." rebuilding data complete.");
 end
 
 function tcl_DEBUG(message)

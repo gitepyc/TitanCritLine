@@ -109,11 +109,6 @@ function tcl_GetHighestCritPercentage( mysource )
 end
 
 --[[ tooltip functions ]]
-function tcl_DisplayDialog(message)
-	GameTooltip:SetText(message);
-	GameTooltip:Show();
-end
-
 function tcl_GenToolDMG(dbSource, hitType, hidmg, dmgperc, hidmgperc)
 	local dmg = "";
 	local hiperc = hidmgperc or 0;
