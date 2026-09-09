@@ -10,6 +10,15 @@ release. The original changelog is preserved in
 actual wording in the commit message, not here - this file (and each
 GitHub release's notes) are a mechanical render of it, not a second
 drafting pass.
+## [0.8.8-dev](https://github.com/gitepyc/TitanCritLine/tree/0.8.8-dev) (2026-09-09)
+[Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.7...0.8.8-dev) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
+
+- **docs:** refresh README, MODERNIZATION-PLAN, and CURSEFORGE-RELEASE for the current state
+
+- **docs:** credit agr8 for publishing the 0.7.1 release this project was imported from
+
+- **fix:** remove broken tcl_Update version-migration logic, plus dead code found while auditing it
+
 ## [0.8.7](https://github.com/gitepyc/TitanCritLine/tree/0.8.7) (2026-09-09)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.6...0.8.7) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
 
