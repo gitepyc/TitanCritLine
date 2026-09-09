@@ -16,6 +16,8 @@ Original development history
 - AidenK: continued development from version 0.4.0e
 - Penddor and Lowpinger: continued development from version 0.4.0i
 - Penddor: continued development from version 0.4.5
+- agr8 (CurseForge account `_ForgeUser234700`): published the 0.7.1 release
+  TitanCritLine was imported from
 
 Additional contributions
 ------------------------
