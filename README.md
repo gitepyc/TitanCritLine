@@ -4,21 +4,26 @@ TitanCritLine is a Titan Panel plugin for WoW Classic Era and Season of
 Discovery. It records personal highscores for normal, critical, and periodic
 damage and healing, including pet and guardian records.
 
+**Current version:** `0.8.7` ([changelog](CHANGELOG.md))
+
 This project is a compatibility restoration of TitanCritLine 0.7.1. The goal
 is to preserve its original behavior on a current client, not to add unrelated
-features. The imported source remains archived on `main` and tag `0.7.1`;
-active development happens on `dev`.
+features. The original imported source is preserved by the `0.7.1` tag; see
+[Versioning](#versioning) below for how `dev`/`main` and version tags work
+today.
 
 ## Supported baseline
 
 | Component | Baseline |
 | --- | --- |
-| Addon version | `0.9` |
 | WoW flavor | Classic Era / Season of Discovery |
 | WoW interface | `11509` |
 | Titan Panel | Unified Titan Panel 9.x |
 | Verified Titan release | `9.3.2` (21 August 2026) |
 | Required addon | `Titan` |
+
+The addon's own version isn't repeated here since it changes far more often
+than this table - see [Versioning](#versioning).
 
 TitanCritLine has been tested in game with Titan Panel 9.x. Registration,
 context menus, settings, damage and healing tracking, record notifications,
@@ -74,6 +79,20 @@ Open compatibility and maintenance pull requests against `dev`. Keep user
 documentation, code comments, commit messages, and new UI text in English.
 Run the repository lint workflow and the relevant sections of the manual test
 guide before merging runtime changes.
+
+## Versioning
+
+Active development and version tags happen on `dev`. `main` only moves once a
+`dev` tag has actually been verified in-game - the two branches are not
+necessarily in sync at any given moment, and that's expected, not a bug.
+
+The addon's single current version lives in `TitanCritLine.toc`'s
+`## Version` line (kept in sync with a matching constant in
+`TitanCritLine.lua`). [`CHANGELOG.md`](CHANGELOG.md) is generated
+automatically from commit messages via [git-cliff](https://git-cliff.org)
+(see `cliff.toml`) - write the actual description in the commit message, not
+in the changelog file directly. The original, untouched `0.7.1` import is
+preserved permanently by the `0.7.1` tag.
 
 ## License
 

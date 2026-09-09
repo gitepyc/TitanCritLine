@@ -75,10 +75,10 @@ can publish to CurseForge with two additions:
 
 ## Step 4: Publish
 
-- Pick the tag to publish as the first CurseForge release. `0.9` (current)
-  is a reasonable first public version — no requirement to reach `1.0`
-  first (see `docs/MODERNIZATION-PLAN.md`: "do not call it 1.0 solely
-  because it runs on a current client").
+- Pick the latest tag actually promoted to `main` as the first CurseForge
+  release - no requirement to reach `1.0` first (see
+  `docs/MODERNIZATION-PLAN.md`: "do not call it 1.0 solely because it runs
+  on a current client").
 - Mark the CurseForge release channel as `Release`, not `Alpha`/`Beta`.
 - If `CF_API_KEY`/`X-Curse-Project-ID` are already in place before the tag
   is pushed, this happens automatically alongside the GitHub release.
@@ -88,12 +88,12 @@ can publish to CurseForge with two additions:
 ## Decided, not blocking
 
 - **Addon-list title shows Titan Panel's version (`9.3.2`), not
-  TitanCritLine's own (`0.9`).** Raised during review: Titan's own
-  bundled plugins (Gold, Clock, Bag, ...) show `9.3.2` in their title only
-  because that IS their own version — they ship in lockstep with Titan
-  Panel itself. TitanCritLine is independently versioned, so the same
-  display doesn't carry the same meaning; it also doesn't match
-  `## Version: 0.9` in the same file. Kept as-is per explicit maintainer
+  TitanCritLine's own.** Raised during review: Titan's own bundled plugins
+  (Gold, Clock, Bag, ...) show `9.3.2` in their title only because that IS
+  their own version — they ship in lockstep with Titan Panel itself.
+  TitanCritLine is independently versioned, so the same display doesn't
+  carry the same meaning; it also doesn't match the addon's own
+  `## Version` line in the same file. Kept as-is per explicit maintainer
   decision (informational: "tested against this Titan Panel version").
   Revisit only if it causes real user confusion.
 - **Relicensing the ported `0.7.1` code as MIT** without contacting the
