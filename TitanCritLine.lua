@@ -692,8 +692,8 @@ function tcl_Initialize(tcl_Table)
 	if (tab[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] == nil) then
 		if (existingSettings["FILTER_HEALING"] ~= nil) then
 			tab[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] = existingSettings["FILTER_HEALING"];
-		else 
-			tab[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] = "1";
+		else
+			tab[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] = "0";
 		end
 	end
 	if (tab[TCL_REALM]["SETTINGS"]["LVLADJ"] == nil) then
