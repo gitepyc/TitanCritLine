@@ -14,6 +14,8 @@ drafting pass.
 
 - **chore:** switch to trunk-based development and SemVer prerelease tags
 
+- **chore:** consolidate -dev.N prerelease tags into their real release's CHANGELOG section
+
 - **docs:** refresh README, MODERNIZATION-PLAN, and CURSEFORGE-RELEASE for the current state
 
 - **docs:** credit agr8 for publishing the 0.7.1 release this project was imported from
@@ -23,6 +25,8 @@ drafting pass.
 - **docs:** move CurseForge release plan to the Gitea wiki
 
 - **docs:** drop the CurseForge release plan reference from the public README
+
+- **docs:** adopt a four-segment version scheme (X.Y.Z.W)
 
 - **fix:** remove broken tcl_Update version-migration logic, plus dead code found while auditing it
 
