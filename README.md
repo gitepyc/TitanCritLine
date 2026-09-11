@@ -55,7 +55,7 @@ the [feature reference](docs/FEATURES.md).
 - [Feature reference](docs/FEATURES.md) — settings, filters, records, and notifications
 - [Manual testing](docs/TESTING.md) — supported baseline and regression checklist
 - [Compatibility roadmap](docs/MODERNIZATION-PLAN.md) — completed and deferred modernization work
-- [CurseForge release plan](docs/CURSEFORGE-RELEASE.md) — project adoption and publishing steps
+- [CurseForge release plan](https://gitea.gil.gmbh/claude-bot-mh/TitanCritLine/wiki/CurseForge-Release-Plan) — project adoption and publishing steps (Gitea wiki, not synced to the GitHub mirror)
 - [Titan Panel 9 integration](docs/TITAN-PANEL-9-COMPATIBILITY.md) — verified dependency and API contracts
 - [Legacy inventory](docs/LEGACY-INVENTORY.md) — original 0.7.1 design and risks
 - [Legacy documents](docs/legacy/) — original changelog, upgrade notes, and retired support instructions
