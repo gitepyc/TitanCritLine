@@ -75,8 +75,8 @@ can publish to CurseForge with two additions:
 
 ## Step 4: Publish
 
-- Pick the latest tag actually promoted to `main` as the first CurseForge
-  release - no requirement to reach `1.0` first (see
+- Pick the latest plain (non-prerelease, no `-` suffix) tag as the first
+  CurseForge release - no requirement to reach `1.0` first (see
   `docs/MODERNIZATION-PLAN.md`: "do not call it 1.0 solely because it runs
   on a current client").
 - Mark the CurseForge release channel as `Release`, not `Alpha`/`Beta`.

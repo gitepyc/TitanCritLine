@@ -47,5 +47,15 @@ jobs:
               "${{ github.server_url }}/${{ github.repository }}" >> release-notes.trunc.md
             mv release-notes.trunc.md release-notes.md
           fi
-          gh release edit "$TAG" --notes-file release-notes.md --repo "$REPO"
+
+          # SemVer: a tag with a `-` (0.8.8-dev.1) is a prerelease, a plain
+          # tag (0.8.8) is a real release - single source of truth for the
+          # prerelease flag, no separate branch needed to signal it.
+          PRERELEASE=false
+          case "$TAG" in
+            *-*) PRERELEASE=true ;;
+          esac
+
+          gh release edit "$TAG" --notes-file release-notes.md --repo "$REPO" \
+            --prerelease="$PRERELEASE" --latest="$([ "$PRERELEASE" = true ] && echo false || echo true)"
           rm -f release-notes.md

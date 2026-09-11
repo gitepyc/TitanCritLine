@@ -19,11 +19,12 @@ asks for:
 
 ## Pull requests
 
-- Branch off `dev` and open the PR against `dev`, not `main`. `main` only
-  receives promoted releases.
+- Branch off `main` (there's no separate `dev` branch - trunk-based, short-lived
+  feature branches only) and open the PR against `main`.
 - Run `luacheck` before opening the PR (see `tests/lint/`) if you changed any
   `.lua` file.
-- Add a `CHANGELOG.md` entry under `## Unreleased` in the project's entry
-  format (`**type:** short bullet`, no prose/rationale).
+- Write commit messages as `type: short description` (`feature`/`fix`/`tweak`/
+  `docs`/`debug`/`refactor`/`chore`) - `CHANGELOG.md` is generated from these
+  automatically via [git-cliff](https://git-cliff.org), not hand-edited.
 - Keep the PR focused on one change - a bug fix doesn't need unrelated
   cleanup bundled in.

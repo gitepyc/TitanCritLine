@@ -8,9 +8,9 @@ compatibility port: changes should fix compatibility, correctness, or
 maintainability without introducing unrelated features.
 
 The exact imported source is preserved by the `0.7.1` tag. Development
-happens on `dev` through pull requests; `main` is only fast-forwarded to a
-`dev` tag once it has been verified in-game (see the
-[README](../README.md#versioning) for the current branch/tag convention).
+happens directly on `main` through short-lived pull-request branches
+(trunk-based - see the [README](../README.md#versioning) for the current
+branch/tag convention).
 
 ## Current baseline
 

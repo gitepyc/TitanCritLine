@@ -1,6 +1,6 @@
 # Config for https://git-cliff.org - generates CHANGELOG.md sections and
 # GitHub release notes straight from commit messages. Requires every commit
-# on `dev` (except merges and "chore: bump version"/"chore: release" ones,
+# on `main` (except merges and "chore: bump version"/"chore: release" ones,
 # both explicitly skipped below) to start with `type: ` matching one of the
 # groups in [git] commit_parsers - same convention already used in commit
 # messages all session, just now load-bearing instead of cosmetic. Kept

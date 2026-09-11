@@ -4,13 +4,12 @@ TitanCritLine is a Titan Panel plugin for WoW Classic Era and Season of
 Discovery. It records personal highscores for normal, critical, and periodic
 damage and healing, including pet and guardian records.
 
-**Current version:** `0.8.7` ([changelog](CHANGELOG.md))
+**Current version:** `0.8.8-dev` ([changelog](CHANGELOG.md))
 
 This project is a compatibility restoration of TitanCritLine 0.7.1. The goal
 is to preserve its original behavior on a current client, not to add unrelated
 features. The original imported source is preserved by the `0.7.1` tag; see
-[Versioning](#versioning) below for how `dev`/`main` and version tags work
-today.
+[Versioning](#versioning) below for how branches and version tags work today.
 
 ## Supported baseline
 
@@ -75,16 +74,21 @@ the [feature reference](docs/FEATURES.md).
 
 ## Development
 
-Open compatibility and maintenance pull requests against `dev`. Keep user
-documentation, code comments, commit messages, and new UI text in English.
-Run the repository lint workflow and the relevant sections of the manual test
-guide before merging runtime changes.
+Trunk-based: there's a single long-lived branch, `main`. Open compatibility
+and maintenance pull requests as short-lived branches off `main`, merged back
+into `main` once lint passes and (for runtime changes) the relevant manual
+test guide sections are done. Keep user documentation, code comments, commit
+messages, and new UI text in English.
 
 ## Versioning
 
-Active development and version tags happen on `dev`. `main` only moves once a
-`dev` tag has actually been verified in-game - the two branches are not
-necessarily in sync at any given moment, and that's expected, not a bug.
+A version tag with no `-` suffix (`0.8.8`) is a real release. A version with
+a dotted prerelease suffix (`0.8.8-dev.1`, `0.8.8-dev.2`, ...) is an
+in-progress build not yet verified in-game - per [SemVer 2.0.0](https://semver.org/),
+these sort *before* the plain version they're leading up to. The GitHub
+release's prerelease flag is set automatically from this (see
+`.github/workflows/release.yml`) - no separate branch is used to signal
+"not yet verified".
 
 The addon's single current version lives in `TitanCritLine.toc`'s
 `## Version` line (kept in sync with a matching constant in

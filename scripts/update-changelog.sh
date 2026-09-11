@@ -1,19 +1,24 @@
 #!/usr/bin/env bash
-# Regenerates CHANGELOG.md's newest section from commits since the last
-# real tag, via git-cliff (see cliff.toml), and prepends it above the
-# existing file - existing sections are untouched. Run this locally right
-# before creating a new tag (after bumping CritLog.toc's version, before
-# `git tag`), not in CI - CI (release.yml) independently regenerates its
-# own release notes from the same commits, it doesn't read this file.
+# Regenerates the entire CHANGELOG.md from scratch via git-cliff (see
+# cliff.toml), reading every real git tag - not an incremental prepend of
+# just the newest section. Run this locally after creating a new tag
+# (bump TitanCritLine.toc's version, commit, `git tag`, then this script,
+# then amend the CHANGELOG.md update into that same commit and move the
+# tag: `git commit --amend --no-edit && git tag -f <version>`), not in CI -
+# CI (release.yml) independently regenerates its own release notes from
+# the same commits, it doesn't read this file.
 #
-# Usage: scripts/update-changelog.sh <new-version>
-#   e.g. scripts/update-changelog.sh 0.9.1.12-dev
+# Full regeneration instead of the old incremental `--unreleased --tag
+# <version> --prepend`: that form has to label the not-yet-existing tag
+# itself, so it stamps "today" for the version's date instead of the real
+# tag date, and - if any tag predates git-cliff's own adoption in this
+# repo's history - can duplicate the entire prior changelog content on
+# every subsequent call. Both were found and fixed during the TitanCritLine
+# and CritLog repo rebuilds; full regeneration only reads real, already-
+# existing tags, so neither failure mode can happen.
+#
+# Usage: scripts/update-changelog.sh
 set -euo pipefail
-
-if [ $# -ne 1 ]; then
-    echo "Usage: $0 <new-version>" >&2
-    exit 1
-fi
 
 cd "$(dirname "$0")/.."
 
@@ -21,4 +26,4 @@ docker run --rm \
     -v "$PWD":/repo \
     -w /repo \
     orhunp/git-cliff:latest \
-    --config cliff.toml --unreleased --tag "$1" --prepend CHANGELOG.md
+    --config cliff.toml -o CHANGELOG.md
