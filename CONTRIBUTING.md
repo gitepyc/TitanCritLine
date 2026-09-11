@@ -31,13 +31,17 @@ asks for:
 
 ## Releasing
 
+- Versions are `X.Y.Z.W`, four segments. `X.Y.Z` only bumps for a genuinely
+  new feature/milestone; a small fix or tweak bumps just `W`
+  (`0.8.7` -> `0.8.7.1` -> `0.8.7.2` -> ...) - keeps `X.Y.Z` from climbing on
+  every minor change.
 - Bump `TitanCritLine.toc`'s `## Version` (and the matching constant in
-  `TitanCritLine.lua`) to a `-dev.N` prerelease (`0.8.8-dev.1`), run
+  `TitanCritLine.lua`) to a `-dev.N` prerelease (`0.8.7.1-dev.1`), run
   `scripts/update-changelog.sh`, commit, and tag.
-- Only bump the `X.Y.Z` part when starting toward a genuinely new target
-  version. For another iteration on the *same* target, just increment `N`
-  (`0.8.8-dev.1` -> `0.8.8-dev.2` -> ...) - bumping `X.Y.Z` on every small
-  change abandons the previous target as a tag nobody ever "finishes",
+- Only bump the target version (`X.Y.Z.W`) when starting toward a genuinely
+  new one. For another iteration on the *same* target, just increment `N`
+  (`0.8.7.1-dev.1` -> `0.8.7.1-dev.2` -> ...) - bumping the target on every
+  small change abandons the previous one as a tag nobody ever "finishes",
   recreating the orphaned-tag mess the whole versioning rework was meant to
   fix.
 - Once a `-dev.N` build is confirmed working in-game, tag that same commit
