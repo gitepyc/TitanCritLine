@@ -10,14 +10,23 @@ release. The original changelog is preserved in
 actual wording in the commit message, not here - this file (and each
 GitHub release's notes) are a mechanical render of it, not a second
 drafting pass.
-## [0.8.8-dev](https://github.com/gitepyc/TitanCritLine/tree/0.8.8-dev) (2026-09-09)
-[Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.7...0.8.8-dev) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
+## Unreleased
+
+- **chore:** switch to trunk-based development and SemVer prerelease tags
 
 - **docs:** refresh README, MODERNIZATION-PLAN, and CURSEFORGE-RELEASE for the current state
 
 - **docs:** credit agr8 for publishing the 0.7.1 release this project was imported from
 
+- **docs:** document the dev.N iteration and release/cleanup workflow in CONTRIBUTING.md
+
+- **docs:** move CurseForge release plan to the Gitea wiki
+
+- **docs:** drop the CurseForge release plan reference from the public README
+
 - **fix:** remove broken tcl_Update version-migration logic, plus dead code found while auditing it
+
+- **tweak:** track healing by default for new installs
 
 ## [0.8.7](https://github.com/gitepyc/TitanCritLine/tree/0.8.7) (2026-09-09)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.6...0.8.7) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
