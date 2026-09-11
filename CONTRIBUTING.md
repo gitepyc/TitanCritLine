@@ -28,3 +28,20 @@ asks for:
   automatically via [git-cliff](https://git-cliff.org), not hand-edited.
 - Keep the PR focused on one change - a bug fix doesn't need unrelated
   cleanup bundled in.
+
+## Releasing
+
+- Bump `TitanCritLine.toc`'s `## Version` (and the matching constant in
+  `TitanCritLine.lua`) to a `-dev.N` prerelease (`0.8.8-dev.1`), run
+  `scripts/update-changelog.sh`, commit, and tag.
+- Only bump the `X.Y.Z` part when starting toward a genuinely new target
+  version. For another iteration on the *same* target, just increment `N`
+  (`0.8.8-dev.1` -> `0.8.8-dev.2` -> ...) - bumping `X.Y.Z` on every small
+  change abandons the previous target as a tag nobody ever "finishes",
+  recreating the orphaned-tag mess the whole versioning rework was meant to
+  fix.
+- Once a `-dev.N` build is confirmed working in-game, tag that same commit
+  again **without** the suffix (the real release) and delete the
+  now-superseded `-dev.N` tag(s) for that target - a `-dev.N` tag never
+  becomes a release just by virtue of a later version bump; it stays a
+  prerelease until an explicit clean tag is cut.
