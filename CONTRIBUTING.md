@@ -45,3 +45,13 @@ asks for:
   now-superseded `-dev.N` tag(s) for that target - a `-dev.N` tag never
   becomes a release just by virtue of a later version bump; it stays a
   prerelease until an explicit clean tag is cut.
+- `cliff.toml`'s `ignore_tags` folds every `-dev.N` tag's commits into the
+  next real release's section automatically - `CHANGELOG.md` never shows
+  `X.Y.Z-dev.1`/`.2`/... as separate permanent entries, only the final
+  `X.Y.Z` heading with everything since the previous real release. The
+  in-progress, not-yet-tagged-clean work shows as `## Unreleased` until
+  then. `release.yml`'s release-notes step accounts for this: a real
+  release keeps using git-cliff's `--current` (which now naturally
+  includes every folded-in `-dev.N` commit too), a prerelease tag gets an
+  explicit commit range instead, since `--current` can't resolve a tag
+  that `ignore_tags` excludes.
