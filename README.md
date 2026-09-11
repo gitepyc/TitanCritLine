@@ -54,9 +54,7 @@ the [feature reference](docs/FEATURES.md).
 - [Contributing](CONTRIBUTING.md) — bug report checklist and pull request guidelines
 - [Feature reference](docs/FEATURES.md) — settings, filters, records, and notifications
 - [Manual testing](docs/TESTING.md) — supported baseline and regression checklist
-- [Compatibility roadmap](docs/MODERNIZATION-PLAN.md) — completed and deferred modernization work
-- [Titan Panel 9 integration](docs/TITAN-PANEL-9-COMPATIBILITY.md) — verified dependency and API contracts
-- [Legacy inventory](docs/LEGACY-INVENTORY.md) — original 0.7.1 design and risks
+- [Roadmap](docs/ROADMAP.md) — deferred design decisions
 - [Legacy documents](docs/legacy/) — original changelog, upgrade notes, and retired support instructions
 - [Credits](CREDITS.TXT) — current maintenance and original contributors
 - [Changelog](CHANGELOG.md) — development history after the 0.7.1 import
