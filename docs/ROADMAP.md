@@ -13,8 +13,11 @@ small chain of migration functions gated on it, run once per version step
 - modeled on the sibling CritLog project's `CritLogDB.SchemaVersion`
 approach.
 
-Not started: no schema-version field exists yet, so there's nothing to
-gate on.
+`TCL_SETTINGS["SCHEMA_VERSION"]` plus `Core/Migrations.lua`'s `MIGRATIONS`
+array now provide that gating/chaining mechanism. Not yet exercised: no
+migration has been added to `MIGRATIONS` yet, so this is still unproven
+in practice. `TCL_DOT` needs no migrations of its own - it only holds
+in-flight tracking state cleared every session.
 
 ### 2. Replace the static 40-row filter UI
 
