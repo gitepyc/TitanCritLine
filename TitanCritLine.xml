@@ -5,6 +5,7 @@
 	<Script file="Localization\ruRU.lua"></Script>
 	<Script file="TitanCritLine.lua"></Script>
 	<Script file="Core\Filters.lua"></Script>
+	<Script file="Core\Migrations.lua"></Script>
 	<Script file="Core\Records.lua"></Script>
 	<Script file="Core\CombatLog.lua"></Script>
 	<Script file="UI\Summary.lua"></Script>

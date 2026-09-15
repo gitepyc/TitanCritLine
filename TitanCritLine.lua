@@ -797,6 +797,7 @@ function tcl_Initialize(tcl_Table)
 			tab[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]] = {};
 		end
 	end
+	tcl_RunSchemaMigrations(tab);
 	tcl_DEBUG("Initialization Complete.");
 end
 
