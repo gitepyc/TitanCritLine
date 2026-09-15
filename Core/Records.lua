@@ -3,6 +3,50 @@ local TCL_REALM = addon:GetRealmKey();
 local TCL_SOURCETYPE = addon.SOURCE_TYPES;
 local DAMAGE_TYPE_HEAL = addon.DAMAGE_TYPE_HEAL;
 
+-- Records are keyed by spell id (a number) since the spell-id rework, by the
+-- literal NORMAL_HIT_TEXT constant for melee normal hits (no spell exists),
+-- or - for pet records - "<pet name>'s <id or NORMAL_HIT_TEXT>". Only the
+-- numeric case needs resolving back to a display name; the other two are
+-- already human-readable. Spells the client hasn't seen this session (e.g.
+-- an old boss ability) fall back to "Spell <id>" rather than erroring.
+local GetSpellInfoCompat = C_Spell and C_Spell.GetSpellInfo;
+function tcl_ResolveAttackTypeName(key)
+	if (type(key) == "number") then
+		local name;
+		if (GetSpellInfoCompat) then
+			local info = GetSpellInfoCompat(key);
+			name = info and info.name;
+		else
+			name = GetSpellInfo(key);
+		end
+		return name or ("Spell "..key);
+	end
+	if (type(key) == "string") then
+		local petName, id = string.match(key, "^(.-)'s (%d+)$");
+		if (petName and id) then
+			return petName.."'s "..tcl_ResolveAttackTypeName(tonumber(id));
+		end
+	end
+	return key;
+end
+addon.ResolveAttackTypeName = tcl_ResolveAttackTypeName;
+
+-- Inverse lookup, used only by the one-time spell-id migration (see
+-- TitanCritLine.lua's tcl_MigrateAttackTypeKeysToSpellId): resolves a spell
+-- name to its id via the client's own spell cache. Returns nil if the name
+-- isn't (yet) known to the client - e.g. an old boss ability not cast since
+-- login - the migration leaves such records under their old name key rather
+-- than guessing.
+function tcl_ResolveSpellIdByName(name)
+	if (GetSpellInfoCompat) then
+		local info = GetSpellInfoCompat(name);
+		return info and info.spellID;
+	end
+	local _, _, _, _, _, _, spellId = GetSpellInfo(name);
+	return spellId;
+end
+addon.ResolveSpellIdByName = tcl_ResolveSpellIdByName;
+
 function tcl_RecordHit(AttackType, HitType, Damage, uname, IsHealing, sourceType, targetGUID)
 	local targetlvl = UnitLevel("target");
 	local source = sourceType or TCL_SOURCETYPE[1];
@@ -80,21 +124,14 @@ function tcl_RecordHit(AttackType, HitType, Damage, uname, IsHealing, sourceType
 	end
 end
 
-function tcl_RecordMiss(text, sourceType)
+function tcl_RecordMiss(AttackType, sourceType)
 	local source = sourceType or TCL_SOURCETYPE[1];
-	if (text == nil or string.find(text, "(%d+)")) then
+	if (AttackType == nil) then
 		return;
 	end
-	for attackType in pairs(TCL_SETTINGS[TCL_REALM]["DATA"][source]) do
-		if (string.find(text, attackType)) then
-			local attack = TCL_SETTINGS[TCL_REALM]["DATA"][source][attackType];
-			attack["Misses"] = (attack["Misses"] or 0) + 1;
-			return;
-		end
-	end
 	local attacks = TCL_SETTINGS[TCL_REALM]["DATA"][source];
-	attacks[NORMAL_HIT_TEXT] = attacks[NORMAL_HIT_TEXT] or {};
-	attacks[NORMAL_HIT_TEXT]["Misses"] = (attacks[NORMAL_HIT_TEXT]["Misses"] or 0) + 1;
+	attacks[AttackType] = attacks[AttackType] or {};
+	attacks[AttackType]["Misses"] = (attacks[AttackType]["Misses"] or 0) + 1;
 end
 
 function tcl_DisplayNewRecord(AttackType, DamageAmount, HitType, IsHealing)
@@ -104,10 +141,11 @@ function tcl_DisplayNewRecord(AttackType, DamageAmount, HitType, IsHealing)
 	elseif (HitType == "DOT") then
 		splashMessage = IsHealing == DAMAGE_TYPE_HEAL and addon.NEW_HOT_RECORD_MSG or TITAN_CRITLINE_NEW_DOT_RECORD_MSG;
 	end
-	tcl_DEBUG(format(splashMessage, AttackType));
+	local attackName = tcl_ResolveAttackTypeName(AttackType);
+	tcl_DEBUG(format(splashMessage, attackName));
 	if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SPLASH"] == "1") then
 		TitanCritLineSplashFrame:AddMessage(DamageAmount, 1, 1, 1, 1, 3);
-		TitanCritLineSplashFrame:AddMessage(format(splashMessage, AttackType), 1, 1, 0, 1, 3);
+		TitanCritLineSplashFrame:AddMessage(format(splashMessage, attackName), 1, 1, 0, 1, 3);
 	end
 	TitanPanelButton_UpdateButton(addon.ID);
 	if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["PLAYSOUND"] == "1") then

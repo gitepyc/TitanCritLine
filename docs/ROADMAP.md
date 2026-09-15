@@ -3,23 +3,7 @@
 Open, forward-looking items only, in priority order. Everything already
 done is in `CHANGELOG.md` and git history, not repeated here.
 
-### 1. Redesign the saved-variable schema and versioned migrations
-
-`TCL_SETTINGS`/`TCL_DOT` have no real schema-version tracking - the
-removed `tcl_Update()` tried to branch on the addon's own version string
-instead and crashed on every normal update (see `CHANGELOG.md`). A proper
-replacement needs an explicit schema-version field per saved table plus a
-small chain of migration functions gated on it, run once per version step
-- modeled on the sibling CritLog project's `CritLogDB.SchemaVersion`
-approach.
-
-`TCL_SETTINGS["SCHEMA_VERSION"]` plus `Core/Migrations.lua`'s `MIGRATIONS`
-array now provide that gating/chaining mechanism. Not yet exercised: no
-migration has been added to `MIGRATIONS` yet, so this is still unproven
-in practice. `TCL_DOT` needs no migrations of its own - it only holds
-in-flight tracking state cleared every session.
-
-### 2. Replace the static 40-row filter UI
+### 1. Replace the static 40-row filter UI
 
 `Filter` is a fixed block of 40 `TitanCritLine_FilterOptionButtonTemplate`
 checkboxes in `TitanCritLine.xml`, one row per possible entry - it can't
@@ -29,7 +13,7 @@ exists whether it's needed or not.
 Needs a dynamic/scrollable list (e.g. a `FauxScrollFrame`) sized to the
 actual number of recorded entries instead of a hardcoded cap. Not started.
 
-### 3. Reduce the remaining global API surface
+### 2. Reduce the remaining global API surface
 
 Around 55 public `tcl_*` functions and several writable globals currently
 form the de facto module interface, and `TitanCritLine.lua` still adds
@@ -44,13 +28,6 @@ done as one deliberate pass rather than incrementally.
 ## Parked
 
 Not active priorities, revisit only if the situation changes.
-
-### Spell-name record keys → spell IDs
-
-Replace spell-name record keys with spell IDs and provide a migration for
-existing records. Would remove the localization/renaming fragility of
-name-keyed records, but touches the saved-variable schema - better done
-together with item 1 above, not before it.
 
 ### HoT full-effect vs. largest tick
 
