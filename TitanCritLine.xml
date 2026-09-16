@@ -502,7 +502,7 @@
 	</CheckButton>
 	<Frame name="TitanCritLine_FilterFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" inherits="BackdropTemplate" movable="true" parent="UIParent" toplevel="true">
 		<Size>
-			<AbsDimension x="300" y="490"/>
+			<AbsDimension x="320" y="380"/>
 		</Size>
 		<Anchors>
 			<Anchor point="LEFT" relativeTo="TitanCritLine_SettingsFrame" relativePoint="RIGHT">
@@ -694,231 +694,28 @@
 					</Anchor>
 				</Anchors>
 			</CheckButton>
-			<CheckButton id="16" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option16">
+			<ScrollFrame name="$parent_ScrollFrame" inherits="FauxScrollFrameTemplate">
+				<Size>
+					<AbsDimension x="20" y="360"/>
+				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option15">
+					<Anchor point="TOPRIGHT">
 						<Offset>
-							<AbsDimension x="0" y="0"/>
+							<AbsDimension x="-8" y="-30"/>
+						</Offset>
+					</Anchor>
+					<Anchor point="BOTTOMRIGHT">
+						<Offset>
+							<AbsDimension x="-8" y="10"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-			</CheckButton>
-			<CheckButton id="17" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option17">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option16">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="18" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option18">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option17">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="19" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option19">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option18">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="20" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option20">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option19">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="21" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option21">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option20">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="22" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option22">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option21">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="23" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option23">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option22">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="24" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option24">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option23">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="25" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option25">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option24">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="26" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option26">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option25">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="27" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option27">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option26">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="28" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option28">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option27">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="29" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option29">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option28">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="30" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option30">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option29">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="31" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option31">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option30">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="32" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option32">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option31">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="33" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option33">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option32">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="34" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option34">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option33">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="35" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option35">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option34">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="36" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option36">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option35">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="37" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option37">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option36">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="38" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option38">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option37">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="39" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option39">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option38">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
-			<CheckButton id="40" inherits="TitanCritLine_FilterOptionButtonTemplate" name="$parent_Option40">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_Option39">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</CheckButton>
+				<Scripts>
+					<OnVerticalScroll>
+						FauxScrollFrame_OnVerticalScroll(self, offset, 24, tcl_FilterUpdate);
+					</OnVerticalScroll>
+				</Scripts>
+			</ScrollFrame>
 		</Frames>
 	</Frame>
 	<Frame name="TitanCritLine_OverviewFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" inherits="BackdropTemplate" movable="true" parent="UIParent" toplevel="true">
