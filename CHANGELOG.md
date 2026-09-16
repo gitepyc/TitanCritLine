@@ -28,6 +28,18 @@ drafting pass.
 
 - **docs:** adopt a four-segment version scheme (X.Y.Z.W)
 
+- **docs:** replace MODERNIZATION-PLAN with a lean ROADMAP, drop TITAN-PANEL-9-COMPATIBILITY and LEGACY-INVENTORY
+
+- **docs:** order the roadmap by priority (schema redesign, then UI/API cleanup, then ID/HoT decisions last)
+
+- **docs:** restyle ROADMAP.md to match CritLog's heading+summary format
+
+- **feature:** add a schema-version migration framework for TCL_SETTINGS
+
+- **feature:** key records by spell id instead of spell name
+
+- **feature:** replace the static 40-row filter UI with a scrollable list
+
 - **fix:** remove broken tcl_Update version-migration logic, plus dead code found while auditing it
 
 - **tweak:** track healing by default for new installs
