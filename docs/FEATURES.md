@@ -12,8 +12,8 @@ that entry from highscore calculations. The underlying record remains stored.
 
 This is an ability filter. It is independent of the special-mob setting.
 
-The legacy dialog has room for at most 40 entries. All 40 rows are cleared when
-the dialog closes.
+The dialog shows every recorded entry; beyond 15 it scrolls instead of
+truncating the list. All visible rows are cleared when the dialog closes.
 
 ## Special mobs
 
