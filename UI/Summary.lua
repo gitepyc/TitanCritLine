@@ -49,7 +49,7 @@ function tcl_GetHighDMG( sourceType, dmgType, healType )
 			end
 		end
 	end
-	return highDMG, attackType, enemyInfo;
+	return highDMG, addon.ResolveAttackTypeName(attackType), enemyInfo;
 end
 
 function tcl_GetHighestCritPercentage( mysource )
@@ -196,6 +196,7 @@ function tcl_GetSummaryRichText()
 
 			for attackType,v in pairs (sourceData) do
 				local attackData = sourceData[attackType];
+				local attackName = addon.ResolveAttackTypeName(attackType);
 				if (attackData["Filter"] == "0") then
 					local crithits, dothits, normhits, critperc, dotperc, normperc;
 					local normAtk = "";
@@ -261,9 +262,9 @@ function tcl_GetSummaryRichText()
 				end
 				local attackText;
 				if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOWHITS"] == "1" ) then
-					attackText = COLOR(HEADER_TEXT_COLOR, attackType).."\t "..COLOR(HEADER_TEXT_COLOR, allhits).." "..HIT_TEXT.." ("..COLOR(HEADER_TEXT_COLOR, hitperc.." %")..")\n";
+					attackText = COLOR(HEADER_TEXT_COLOR, attackName).."\t "..COLOR(HEADER_TEXT_COLOR, allhits).." "..HIT_TEXT.." ("..COLOR(HEADER_TEXT_COLOR, hitperc.." %")..")\n";
 				else
-					attackText = COLOR(HEADER_TEXT_COLOR, attackType).."\n";
+					attackText = COLOR(HEADER_TEXT_COLOR, attackName).."\n";
 				end
 				for _,hitType in ipairs (hitTypes) do
 					if (attackData[hitType] ~= nil) then
