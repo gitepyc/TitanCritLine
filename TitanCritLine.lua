@@ -478,7 +478,9 @@ function tcl_Filter()
 				local button = _G["TitanCritLine_FilterFrame_Option"..tostring(i)];
 				local text = _G["TitanCritLine_FilterFrame_Option"..tostring(i).."Text"];
 				text:Show();
-				text:SetText(k);
+				text:SetText(tcl_ResolveAttackTypeName(k));
+				button.attackTypeKey = k;
+				button.attackTypeSourceType = TCL_SOURCETYPE[index];
 				button:Show();
 				if (TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[index]][k]["Filter"] == "0") then
 					button:SetChecked(true);
@@ -496,23 +498,18 @@ end
 
 function tcl_FilterOptionButton_OnClick(self, id)
 	local button = _G["TitanCritLine_FilterFrame_Option"..tostring(id)];
-	local attackType = _G["TitanCritLine_FilterFrame_Option"..tostring(id).."Text"]:GetText();
+	local attackType = button.attackTypeKey;
+	local sourceType = button.attackTypeSourceType;
+	local record = attackType and sourceType and TCL_SETTINGS[TCL_REALM]["DATA"][sourceType][attackType];
+	if (record == nil) then
+		return;
+	end
 	if ( button:GetChecked() ) then
-		tcl_DEBUG(attackType.." filter is on");
-		for i = 1, #(TCL_SOURCETYPE) do
-			if (TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType] ~= nil) then
-				TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["Filter"] = "0";
-				break;
-			end
-		end
+		tcl_DEBUG(tcl_ResolveAttackTypeName(attackType).." filter is on");
+		record["Filter"] = "0";
 	else
-		tcl_DEBUG(attackType.." filter is off");
-		for i = 1, #(TCL_SOURCETYPE) do
-			if (TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType] ~= nil) then
-				TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[i]][attackType]["Filter"] = "1";
-				break;
-			end
-		end
+		tcl_DEBUG(tcl_ResolveAttackTypeName(attackType).." filter is off");
+		record["Filter"] = "1";
 	end
 	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
 end
@@ -523,6 +520,8 @@ function tcl_FilterClose()
 		local button = _G["TitanCritLine_FilterFrame_Option"..tostring(i)];
 		local text = _G["TitanCritLine_FilterFrame_Option"..tostring(i).."Text"];
 		button:SetChecked(false);
+		button.attackTypeKey = nil;
+		button.attackTypeSourceType = nil;
 		button:Hide();
 		text:SetText(nil);
 		text:Hide();
