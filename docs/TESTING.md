@@ -105,6 +105,15 @@ combat-log parser:
   clamped to the screen.
 - `Filter`, `Reset All`, and `About` execute their actions without a `PlaySound`
   argument error.
+- With 15 or fewer recorded abilities, `Filter` shows every entry with no
+  scrollbar and the window shrinks to fit them exactly, matching the old
+  behavior.
+- With more than 15 recorded abilities, `Filter` shows a scrollbar; scrolling
+  reveals the remaining entries and checking/unchecking a row scrolled into
+  view toggles the correct ability's filter (not whatever used to occupy that
+  row position).
+- Closing and reopening `Filter` after scrolling starts back at the top and
+  reflects any filter changes made in the previous session.
 - `Reset All` displays a Yes/No confirmation and changes records only after
   confirmation.
 - The WoW addon list displays the bundled CritLine icon instead of a question
