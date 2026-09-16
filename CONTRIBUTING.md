@@ -31,10 +31,11 @@ asks for:
 
 ## Releasing
 
-- Versions are `X.Y.Z.W`, four segments. `X.Y.Z` only bumps for a genuinely
-  new feature/milestone; a small fix or tweak bumps just `W`
-  (`0.8.7` -> `0.8.7.1` -> `0.8.7.2` -> ...) - keeps `X.Y.Z` from climbing on
-  every minor change.
+- Versions are `X.Y.Z.W`, four segments, but `W` only appears once it's
+  actually been incremented. A genuinely new feature/milestone is plain
+  `X.Y.Z` (`0.8.8`, tagged `0.8.8-dev.1`) - not `X.Y.Z.0`. The first small
+  fix or tweak on top of it introduces `W` (`0.8.8` -> `0.8.8.1` ->
+  `0.8.8.2` -> ...) - keeps `X.Y.Z` from climbing on every minor change.
 - Bump `TitanCritLine.toc`'s `## Version` (and the matching constant in
   `TitanCritLine.lua`) to a `-dev.N` prerelease (`0.8.7.1-dev.1`), run
   `scripts/update-changelog.sh`, commit, and tag.
