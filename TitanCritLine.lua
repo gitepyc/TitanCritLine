@@ -464,35 +464,60 @@ function tcl_SettingsClose()
 	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
 end
 
+-- Filter list: a fixed pool of TCL_FILTER_ROWS checkbox rows (declared in
+-- TitanCritLine.xml) is repurposed to show whatever slice of
+-- tcl_FilterEntries is currently scrolled into view via the
+-- TitanCritLine_FilterFrame_ScrollFrame FauxScrollFrame - not one row per
+-- possible entry, so the list isn't capped at a hardcoded maximum.
+local TCL_FILTER_ROWS = 15;
+local TCL_FILTER_ROW_HEIGHT = 24;
+local tcl_FilterEntries = {};
+local tcl_FilterVisibleRows = 0;
+
 function tcl_Filter()
 	if ( TitanCritLine_FilterFrame:IsVisible() ) then
 		tcl_FilterClose();
 	else
-		local i = 1;
+		tcl_FilterEntries = {};
 		for index = 1, #(TCL_SOURCETYPE) do
-			for k,v in pairs(TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[index]]) do
-				if ( i > 40 ) then
-					do break end
-				end
-				tcl_DEBUG("create button no."..tostring(i).." for "..k);
-				local button = _G["TitanCritLine_FilterFrame_Option"..tostring(i)];
-				local text = _G["TitanCritLine_FilterFrame_Option"..tostring(i).."Text"];
-				text:Show();
-				text:SetText(tcl_ResolveAttackTypeName(k));
-				button.attackTypeKey = k;
-				button.attackTypeSourceType = TCL_SOURCETYPE[index];
-				button:Show();
-				if (TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[index]][k]["Filter"] == "0") then
-					button:SetChecked(true);
-				end
-				i = i + 1;
+			for k in pairs(TCL_SETTINGS[TCL_REALM]["DATA"][TCL_SOURCETYPE[index]]) do
+				tinsert(tcl_FilterEntries, { key = k, sourceType = TCL_SOURCETYPE[index] });
 			end
 		end
-		local height = i * 24 + 20;
+		tcl_FilterVisibleRows = math.max(math.min(#tcl_FilterEntries, TCL_FILTER_ROWS), 1);
+		local height = tcl_FilterVisibleRows * TCL_FILTER_ROW_HEIGHT + 20;
 		TitanCritLine_FilterFrame:SetHeight(height);
 		TitanCritLine_FilterFrame:SetPoint("LEFT", "TitanCritLine_SettingsFrame", "RIGHT", 5, 0);
+		TitanCritLine_FilterFrame_ScrollFrame:SetHeight(tcl_FilterVisibleRows * TCL_FILTER_ROW_HEIGHT);
 		tcl_ApplyDialogBackdrop(TitanCritLine_FilterFrame);
 		TitanCritLine_FilterFrame:Show();
+		tcl_FilterUpdate();
+	end
+end
+
+function tcl_FilterUpdate()
+	local scrollFrame = TitanCritLine_FilterFrame_ScrollFrame;
+	FauxScrollFrame_Update(scrollFrame, #tcl_FilterEntries, tcl_FilterVisibleRows, TCL_FILTER_ROW_HEIGHT);
+	local offset = FauxScrollFrame_GetOffset(scrollFrame);
+	for i = 1, TCL_FILTER_ROWS do
+		local entry = tcl_FilterEntries[i + offset];
+		local button = _G["TitanCritLine_FilterFrame_Option"..tostring(i)];
+		local text = _G["TitanCritLine_FilterFrame_Option"..tostring(i).."Text"];
+		if (entry ~= nil) then
+			text:Show();
+			text:SetText(tcl_ResolveAttackTypeName(entry.key));
+			button.attackTypeKey = entry.key;
+			button.attackTypeSourceType = entry.sourceType;
+			button:SetChecked(TCL_SETTINGS[TCL_REALM]["DATA"][entry.sourceType][entry.key]["Filter"] == "0");
+			button:Show();
+		else
+			button.attackTypeKey = nil;
+			button.attackTypeSourceType = nil;
+			button:SetChecked(false);
+			button:Hide();
+			text:SetText(nil);
+			text:Hide();
+		end
 	end
 end
 
@@ -516,7 +541,7 @@ end
 
 function tcl_FilterClose()
 	TitanCritLine_FilterFrame:Hide();
-	for i = 1, 40, 1 do
+	for i = 1, TCL_FILTER_ROWS, 1 do
 		local button = _G["TitanCritLine_FilterFrame_Option"..tostring(i)];
 		local text = _G["TitanCritLine_FilterFrame_Option"..tostring(i).."Text"];
 		button:SetChecked(false);
@@ -526,6 +551,7 @@ function tcl_FilterClose()
 		text:SetText(nil);
 		text:Hide();
 	end
+	tcl_FilterEntries = {};
 	TitanPanelButton_UpdateButton(TITAN_CRITLINE_ID);
 end
 

@@ -3,17 +3,7 @@
 Open, forward-looking items only, in priority order. Everything already
 done is in `CHANGELOG.md` and git history, not repeated here.
 
-### 1. Replace the static 40-row filter UI
-
-`Filter` is a fixed block of 40 `TitanCritLine_FilterOptionButtonTemplate`
-checkboxes in `TitanCritLine.xml`, one row per possible entry - it can't
-show more than 40 filterable abilities/spells at once, and every row
-exists whether it's needed or not.
-
-Needs a dynamic/scrollable list (e.g. a `FauxScrollFrame`) sized to the
-actual number of recorded entries instead of a hardcoded cap. Not started.
-
-### 2. Reduce the remaining global API surface
+### 1. Reduce the remaining global API surface
 
 Around 55 public `tcl_*` functions and several writable globals currently
 form the de facto module interface, and `TitanCritLine.lua` still adds
