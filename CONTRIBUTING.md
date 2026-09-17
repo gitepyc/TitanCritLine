@@ -39,17 +39,41 @@ asks for:
 - Bump `TitanCritLine.toc`'s `## Version` (and the matching constant in
   `TitanCritLine.lua`) to a `-dev.N` prerelease (`0.8.7.1-dev.1`), run
   `scripts/update-changelog.sh`, commit, and tag.
-- Only bump the target version (`X.Y.Z.W`) when starting toward a genuinely
-  new one. For another iteration on the *same* target, just increment `N`
-  (`0.8.7.1-dev.1` -> `0.8.7.1-dev.2` -> ...) - bumping the target on every
-  small change abandons the previous one as a tag nobody ever "finishes",
-  recreating the orphaned-tag mess the whole versioning rework was meant to
-  fix.
-- Once a `-dev.N` build is confirmed working in-game, tag that same commit
-  again **without** the suffix (the real release) and delete the
-  now-superseded `-dev.N` tag(s) for that target - a `-dev.N` tag never
-  becomes a release just by virtue of a later version bump; it stays a
-  prerelease until an explicit clean tag is cut.
+
+### When to bump the target vs. just `N`
+
+- **Another dev build for the same target** (you found a bug, made a small
+  change, want to re-test): keep the target exactly as-is, just increment
+  `N` (`0.8.7.1-dev.1` -> `0.8.7.1-dev.2` -> ...).
+- **Starting toward a genuinely new target** (new milestone, or a small
+  fix/tweak layered on a target that's already been promoted to a real
+  release): bump `X.Y.Z` or `W` and reset to `-dev.1`.
+- Never bump the target just to "try again" on the same one - that abandons
+  the previous `-dev.N` as a tag nobody ever "finishes", recreating the
+  orphaned-tag mess the whole versioning rework was meant to fix. If you're
+  not sure whether the *current* target has already shipped as a real
+  release, check `git tag` before bumping.
+
+### When to rotate a dev build into a real release
+
+Only on **explicit confirmation that the build works in-game** (a `docs/TESTING.md`
+pass, or the user saying so directly) - never rotate just because a `-dev.N`
+build merged cleanly or passed `luacheck`. When that confirmation happens,
+on the same commit the confirmed `-dev.N` build points to:
+
+1. Tag that commit again **without** the `-dev.N` suffix (the real release,
+   e.g. `0.8.8`) - a `-dev.N` tag never becomes a release by itself, only an
+   explicit clean tag makes it one.
+2. Delete every `-dev.N` tag for that target, both locally and on the Gitea
+   remote (`git tag -d ...` / `git push origin :refs/tags/...`).
+3. Push the new clean tag so `release.yml` builds the real release.
+4. Check the GitHub mirror's Releases page separately - the push-mirror
+   doesn't reliably propagate tag *deletions*, so a superseded `-dev.N`
+   GitHub Release can linger even after step 2. Delete it there by hand if
+   so (no GitHub write access from this tooling to automate that step).
+
+### CHANGELOG interaction
+
 - `cliff.toml`'s `ignore_tags` folds every `-dev.N` tag's commits into the
   next real release's section automatically - `CHANGELOG.md` never shows
   `X.Y.Z-dev.1`/`.2`/... as separate permanent entries, only the final
