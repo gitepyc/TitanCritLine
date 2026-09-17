@@ -16,6 +16,8 @@ drafting pass.
 
 - **chore:** consolidate -dev.N prerelease tags into their real release's CHANGELOG section
 
+- **chore:** retarget release as 0.8.8.0-dev.1
+
 - **docs:** refresh README, MODERNIZATION-PLAN, and CURSEFORGE-RELEASE for the current state
 
 - **docs:** credit agr8 for publishing the 0.7.1 release this project was imported from
@@ -33,6 +35,10 @@ drafting pass.
 - **docs:** order the roadmap by priority (schema redesign, then UI/API cleanup, then ID/HoT decisions last)
 
 - **docs:** restyle ROADMAP.md to match CritLog's heading+summary format
+
+- **docs:** fix stale version string and 40-row filter description
+
+- **docs:** clarify that a fresh X.Y.Z milestone has no trailing .0
 
 - **feature:** add a schema-version migration framework for TCL_SETTINGS
 

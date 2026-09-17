@@ -4,7 +4,7 @@ TitanCritLine is a Titan Panel plugin for WoW Classic Era and Season of
 Discovery. It records personal highscores for normal, critical, and periodic
 damage and healing, including pet and guardian records.
 
-**Current version:** `0.8.8.0-dev.1` ([changelog](CHANGELOG.md))
+**Current version:** `0.8.8-dev.1` ([changelog](CHANGELOG.md))
 
 This project is a compatibility restoration of TitanCritLine 0.7.1. The goal
 is to preserve its original behavior on a current client, not to add unrelated
@@ -80,9 +80,9 @@ messages, and new UI text in English.
 ## Versioning
 
 Versions are `X.Y.Z.W`, four segments - see [CONTRIBUTING.md](CONTRIBUTING.md#releasing)
-for when each segment bumps. A version tag with no `-` suffix (`0.8.8.0`) is a
-real release. A version with a dotted prerelease suffix (`0.8.8.0-dev.1`,
-`0.8.8.0-dev.2`, ...) is an in-progress build not yet verified in-game - per
+for when each segment bumps. A version tag with no `-` suffix (`0.8.8`) is a
+real release. A version with a dotted prerelease suffix (`0.8.8-dev.1`,
+`0.8.8-dev.2`, ...) is an in-progress build not yet verified in-game - per
 [SemVer 2.0.0](https://semver.org/), these sort *before* the plain version
 they're leading up to. The GitHub release's prerelease flag is set
 automatically from this (see `.github/workflows/release.yml`) - no separate
