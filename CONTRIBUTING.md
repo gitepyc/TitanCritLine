@@ -47,30 +47,21 @@ asks for:
   `N` (`0.8.7.1-dev.1` -> `0.8.7.1-dev.2` -> ...).
 - **Starting toward a genuinely new target** (new milestone, or a small
   fix/tweak layered on a target that's already been promoted to a real
-  release): bump `X.Y.Z` or `W` and reset to `-dev.1`.
-- Never bump the target just to "try again" on the same one - that abandons
-  the previous `-dev.N` as a tag nobody ever "finishes", recreating the
-  orphaned-tag mess the whole versioning rework was meant to fix. If you're
-  not sure whether the *current* target has already shipped as a real
-  release, check `git tag` before bumping.
+  release): bump `X.Y.Z` or `W` and reset to `-dev.1` - this bump is itself
+  the confirmation that the previous target is done, see below.
 
-### When to rotate a dev build into a real release
+### Bumping to a new target finishes the previous one
 
-Only on **explicit confirmation that the build works in-game** (a `docs/TESTING.md`
-pass, or the user saying so directly) - never rotate just because a `-dev.N`
-build merged cleanly or passed `luacheck`. When that confirmation happens,
-on the same commit the confirmed `-dev.N` build points to:
+A bump to a new target means: the previous target counts as tested and
+done.
 
-1. Tag that commit again **without** the `-dev.N` suffix (the real release,
-   e.g. `0.8.8`) - a `-dev.N` tag never becomes a release by itself, only an
-   explicit clean tag makes it one.
-2. Delete every `-dev.N` tag for that target, both locally and on the Gitea
-   remote (`git tag -d ...` / `git push origin :refs/tags/...`).
-3. Push the new clean tag so `release.yml` builds the real release.
-4. Check the GitHub mirror's Releases page separately - the push-mirror
-   doesn't reliably propagate tag *deletions*, so a superseded `-dev.N`
-   GitHub Release can linger even after step 2. Delete it there by hand if
-   so (no GitHub write access from this tooling to automate that step).
+1. Tag the previous target's last commit again, without `-dev.N` (e.g. the
+   commit tagged `0.8.7.1-dev.3` also gets tagged plain `0.8.7.1`).
+2. Delete every `-dev.N` tag for that target, locally and on the Gitea
+   remote.
+3. Tag the new target as `-dev.1`, regenerate the changelog, commit.
+4. Check the GitHub mirror's Releases page by hand afterward - deleted
+   tags don't reliably sync there.
 
 ### CHANGELOG interaction
 
