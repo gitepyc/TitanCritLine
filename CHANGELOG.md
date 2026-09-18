@@ -10,13 +10,16 @@ release. The original changelog is preserved in
 actual wording in the commit message, not here - this file (and each
 GitHub release's notes) are a mechanical render of it, not a second
 drafting pass.
-## Unreleased
+## [0.8.8](https://github.com/gitepyc/TitanCritLine/tree/0.8.8) (2026-09-18)
+[Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.7...0.8.8) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
 
 - **chore:** switch to trunk-based development and SemVer prerelease tags
 
 - **chore:** consolidate -dev.N prerelease tags into their real release's CHANGELOG section
 
 - **chore:** retarget release as 0.8.8.0-dev.1
+
+- **chore:** rename release to 0.8.8-dev.1 (drop the trailing .0)
 
 - **docs:** refresh README, MODERNIZATION-PLAN, and CURSEFORGE-RELEASE for the current state
 
@@ -40,6 +43,10 @@ drafting pass.
 
 - **docs:** clarify that a fresh X.Y.Z milestone has no trailing .0
 
+- **docs:** spell out clear rules for when a release rotates
+
+- **docs:** simplify release rotation rule - bumping the target finishes it
+
 - **feature:** add a schema-version migration framework for TCL_SETTINGS
 
 - **feature:** key records by spell id instead of spell name
@@ -47,6 +54,8 @@ drafting pass.
 - **feature:** replace the static 40-row filter UI with a scrollable list
 
 - **fix:** remove broken tcl_Update version-migration logic, plus dead code found while auditing it
+
+- **fix:** filter window height didn't account for its checkbox column's top offset
 
 - **tweak:** track healing by default for new installs
 
