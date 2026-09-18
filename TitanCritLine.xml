@@ -500,7 +500,7 @@
 			</OnClick>
 		</Scripts>
 	</CheckButton>
-	<Frame name="TitanCritLine_FilterFrame" enableMouse="true" frameStrata="FULLSCREEN" hidden="true" inherits="BackdropTemplate" movable="true" parent="UIParent" toplevel="true">
+	<Frame name="TitanCritLine_FilterFrame" enableMouse="true" enableMouseWheel="true" frameStrata="FULLSCREEN" hidden="true" inherits="BackdropTemplate" movable="true" parent="UIParent" toplevel="true">
 		<Size>
 			<AbsDimension x="320" y="380"/>
 		</Size>
@@ -518,6 +518,9 @@
 			<OnHide>
 				tcl_PopEscapeFrame(self:GetName());
 			</OnHide>
+			<OnMouseWheel>
+				tcl_FilterOnMouseWheel(delta);
+			</OnMouseWheel>
 		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">
