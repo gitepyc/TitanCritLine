@@ -4,7 +4,7 @@ TitanCritLine is a Titan Panel plugin for WoW Classic Era and Season of
 Discovery. It records personal highscores for normal, critical, and periodic
 damage and healing, including pet and guardian records.
 
-**Current version:** `0.8.8-dev.1` ([changelog](CHANGELOG.md))
+**Current version:** `0.8.8` ([changelog](CHANGELOG.md))
 
 This project is a compatibility restoration of TitanCritLine 0.7.1. The goal
 is to preserve its original behavior on a current client, not to add unrelated
