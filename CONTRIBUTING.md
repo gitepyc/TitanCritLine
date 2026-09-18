@@ -55,12 +55,19 @@ asks for:
 A bump to a new target means: the previous target counts as tested and
 done.
 
-1. Tag the previous target's last commit again, without `-dev.N` (e.g. the
-   commit tagged `0.8.7.1-dev.3` also gets tagged plain `0.8.7.1`).
-2. Delete every `-dev.N` tag for that target, locally and on the Gitea
+1. Bump `TitanCritLine.toc`/`TitanCritLine.lua` to the previous target's
+   plain version (drop `-dev.N`), commit, and tag it (e.g. the target that
+   was `0.8.7.1-dev.3` gets committed and tagged as plain `0.8.7.1`).
+2. Run `scripts/update-changelog.sh` - tag first, then regenerate, so
+   git-cliff labels the section with the real tag instead of "Unreleased".
+   Fold the result into the same commit (`git add CHANGELOG.md && git
+   commit --amend --no-edit`) and move the tag onto the amended commit
+   (`git tag -f <version>`).
+3. Delete every `-dev.N` tag for that target, locally and on the Gitea
    remote.
-3. Tag the new target as `-dev.1`, regenerate the changelog, commit.
-4. Check the GitHub mirror's Releases page by hand afterward - deleted
+4. Push the release commit and tag, then start the new target as `-dev.1`
+   the same way (bump, commit, tag, regenerate changelog, amend).
+5. Check the GitHub mirror's Releases page by hand afterward - deleted
    tags don't reliably sync there.
 
 ### CHANGELOG interaction
