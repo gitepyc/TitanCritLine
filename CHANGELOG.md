@@ -10,6 +10,10 @@ release. The original changelog is preserved in
 actual wording in the commit message, not here - this file (and each
 GitHub release's notes) are a mechanical render of it, not a second
 drafting pass.
+## Unreleased
+
+- **docs:** correct the release-rotation steps to match actual practice
+
 ## [0.8.8](https://github.com/gitepyc/TitanCritLine/tree/0.8.8) (2026-09-18)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.7...0.8.8) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
 
