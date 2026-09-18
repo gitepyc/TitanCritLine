@@ -524,6 +524,18 @@ function tcl_FilterUpdate()
 	end
 end
 
+-- Mouse-wheel over the whole Filter window, not just the thin scrollbar
+-- strip - one wheel notch (delta +-1) moves one row.
+function tcl_FilterOnMouseWheel(delta)
+	local scrollFrame = TitanCritLine_FilterFrame_ScrollFrame;
+	local maxOffset = math.max(#tcl_FilterEntries - tcl_FilterVisibleRows, 0);
+	local newOffset = FauxScrollFrame_GetOffset(scrollFrame) - delta;
+	newOffset = math.max(math.min(newOffset, maxOffset), 0);
+	local scrollValue = newOffset * TCL_FILTER_ROW_HEIGHT;
+	scrollFrame:SetVerticalScroll(scrollValue);
+	FauxScrollFrame_OnVerticalScroll(scrollFrame, scrollValue, TCL_FILTER_ROW_HEIGHT, tcl_FilterUpdate);
+end
+
 function tcl_FilterOptionButton_OnClick(self, id)
 	local button = _G["TitanCritLine_FilterFrame_Option"..tostring(id)];
 	local attackType = button.attackTypeKey;
