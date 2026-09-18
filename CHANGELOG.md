@@ -12,7 +12,11 @@ GitHub release's notes) are a mechanical render of it, not a second
 drafting pass.
 ## Unreleased
 
+- **chore:** start 0.8.8.1 hotfix iteration
+
 - **docs:** correct the release-rotation steps to match actual practice
+
+- **feature:** scroll the Filter list with the mouse wheel
 
 ## [0.8.8](https://github.com/gitepyc/TitanCritLine/tree/0.8.8) (2026-09-18)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.7...0.8.8) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
