@@ -485,7 +485,10 @@ function tcl_Filter()
 			end
 		end
 		tcl_FilterVisibleRows = math.max(math.min(#tcl_FilterEntries, TCL_FILTER_ROWS), 1);
-		local height = tcl_FilterVisibleRows * TCL_FILTER_ROW_HEIGHT + 20;
+		-- +30 for the checkbox column's own top offset (TOPLEFT y=-30 in
+		-- TitanCritLine.xml), +20 bottom margin - the old "+20 only" left
+		-- the bottom-most checkbox row hanging 10px past the frame edge.
+		local height = tcl_FilterVisibleRows * TCL_FILTER_ROW_HEIGHT + 50;
 		TitanCritLine_FilterFrame:SetHeight(height);
 		TitanCritLine_FilterFrame:SetPoint("LEFT", "TitanCritLine_SettingsFrame", "RIGHT", 5, 0);
 		TitanCritLine_FilterFrame_ScrollFrame:SetHeight(tcl_FilterVisibleRows * TCL_FILTER_ROW_HEIGHT);
