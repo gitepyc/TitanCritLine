@@ -531,9 +531,12 @@ function tcl_FilterOnMouseWheel(delta)
 	local maxOffset = math.max(#tcl_FilterEntries - tcl_FilterVisibleRows, 0);
 	local newOffset = FauxScrollFrame_GetOffset(scrollFrame) - delta;
 	newOffset = math.max(math.min(newOffset, maxOffset), 0);
-	local scrollValue = newOffset * TCL_FILTER_ROW_HEIGHT;
-	scrollFrame:SetVerticalScroll(scrollValue);
-	FauxScrollFrame_OnVerticalScroll(scrollFrame, scrollValue, TCL_FILTER_ROW_HEIGHT, tcl_FilterUpdate);
+	-- FauxScrollFrame_OnVerticalScroll already calls SetVerticalScroll
+	-- itself (via the scrollbar's OnValueChanged) - calling it here first
+	-- was redundant, and on a ScrollFrame with no ScrollChild it may have
+	-- errored before this line ever ran, silently breaking the whole
+	-- handler.
+	FauxScrollFrame_OnVerticalScroll(scrollFrame, newOffset * TCL_FILTER_ROW_HEIGHT, TCL_FILTER_ROW_HEIGHT, tcl_FilterUpdate);
 end
 
 function tcl_FilterOptionButton_OnClick(self, id)
