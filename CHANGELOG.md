@@ -10,17 +10,24 @@ release. The original changelog is preserved in
 actual wording in the commit message, not here - this file (and each
 GitHub release's notes) are a mechanical render of it, not a second
 drafting pass.
-## Unreleased
+## [0.8.8.1](https://github.com/gitepyc/TitanCritLine/tree/0.8.8.1) (2026-09-25)
+[Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.8...0.8.8.1) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
 
 - **chore:** start 0.8.8.1 hotfix iteration
 
 - **chore:** bump to 0.8.8.1-dev.2 for the mouse-wheel filter scroll test
+
+- **chore:** bump to 0.8.8.1-dev.3 for the mouse-wheel fix retest
 
 - **docs:** correct the release-rotation steps to match actual practice
 
 - **feature:** scroll the Filter list with the mouse wheel
 
 - **fix:** mouse-wheel filter scroll did nothing
+
+- **other:** ci: bump actions/checkout to v7
+
+- **other:** ci: make lint image name generic
 
 ## [0.8.8](https://github.com/gitepyc/TitanCritLine/tree/0.8.8) (2026-09-18)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.7...0.8.8) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
