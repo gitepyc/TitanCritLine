@@ -3,7 +3,7 @@ DEBUG = false; -- for internal testing only, leave it set to false!
 
 --[[ global addon variables ]]
 local TITAN_CRITLINE_ID =  "CritLine";
-local TITAN_CRITLINE_VERSION = "0.8.8";
+local TITAN_CRITLINE_VERSION = "0.8.8.1";
 local TITAN_CRITLINE_BUTTON_LABEL = "CL: ";
 local TITAN_CRITLINE_BUTTON_ICON = "Interface\\AddOns\\TitanCritLine\\TitanCritLine";
 local TITAN_CRITLINE_BUTTON_TEXT = "%s/%s/%s";
@@ -521,6 +521,21 @@ function tcl_FilterUpdate()
 			text:Hide();
 		end
 	end
+end
+
+-- Mouse-wheel over the whole Filter window, not just the thin scrollbar
+-- strip - one wheel notch (delta +-1) moves one row.
+function tcl_FilterOnMouseWheel(delta)
+	local scrollFrame = TitanCritLine_FilterFrame_ScrollFrame;
+	local maxOffset = math.max(#tcl_FilterEntries - tcl_FilterVisibleRows, 0);
+	local newOffset = FauxScrollFrame_GetOffset(scrollFrame) - delta;
+	newOffset = math.max(math.min(newOffset, maxOffset), 0);
+	-- FauxScrollFrame_OnVerticalScroll already calls SetVerticalScroll
+	-- itself (via the scrollbar's OnValueChanged) - calling it here first
+	-- was redundant, and on a ScrollFrame with no ScrollChild it may have
+	-- errored before this line ever ran, silently breaking the whole
+	-- handler.
+	FauxScrollFrame_OnVerticalScroll(scrollFrame, newOffset * TCL_FILTER_ROW_HEIGHT, TCL_FILTER_ROW_HEIGHT, tcl_FilterUpdate);
 end
 
 function tcl_FilterOptionButton_OnClick(self, id)
