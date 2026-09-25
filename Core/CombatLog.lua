@@ -103,10 +103,7 @@ function tcl_OnEvent(self, event, ...)
 		-- ...) leaves srcType nil on purpose - this is not you or your own pet
 		-- dealing/receiving damage, so it has no place in a personal crit
 		-- tracker and every DOT/HOT block below is already gated on
-		-- srcType ~= nil. Used to fall through to the "PET" bucket ("for now
-		-- use pet, may create GUARDIAN grouping later"), which meant a mob's
-		-- DoT on you or on another party member got recorded and displayed as
-		-- if it were your own pet's damage.
+		-- srcType ~= nil.
 
 	    if ( event ~= nil ) then
 	        tcl_DEBUG("Received Event: ["..(arg2 or "none").."]");	    
@@ -260,16 +257,10 @@ function tcl_OnEvent(self, event, ...)
 					end
 		   		end
 		   end
-		   -- SPELL_AURA_REMOVED/REFRESH used to gate on "arg8 == UnitName("player")"
-		   -- (the buff's target being yourself) and then match table entries against
-		   -- TCL_PUID (your own source GUID, not the target's). That only ever
-		   -- resolved for HoTs/DoTs you put on yourself; casting Renew (or any
-		   -- periodic effect) on someone else never finalized or cleaned up its
-		   -- entry, since neither the gate nor the GUID comparison could ever be
-		   -- true for another target. SPELL_AURA_APPLIED and SPELL_PERIODIC_HEAL/
-		   -- DAMAGE already key entries by arg7 (the actual target GUID of this
-		   -- event) under the correctly-detected srcType (not hardcoded to "MY") -
-		   -- REMOVED/REFRESH now do the same, so any target's effect resolves.
+		   -- SPELL_AURA_APPLIED and SPELL_PERIODIC_HEAL/DAMAGE already key entries
+		   -- by arg7 (the actual target GUID of this event) under the
+		   -- correctly-detected srcType (not hardcoded to "MY") - REMOVED/REFRESH
+		   -- do the same, so any target's effect resolves.
 		   if ( srcType ~= nil and trackDOT ) then
 		   		if ( arg2 == "SPELL_AURA_REMOVED" ) then
 		 			if ( TCL_DOT["DOT_DATA"][srcType][arg10] ~= nil ) then
@@ -454,8 +445,7 @@ function tcl_OnEvent(self, event, ...)
 			end
 		else
 			local showMsg = 0;
-						
-			--tcl_DEBUG("Received Event: ["..(arg2 or "none").."]");
+
 			local dmg = arg13 or "none";
 			local trg = arg8 or "none";
 			local src = arg5 or "none";

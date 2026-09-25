@@ -39,10 +39,7 @@ end
 -- real chat channel - only ever RAID for Raid, PARTY for Party (even while
 -- in a raid; the WoW client itself may reject SendChatMessage(..., "PARTY")
 -- while raided, needs in-game verification), GUILD for Guild. Falls back to
--- a local-only echo, never to a different real channel (in-game reported:
--- both used to fall back to a context-sensitive getDefaultChannel(), which
--- made Post to Party post to the raid channel while in a raid, and Post to
--- Raid post to party/guild chat while not in a raid).
+-- a local-only echo, never to a different real channel.
 function tcl_PostToRaid()
 	if (IsInRaid()) then
 		tcl_PostMessage(tcl_GetRecordChatText(), "RAID");
