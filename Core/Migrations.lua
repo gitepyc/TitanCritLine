@@ -16,8 +16,7 @@ local TCL_SOURCETYPE = addon.SOURCE_TYPES;
 -- (see tcl_OnEvent's PLAYER_LEAVING_WORLD handler in Core/CombatLog.lua),
 -- so nothing in it ever needs upgrading across logins.
 
--- Schema 1: the old spell-name-keyed records become spell-id keys (see
--- docs/ROADMAP.md's former "Spell-name record keys -> spell IDs" item).
+-- Schema 1: the old spell-name-keyed records become spell-id keys.
 -- Only string keys are touched; a fresh install has nothing but
 -- numeric/NORMAL_HIT_TEXT keys already, so this is a no-op for it. Names
 -- the client can't currently resolve (e.g. a boss ability not cast since

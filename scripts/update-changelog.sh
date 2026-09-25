@@ -13,8 +13,7 @@
 # itself, so it stamps "today" for the version's date instead of the real
 # tag date, and - if any tag predates git-cliff's own adoption in this
 # repo's history - can duplicate the entire prior changelog content on
-# every subsequent call. Both were found and fixed during the TitanCritLine
-# and CritLog repo rebuilds; full regeneration only reads real, already-
+# every subsequent call. Full regeneration only reads real, already-
 # existing tags, so neither failure mode can happen.
 #
 # Usage: scripts/update-changelog.sh

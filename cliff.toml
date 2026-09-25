@@ -69,8 +69,8 @@ commit_parsers = [
   { message = "^Merge pull request", skip = true },
   { message = "^Merge branch", skip = true },
   { message = "^Revert", group = "revert" },
-  # `feat:` accepted alongside `feature:` for this repo's own older history -
-  # write new commits as `feature:` (agreed unified vocabulary).
+  # `feat:` accepted alongside `feature:` - write new commits as `feature:`
+  # (agreed unified vocabulary).
   { message = "^feat(ure)?:", group = "feature" },
   { message = "^fix:", group = "fix" },
   { message = "^tweak:", group = "tweak" },
