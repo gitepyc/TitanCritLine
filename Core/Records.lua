@@ -55,14 +55,14 @@ function tcl_RecordHit(AttackType, HitType, Damage, uname, IsHealing, sourceType
 		targetlvl = 0;
 	end
 	if (not addon:IsTrackingDamage()) then
-		tcl_DEBUG("TCL Record Hit disabled!  exiting...");
+		if DEBUG then tcl_DEBUG("TCL Record Hit disabled!  exiting..."); end
 		return;
 	end
 	if ((Damage == nil) or (Damage < 1)) then
-		tcl_DEBUG("No Damage! exiting...");
+		if DEBUG then tcl_DEBUG("No Damage! exiting..."); end
 		return;
 	else
-		tcl_DEBUG("Storing ["..AttackType.."/"..Damage.."]");
+		if DEBUG then tcl_DEBUG("Storing ["..AttackType.."/"..Damage.."]"); end
 	end
 	if (uname == nil) then
 		uname = "??";
@@ -72,16 +72,16 @@ function tcl_RecordHit(AttackType, HitType, Damage, uname, IsHealing, sourceType
 			uname = UnitName("player");
 			ulevel = UnitLevel("player");
 		else
-			tcl_DEBUG("No Target! exiting...");
+			if DEBUG then tcl_DEBUG("No Target! exiting..."); end
 			return;
 		end
 	end
 	if (IsHealing == nil) then
-		tcl_DEBUG("IsHealing==nil! exiting...");
+		if DEBUG then tcl_DEBUG("IsHealing==nil! exiting..."); end
 		return;
 	end
 	if ((UnitIsPlayer("target") ~= 1) and (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["PVPONLY"] == "1")) then
-		tcl_DEBUG("Target !=player and PvPOnly enabled, exiting...");
+		if DEBUG then tcl_DEBUG("Target !=player and PvPOnly enabled, exiting..."); end
 		return;
 	end
 	local leveldiff = 0;
@@ -90,9 +90,9 @@ function tcl_RecordHit(AttackType, HitType, Damage, uname, IsHealing, sourceType
 	else
 		leveldiff = UnitLevel("player") - UnitLevel("target");
 	end
-	tcl_DEBUG("Level difference: "..leveldiff);
+	if DEBUG then tcl_DEBUG("Level difference: "..leveldiff); end
 	if ((tonumber(TCL_SETTINGS[TCL_REALM]["SETTINGS"]["LVLADJ"]) ~= 0) and (tonumber(TCL_SETTINGS[TCL_REALM]["SETTINGS"]["LVLADJ"]) < leveldiff)) then
-		tcl_DEBUG("Target level too low and LvlAdj enabled, exiting...");
+		if DEBUG then tcl_DEBUG("Target level too low and LvlAdj enabled, exiting..."); end
 		return;
 	end
 	if (TCL_SETTINGS == nil) then
@@ -142,7 +142,7 @@ function tcl_DisplayNewRecord(AttackType, DamageAmount, HitType, IsHealing)
 		splashMessage = IsHealing == DAMAGE_TYPE_HEAL and addon.NEW_HOT_RECORD_MSG or TITAN_CRITLINE_NEW_DOT_RECORD_MSG;
 	end
 	local attackName = tcl_ResolveAttackTypeName(AttackType);
-	tcl_DEBUG(format(splashMessage, attackName));
+	if DEBUG then tcl_DEBUG(format(splashMessage, attackName)); end
 	if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SPLASH"] == "1") then
 		TitanCritLineSplashFrame:AddMessage(DamageAmount, 1, 1, 1, 1, 3);
 		TitanCritLineSplashFrame:AddMessage(format(splashMessage, attackName), 1, 1, 0, 1, 3);

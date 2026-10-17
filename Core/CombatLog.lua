@@ -41,18 +41,18 @@ function tcl_OnEvent(self, event, ...)
 	end
 	
 	if ( event ~= nil and event ~= "COMBAT_LOG_EVENT_UNFILTERED" ) then 
-		tcl_DEBUG("***"..tostring(event).."***");
+		if DEBUG then tcl_DEBUG("***"..tostring(event).."***"); end
 	end
 	
 	if (event == "UNIT_ENTERED_VEHICLE" ) then
-		tcl_DEBUG("Disabling TCL Tracking!");
+		if DEBUG then tcl_DEBUG("Disabling TCL Tracking!"); end
 		if ( TRACK_DMG == true ) then
 			TRACK_DMG = false;
 		end
 	end
 	
 	if (event == "UNIT_EXITED_VEHICLE" ) then
-		tcl_DEBUG("Enabling TCL Tracking!");
+		if DEBUG then tcl_DEBUG("Enabling TCL Tracking!"); end
 		if ( TRACK_DMG == false ) then
 			TRACK_DMG = true;
 		end
@@ -86,7 +86,7 @@ function tcl_OnEvent(self, event, ...)
 		for i = 1, #(TCL_SOURCETYPE) do
 			if ( TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[i]] ~= nil ) then
 				TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[i]] = {};
-				tcl_DEBUG("Removing TCL_DOT table ["..TCL_SOURCETYPE[i].."]");		
+				if DEBUG then tcl_DEBUG("Removing TCL_DOT table ["..TCL_SOURCETYPE[i].."]"); end
 			end
 		end
 	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
@@ -106,26 +106,26 @@ function tcl_OnEvent(self, event, ...)
 		-- srcType ~= nil.
 
 	    if ( event ~= nil ) then
-	        tcl_DEBUG("Received Event: ["..(arg2 or "none").."]");	    
+	        if DEBUG then tcl_DEBUG("Received Event: ["..(arg2 or "none").."]"); end
 	    end  
 		if ( arg2 == "SPELL_HEAL" ) then 
 			if (TCL_SETTINGS[TCL_REALM]["SETTINGS"]["FILTER_HEALING"] == "0") then
 				if ( arg5 == UnitName("player") and bit.band(arg6, COMBATLOG_FILTER_ME) ) then 
 					if (arg8 == UnitName("player")) then
 						if (arg16 == true) then
- 							tcl_DEBUG("Crit Heal: Yourself for "..arg13);
+ 							if DEBUG then tcl_DEBUG("Crit Heal: Yourself for "..arg13); end
  							tcl_RecordHit(arg10, "CRIT", tonumber(arg13), "You", DAMAGE_TYPE_HEAL);
 						else
-							tcl_DEBUG("Regular Heal: Yourself for "..arg13);
+							if DEBUG then tcl_DEBUG("Regular Heal: Yourself for "..arg13); end
 							tcl_RecordHit(arg10, "NORMAL", tonumber(arg13), "You", DAMAGE_TYPE_HEAL);
 						end
 					else
 						creaturename = arg8;
 						if (arg16 == true) then
-							tcl_DEBUG("Crit Heal: "..creaturename.." for "..arg13);
+							if DEBUG then tcl_DEBUG("Crit Heal: "..creaturename.." for "..arg13); end
 							tcl_RecordHit(arg10, "CRIT", tonumber(arg13), creaturename, DAMAGE_TYPE_HEAL);
 						else
-							tcl_DEBUG("Regular Heal: "..creaturename.." for "..arg13);
+							if DEBUG then tcl_DEBUG("Regular Heal: "..creaturename.." for "..arg13); end
 							tcl_RecordHit(arg10, "NORMAL", tonumber(arg13), creaturename, DAMAGE_TYPE_HEAL);
 						end
 					end
@@ -134,10 +134,10 @@ function tcl_OnEvent(self, event, ...)
 		elseif (arg2 == "RANGE_DAMAGE" ) then
 			if ( arg5 == UnitName("player") and bit.band(arg6, COMBATLOG_FILTER_ME) ~= 0 ) then 
 				if (arg19 == true) then
-					tcl_DEBUG("Range Crit Hit: "..arg8.." with "..arg11.." for "..arg13);
+					if DEBUG then tcl_DEBUG("Range Crit Hit: "..arg8.." with "..arg11.." for "..arg13); end
 					tcl_RecordHit(arg10, "CRIT", tonumber(arg13), arg8, DAMAGE_TYPE_NONHEAL);
 				else
-					tcl_DEBUG("Range Regular Hit: "..arg8.." with "..arg11.." for "..arg13);
+					if DEBUG then tcl_DEBUG("Range Regular Hit: "..arg8.." with "..arg11.." for "..arg13); end
 					tcl_RecordHit(arg10, "NORMAL", tonumber(arg13), arg8, DAMAGE_TYPE_NONHEAL);
 				end
 			elseif ( bit.band(arg6, COMBATLOG_OBJECT_TYPE_PLAYER) == 0 
@@ -146,10 +146,10 @@ function tcl_OnEvent(self, event, ...)
                 
                 if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOW_PET"] == "1" ) then
 					if (arg19 == true) then
-						tcl_DEBUG("Range Crit Hit: "..arg5.." crit "..arg8.." with "..arg11.." for "..arg13);
+						if DEBUG then tcl_DEBUG("Range Crit Hit: "..arg5.." crit "..arg8.." with "..arg11.." for "..arg13); end
 						tcl_RecordHit(arg5.."'s "..arg10, "CRIT", tonumber(arg13), arg8, DAMAGE_TYPE_NONHEAL, "PET");
 					else
-						tcl_DEBUG("Range Regular Hit: "..arg5.." hit "..arg8.." with "..arg11.." for "..arg13);
+						if DEBUG then tcl_DEBUG("Range Regular Hit: "..arg5.." hit "..arg8.." with "..arg11.." for "..arg13); end
 						tcl_RecordHit(arg5.."'s "..arg10, "NORMAL", tonumber(arg13), arg8, DAMAGE_TYPE_NONHEAL, "PET");
 					end
 				end
@@ -158,10 +158,10 @@ function tcl_OnEvent(self, event, ...)
 		elseif (arg2 == "SWING_DAMAGE" or arg2 == "SWING_EXTRA_ATTACKS" ) then
 			if ( arg5 == UnitName("player") and bit.band(arg6, COMBATLOG_FILTER_ME) ~= 0 ) then 
 				if (arg16 == true) then
-					tcl_DEBUG("Crit Hit: "..arg8.." for "..arg10);
+					if DEBUG then tcl_DEBUG("Crit Hit: "..arg8.." for "..arg10); end
 					tcl_RecordHit(NORMAL_HIT_TEXT, "CRIT", tonumber(arg10), arg8, DAMAGE_TYPE_NONHEAL);
 				else
-					tcl_DEBUG("Regular Hit: "..arg8.." for "..arg10);
+					if DEBUG then tcl_DEBUG("Regular Hit: "..arg8.." for "..arg10); end
 					tcl_RecordHit(NORMAL_HIT_TEXT, "NORMAL", tonumber(arg10), arg8, DAMAGE_TYPE_NONHEAL); 
 				end
 			elseif ( bit.band(arg6, COMBATLOG_OBJECT_TYPE_PLAYER) == 0 
@@ -170,10 +170,10 @@ function tcl_OnEvent(self, event, ...)
 				
 				if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOW_PET"] == "1" ) then
 					if (arg16 == true) then
-						tcl_DEBUG("Pet Crit Hit: "..arg5.." crit "..arg8.." for "..arg10);
+						if DEBUG then tcl_DEBUG("Pet Crit Hit: "..arg5.." crit "..arg8.." for "..arg10); end
 						tcl_RecordHit(arg5.."'s "..NORMAL_HIT_TEXT, "CRIT", tonumber(arg10), arg8, DAMAGE_TYPE_NONHEAL, "PET");
 					else
-						tcl_DEBUG("Pet Normal Hit: "..arg5.." hit "..arg8.." for "..arg10);
+						if DEBUG then tcl_DEBUG("Pet Normal Hit: "..arg5.." hit "..arg8.." for "..arg10); end
 						tcl_RecordHit(arg5.."'s "..NORMAL_HIT_TEXT, "NORMAL", tonumber(arg10), arg8, DAMAGE_TYPE_NONHEAL, "PET");
 					end
 				end
@@ -181,10 +181,10 @@ function tcl_OnEvent(self, event, ...)
 		elseif (arg2 == "SPELL_DAMAGE" ) then
 			if ( arg5 == UnitName("player") and bit.band(arg6, COMBATLOG_FILTER_ME) ~= 0 ) then 
 				if (arg19 == true) then
-					tcl_DEBUG(arg11.." Crit: "..arg8.." for "..arg13);
+					if DEBUG then tcl_DEBUG(arg11.." Crit: "..arg8.." for "..arg13); end
 					tcl_RecordHit(arg10, "CRIT", tonumber(arg13), arg8, DAMAGE_TYPE_NONHEAL);
 				else
-					tcl_DEBUG(arg11.." Hit: "..arg8.." for "..arg13);
+					if DEBUG then tcl_DEBUG(arg11.." Hit: "..arg8.." for "..arg13); end
 					tcl_RecordHit(arg10, "NORMAL", tonumber(arg13), arg8, DAMAGE_TYPE_NONHEAL);
 				end
 			elseif ( bit.band(arg6, COMBATLOG_OBJECT_TYPE_PLAYER) == 0 
@@ -192,10 +192,10 @@ function tcl_OnEvent(self, event, ...)
 				and bit.band( arg6, COMBATLOG_FILTER_MY_PET ) ~= 0 ) then
 				if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOW_PET"] == "1" ) then
 					if (arg19 == true) then
-						tcl_DEBUG(arg5.."'s "..arg11.." Crit: "..arg8.." for "..arg13);
+						if DEBUG then tcl_DEBUG(arg5.."'s "..arg11.." Crit: "..arg8.." for "..arg13); end
 						tcl_RecordHit(arg5.."'s "..arg10, "CRIT", tonumber(arg13), arg8, DAMAGE_TYPE_NONHEAL, "PET");
 					else
-						tcl_DEBUG(arg5.."'s "..arg11.." Hit: "..arg8.." for "..arg13);
+						if DEBUG then tcl_DEBUG(arg5.."'s "..arg11.." Hit: "..arg8.." for "..arg13); end
 						tcl_RecordHit(arg5.."'s "..arg10, "NORMAL", tonumber(arg13), arg8, DAMAGE_TYPE_NONHEAL, "PET");
 					end
 				end
@@ -206,7 +206,7 @@ function tcl_OnEvent(self, event, ...)
 				tcl_Initialize();
 			else
 				if ( arg5 == UnitName("player") and bit.band(arg6, COMBATLOG_FILTER_ME) ~= 0 ) then 
-					tcl_DEBUG(arg11.." Cast: "..src);
+					if DEBUG then tcl_DEBUG(arg11.." Cast: "..src); end
 					if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["ALL_SPELLS"] == "1" ) then
 						tcl_RecordHit(arg10, "NORMAL", 0, src, DAMAGE_TYPE_NONHEAL);
 					end
@@ -215,7 +215,7 @@ function tcl_OnEvent(self, event, ...)
 					and bit.band( arg6, COMBATLOG_FILTER_MY_PET ) ~= 0 ) then
 					
 					if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["SHOW_PET"] == "1" ) then
-						tcl_DEBUG(arg5.."'s "..arg11.." Cast: "..src);
+						if DEBUG then tcl_DEBUG(arg5.."'s "..arg11.." Cast: "..src); end
 						--if ( TCL_SETTINGS[TCL_REALM]["SETTINGS"]["ALL_SPELLS"] == "1" ) then
 						tcl_RecordHit(arg5.."'s "..arg10, "NORMAL", 0, src, DAMAGE_TYPE_NONHEAL, "PET");
 						--end
@@ -237,7 +237,7 @@ function tcl_OnEvent(self, event, ...)
 				if ( showMsg == 1 ) then
 					tcl_Msg("AURA: "..arg11.." S: ["..src.."]T: ["..trg.."] TYPE: ["..dmg.."]");
 				end
-				tcl_DEBUG("AURA: "..arg11.." S: ["..src.."]T: ["..trg.."] TYPE: ["..dmg.."]");				
+				if DEBUG then tcl_DEBUG("AURA: "..arg11.." S: ["..src.."]T: ["..trg.."] TYPE: ["..dmg.."]"); end
 			end
 
 			if ( srcType ~= nil and trackDOT ) then
@@ -246,7 +246,7 @@ function tcl_OnEvent(self, event, ...)
 					if ( TCL_DOT["DOT_DATA"][srcType][arg10] == nil ) then
 						TCL_DOT["DOT_DATA"][srcType][arg10] = {};
 					end
-					tcl_DEBUG("SPELL: "..arg11.." is casted on "..arg8.." ["..arg7.."]");
+					if DEBUG then tcl_DEBUG("SPELL: "..arg11.." is casted on "..arg8.." ["..arg7.."]"); end
 						if ( TCL_DOT["DOT_DATA"][srcType][arg10][arg7] == nil ) then
 							if (( arg5 == arg8 ) and ( arg13 == "BUFF" ) ) then
 								isHeal = true;
@@ -266,14 +266,14 @@ function tcl_OnEvent(self, event, ...)
 		 			if ( TCL_DOT["DOT_DATA"][srcType][arg10] ~= nil ) then
 		 				local entry = TCL_DOT["DOT_DATA"][srcType][arg10][arg7];
 		 				if ( entry ~= nil ) then
-		 					tcl_DEBUG("AURA_REMOVED: Removing "..arg11.." from the DOT database from "..arg8);
+		 					if DEBUG then tcl_DEBUG("AURA_REMOVED: Removing "..arg11.." from the DOT database from "..arg8); end
 		 					if ( entry[2] == true ) then
 		 						tcl_RecordHit(arg10, "DOT", tonumber(entry[1]), "You", DAMAGE_TYPE_HEAL);
 		 					else
 		 						tcl_RecordHit(arg10, "DOT", tonumber(entry[1]), arg8, DAMAGE_TYPE_NONHEAL);
 		 					end
 		 					TCL_DOT["DOT_DATA"][srcType][arg10][arg7] = nil;
-		 					tcl_DEBUG("SPELL_AURA_REMOVED: Removed ["..entry[1].."] from "..arg11.." K "..arg7);
+		 					if DEBUG then tcl_DEBUG("SPELL_AURA_REMOVED: Removed ["..entry[1].."] from "..arg11.." K "..arg7); end
 		 				end
 		 			end
 		   		end
@@ -284,14 +284,14 @@ function tcl_OnEvent(self, event, ...)
 		 			if ( TCL_DOT["DOT_DATA"][srcType][arg10] ~= nil ) then
 		 				local entry = TCL_DOT["DOT_DATA"][srcType][arg10][arg7];
 		 				if ( entry ~= nil ) then
-		 					tcl_DEBUG("AURA_REFRESH: Removing "..arg11.." from the DOT database from "..arg8);
+		 					if DEBUG then tcl_DEBUG("AURA_REFRESH: Removing "..arg11.." from the DOT database from "..arg8); end
 		 					if ( entry[2] == true ) then
 		 						tcl_RecordHit(arg10, "DOT", tonumber(entry[1]), "You", DAMAGE_TYPE_HEAL);
 		 					else
 		 						tcl_RecordHit(arg10, "DOT", tonumber(entry[1]), arg8, DAMAGE_TYPE_NONHEAL);
 		 					end
 		 					TCL_DOT["DOT_DATA"][srcType][arg10][arg7] = nil;
-		 					tcl_DEBUG("SPELL_AURA_REFRESH: Removed ["..entry[1].."] from "..arg11.." K "..arg7);
+		 					if DEBUG then tcl_DEBUG("SPELL_AURA_REFRESH: Removed ["..entry[1].."] from "..arg11.." K "..arg7); end
 		 				end
 		 			end
 			   end
@@ -300,7 +300,7 @@ function tcl_OnEvent(self, event, ...)
 			local isHeal = false;
 			
 			if ( event ~= nil ) then 
-		        tcl_DEBUG("Received Event: ["..(arg2 or "none").."]");	    
+		        if DEBUG then tcl_DEBUG("Received Event: ["..(arg2 or "none").."]"); end
 		    end	 				
 		    if ( arg4 == UnitName("player") ) then	    	    
 				if ( TCL_DOT["DOT_DATA"][srcType][arg10] == nil ) then
@@ -316,13 +316,13 @@ function tcl_OnEvent(self, event, ...)
 			local destID = arg7;
 
 			-- check DOT table for spells that may have damaged this unit
-			tcl_DEBUG("High DOT "..tcl_GetHighDMG("MY", "DOT"));
+			if DEBUG then tcl_DEBUG("High DOT "..tcl_GetHighDMG("MY", "DOT")); end
 
 			for i = 1, #(TCL_SOURCETYPE) do
 				for spellId,v in pairs(TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[i]]) do
 					for gUID,v in pairs(TCL_DOT["DOT_DATA"][TCL_SOURCETYPE[i]][spellId]) do
 						if ( gUID == destID ) then
-							tcl_DEBUG("MOB: "..spellId.." ["..v[1].."] ".." arg8 "..arg8);
+							if DEBUG then tcl_DEBUG("MOB: "..spellId.." ["..v[1].."] ".." arg8 "..arg8); end
 							if ( arg8 == UnitName("player") ) then
 								dest = "You";
 							else
@@ -351,7 +351,7 @@ function tcl_OnEvent(self, event, ...)
 							if ( removeVal == nil) then
 								removeVal = "nil";
 							end
-							tcl_DEBUG("MOB: Removed ["..removeVal[1].."] from "..spellId.." K "..gUID.." V "..v[1]);
+							if DEBUG then tcl_DEBUG("MOB: Removed ["..removeVal[1].."] from "..spellId.." K "..gUID.." V "..v[1]); end
 						end					
 					end
 				end
@@ -368,27 +368,27 @@ function tcl_OnEvent(self, event, ...)
 							if ( TCL_DOT["DOT_DATA"][srcType][arg10][destID][2] == true ) then
 								temp = "TRUE";
 							end		
-							tcl_DEBUG(" SPHeal "..arg11.." : {"..TCL_DOT["DOT_DATA"][srcType][arg10][destID][1]..", "..temp.."}");
+							if DEBUG then tcl_DEBUG(" SPHeal "..arg11.." : {"..TCL_DOT["DOT_DATA"][srcType][arg10][destID][1]..", "..temp.."}"); end
 						end	
 					end
 				end
 											 					
 				if ( srcType ~= nil ) then
 					if ( TCL_DOT["DOT_DATA"][srcType][arg10] == nil ) then
-						tcl_DEBUG("TCL_DOT Table: ["..srcType.."]["..arg11.."] does not exist...Creating");
+						if DEBUG then tcl_DEBUG("TCL_DOT Table: ["..srcType.."]["..arg11.."] does not exist...Creating"); end
 						TCL_DOT["DOT_DATA"][srcType][arg10] = {}
 					end
 					if ( TCL_DOT["DOT_DATA"][srcType][arg10][destID] == nil ) then
-						tcl_DEBUG("TCL_DOT Table: ["..srcType.."]["..arg11.."]["..destID.."] does not exist...Creating");
+						if DEBUG then tcl_DEBUG("TCL_DOT Table: ["..srcType.."]["..arg11.."]["..destID.."] does not exist...Creating"); end
 						TCL_DOT["DOT_DATA"][srcType][arg10][destID] = {0, true};
 					elseif ( TCL_DOT["DOT_DATA"][srcType][arg10][destID][2] == false ) then -- check to see of named periodic heal was set to false
-						tcl_DEBUG("TCL_DOT Table: ["..srcType.."]["..arg11.."]["..destID.."][2] was set to false, set to true");
+						if DEBUG then tcl_DEBUG("TCL_DOT Table: ["..srcType.."]["..arg11.."]["..destID.."][2] was set to false, set to true"); end
 						TCL_DOT["DOT_DATA"][srcType][arg10][destID][2] = true;
 					end
 					oDOT = TCL_DOT["DOT_DATA"][srcType][arg10][destID];
 					nTotal = oDOT[1] + arg13;
 					
-					tcl_DEBUG("DOT Heal for ["..arg11.."] is "..oDOT[1].." new stored heal is "..nTotal);
+					if DEBUG then tcl_DEBUG("DOT Heal for ["..arg11.."] is "..oDOT[1].." new stored heal is "..nTotal); end
 					if ( TCL_DOT["DOT_DATA"][srcType][arg10][destID] ~= nil ) then
 						TCL_DOT["DOT_DATA"][srcType][arg10][destID][1] = nTotal;
 					end
@@ -404,7 +404,7 @@ function tcl_OnEvent(self, event, ...)
 						if ( TCL_DOT["DOT_DATA"][srcType][arg10][arg7][2] == true ) then
 							temp = "TRUE";				
 						end		
-						tcl_DEBUG(" SPDamage "..arg11.." : {"..TCL_DOT["DOT_DATA"][srcType][arg10][arg7][1]..", "..temp.."}");
+						if DEBUG then tcl_DEBUG(" SPDamage "..arg11.." : {"..TCL_DOT["DOT_DATA"][srcType][arg10][arg7][1]..", "..temp.."}"); end
 					end
 				end
 			end
@@ -421,7 +421,7 @@ function tcl_OnEvent(self, event, ...)
 				oDOT = TCL_DOT["DOT_DATA"][srcType][arg10][arg7];
 				nTotal = oDOT[1] + arg13;
 				
-				tcl_DEBUG("DOT Damage for ["..arg11.."] is "..oDOT[1].." new stored damage is "..nTotal);
+				if DEBUG then tcl_DEBUG("DOT Damage for ["..arg11.."] is "..oDOT[1].." new stored damage is "..nTotal); end
 				if ( TCL_DOT["DOT_DATA"][srcType][arg10][arg7] ~= nil ) then
 					TCL_DOT["DOT_DATA"][srcType][arg10][arg7][1] = nTotal;
 				end
@@ -453,7 +453,7 @@ function tcl_OnEvent(self, event, ...)
 				if ( showMsg == 1 ) then
 					tcl_Msg("SPELL: "..arg11.." S: ["..src.."]T: ["..trg.."] DMG: ["..dmg.."]");
 				end
-				tcl_DEBUG("SPELL: "..arg11.." S: ["..src.."]T: ["..trg.."] DMG: ["..dmg.."]");
+				if DEBUG then tcl_DEBUG("SPELL: "..arg11.." S: ["..src.."]T: ["..trg.."] DMG: ["..dmg.."]"); end
 			end
 			if ( arg2 == "UNIT_DIED" ) then
 				if ( showMsg == 1 ) then
