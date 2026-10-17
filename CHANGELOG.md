@@ -10,6 +10,20 @@ release. The original changelog is preserved in
 actual wording in the commit message, not here - this file (and each
 GitHub release's notes) are a mechanical render of it, not a second
 drafting pass.
+## Unreleased
+
+- **chore:** bump to 0.8.8.2-dev.1 for the debug-garbage fix test
+
+- **docs:** trim narrative history from comments
+
+- **docs:** trim narrative history from comments (#17)
+
+- **fix:** skip debug string concatenation when DEBUG is off
+
+- **fix:** make DEBUG local so other addons can't toggle it
+
+- **other:** hotfix: 0.8.8.1 mouse-wheel filter scroll (#16)
+
 ## [0.8.8.1](https://github.com/gitepyc/TitanCritLine/tree/0.8.8.1) (2026-09-25)
 [Full Changelog](https://github.com/gitepyc/TitanCritLine/compare/0.8.8...0.8.8.1) [Previous Releases](https://github.com/gitepyc/TitanCritLine/releases)
 
