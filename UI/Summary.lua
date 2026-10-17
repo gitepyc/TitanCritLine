@@ -43,9 +43,9 @@ function tcl_GetHighDMG( sourceType, dmgType, healType )
 			end
 		else
 			if ( isHeal == "0" ) then 
-				if DEBUG then tcl_DEBUG(attackType.." Filter enabled, did not process for highest "..dmg.." Hit."); end
+				if tcl_IsDebugEnabled() then tcl_DEBUG(attackType.." Filter enabled, did not process for highest "..dmg.." Hit."); end
 			else
-				if DEBUG then tcl_DEBUG(attackType.." Filter enabled, did not process for highest "..dmg.." Heal."); end
+				if tcl_IsDebugEnabled() then tcl_DEBUG(attackType.." Filter enabled, did not process for highest "..dmg.." Heal."); end
 			end
 		end
 	end
@@ -59,7 +59,7 @@ function tcl_GetHighestCritPercentage( mysource )
 	local hiperc = 0;
 	local attack = "";
 	local source = mysource or TCL_SOURCETYPE[1];
-	if DEBUG then tcl_DEBUG("Using source "..source); end
+	if tcl_IsDebugEnabled() then tcl_DEBUG("Using source "..source); end
 	
 	if (TCL_SETTINGS == nil) then 
 		return hiperc;
@@ -94,15 +94,15 @@ function tcl_GetHighestCritPercentage( mysource )
 					hiperc = critperc;
 				end
 			end
-			if DEBUG then tcl_DEBUG(k.." critical percentage: "..critperc); end
+			if tcl_IsDebugEnabled() then tcl_DEBUG(k.." critical percentage: "..critperc); end
 			if ( critperc > hiperc ) then
-				if DEBUG then tcl_DEBUG("Crit%: "..critperc.." > ".." Hi% :"..hiperc); end
+				if tcl_IsDebugEnabled() then tcl_DEBUG("Crit%: "..critperc.." > ".." Hi% :"..hiperc); end
 				hiperc = critperc;
 				attack = k;
-				if DEBUG then tcl_DEBUG(attack.." crit of "..hiperc.." is now the best!"); end
+				if tcl_IsDebugEnabled() then tcl_DEBUG(attack.." crit of "..hiperc.." is now the best!"); end
 			end
 		else
-			if DEBUG then tcl_DEBUG(k.." Filter is on, did not recognized for highest CRIT percentage"); end
+			if tcl_IsDebugEnabled() then tcl_DEBUG(k.." Filter is on, did not recognized for highest CRIT percentage"); end
 		end
 	end
 	return format("%.2f", hiperc), attack;

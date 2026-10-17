@@ -1,4 +1,4 @@
-DEBUG = false; -- for internal testing only, leave it set to false!
+local DEBUG = false; -- for internal testing only, leave it set to false!
 -- Tony
 
 --[[ global addon variables ]]
@@ -870,4 +870,10 @@ function tcl_DEBUG(message)
 	if (DEBUG and DEFAULT_CHAT_FRAME) then
 		DEFAULT_CHAT_FRAME:AddMessage("DEBUG: "..message);
 	end
+end
+
+-- DEBUG is local to this file so no other addon can flip it by setting a
+-- global of the same name; other files check this instead of DEBUG directly.
+function tcl_IsDebugEnabled()
+	return DEBUG;
 end
