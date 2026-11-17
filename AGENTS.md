@@ -1,4 +1,4 @@
-# CLAUDE.md
+# AGENTS.md
 
 TitanCritLine: Titan Panel plugin (WoW Classic Era / SoD and other flavors)
 recording highest normal, critical and periodic damage/healing. Compatibility
